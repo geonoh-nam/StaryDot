@@ -14,16 +14,26 @@ const SIZE = 130;
 const Buddy = forwardRef(function Buddy({ character, stage }, ref) {
   const pos = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const hop = useRef(new Animated.Value(0)).current;
+  const celebrate = useRef(new Animated.Value(0)).current;
   const tilt = useRef(new Animated.Value(0)).current;
   const [bubble, setBubble] = useState(null);
   const lastLine = useRef(null);
+
+  // stage is measured by the parent's onLayout and can change (or arrive late as {w:0,h:0}
+  // on the very first render). useImperativeHandle has no deps array, so ref.current only
+  // picks up a new closure after a render commits — mirror stage into a ref so goTo always
+  // reads the latest value even when called synchronously inside that same onLayout.
+  const stageRef = useRef(stage);
+  stageRef.current = stage;
 
   // Home is the middle of the bottom edge — the B frame from the spec.
   const HOME = { x: 0.5, y: 0.9 };
 
   const goTo = (point) => {
+    const s = stageRef.current;
+    if (!s.w || !s.h) return; // nothing meaningful to move to on a zero-sized stage
     Animated.spring(pos, {
-      toValue: { x: point.x * stage.w - SIZE / 2, y: point.y * stage.h - SIZE / 2 },
+      toValue: { x: point.x * s.w - SIZE / 2, y: point.y * s.h - SIZE / 2 },
       friction: 7,
       tension: 60,
       useNativeDriver: true,
@@ -39,17 +49,23 @@ const Buddy = forwardRef(function Buddy({ character, stage }, ref) {
       const text = key.startsWith('count.n:')
         ? sayCount(character, Number(key.slice('count.n:'.length)))
         : sayLine(character, key, lastLine.current);
-      if (text === null) return;
+      if (text === null) {
+        setBubble(null);
+        return;
+      }
       lastLine.current = text;
       setBubble(text);
     },
     moveTo: goTo,
-    home: () => goTo(HOME),
+    home: () => {
+      setBubble(null);
+      goTo(HOME);
+    },
     react(kind) {
       if (kind === 'right') {
         Animated.sequence([
-          Animated.timing(hop, { toValue: 1, duration: 140, useNativeDriver: true }),
-          Animated.timing(hop, { toValue: 0, duration: 260, easing: Easing.bounce, useNativeDriver: true }),
+          Animated.timing(celebrate, { toValue: 1, duration: 140, useNativeDriver: true }),
+          Animated.timing(celebrate, { toValue: 0, duration: 260, easing: Easing.bounce, useNativeDriver: true }),
         ]).start();
       } else {
         Animated.sequence([
@@ -70,6 +86,7 @@ const Buddy = forwardRef(function Buddy({ character, stage }, ref) {
           transform: [
             ...pos.getTranslateTransform(),
             { translateY: hop.interpolate({ inputRange: [0, 1], outputRange: [0, -34] }) },
+            { translateY: celebrate.interpolate({ inputRange: [0, 1], outputRange: [0, -34] }) },
             { rotate: tilt.interpolate({ inputRange: [-1, 1], outputRange: ['-12deg', '12deg'] }) },
           ],
         },
@@ -91,6 +108,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     width: SIZE,
+    height: SIZE,
     alignItems: 'center',
   },
   art: {
@@ -98,6 +116,9 @@ const styles = StyleSheet.create({
     height: SIZE,
   },
   bubble: {
+    position: 'absolute',
+    bottom: '100%',
+    alignSelf: 'center',
     marginBottom: 12,
     minWidth: 180,
     paddingHorizontal: 20,
