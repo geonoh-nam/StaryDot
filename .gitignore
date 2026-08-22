@@ -9,3 +9,4 @@ web-build/
 # Media and databases live outside git: they are large and regenerable.
 *.mp4
 *.srt
+.superpowers/
