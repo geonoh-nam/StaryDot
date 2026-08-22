@@ -9,6 +9,25 @@ const FIND_IMAGES = {
 };
 // FIND_IMAGES_END
 
+// Every frame the tool extracts is cropped to this size (see puzzle-frames.mjs), so this is
+// the image's real aspect ratio — the box below letterboxes to it, not to the stage's.
+const IMAGE_W = 940;
+const IMAGE_H = 529;
+
+// The picture is drawn "contain"ed inside the stage, so it letterboxes on one axis. Both the
+// tap and the ring must be measured against that inner box, not the stage — otherwise they
+// drift apart on any stage whose aspect ratio differs from the image's.
+function imageBox(stage) {
+  const ratio = IMAGE_W / IMAGE_H;
+  let w = stage.w;
+  let h = w / ratio;
+  if (h > stage.h) {
+    h = stage.h;
+    w = h * ratio;
+  }
+  return { x: (stage.w - w) / 2, y: (stage.h - h) / 2, w, h };
+}
+
 // Tap the picture to find something in it. A miss does nothing at all — no buzzer, no shake.
 // The child keeps looking instead of learning they got it wrong.
 export default function FindIt({ payload, buddy, stage, onSolve, setHintAt }) {
@@ -19,11 +38,13 @@ export default function FindIt({ payload, buddy, stage, onSolve, setHintAt }) {
     buddy?.say(payload.ask || 'quiz.ask');
   }, []);
 
+  const box = imageBox(stage);
+
   const onTap = (e) => {
     if (found) return;
     const point = {
-      x: e.nativeEvent.locationX / stage.w,
-      y: e.nativeEvent.locationY / stage.h,
+      x: (e.nativeEvent.locationX - box.x) / box.w,
+      y: (e.nativeEvent.locationY - box.y) / box.h,
     };
     if (!isHit(point, payload.target)) return;
     setFound(true);
@@ -33,20 +54,24 @@ export default function FindIt({ payload, buddy, stage, onSolve, setHintAt }) {
     onSolve();
   };
 
-  const ring = payload.target.r * stage.w;
+  const ring = payload.target.r * box.w;
 
   return (
     <Pressable style={styles.board} onPress={onTap}>
       {FIND_IMAGES[payload.image] ? (
-        <Image source={FIND_IMAGES[payload.image]} style={styles.art} resizeMode="cover" />
+        <Image
+          source={FIND_IMAGES[payload.image]}
+          style={[styles.art, { left: box.x, top: box.y, width: box.w, height: box.h }]}
+          resizeMode="contain"
+        />
       ) : null}
       {found ? (
         <View
           style={[
             styles.ring,
             {
-              left: payload.target.x * stage.w - ring,
-              top: payload.target.y * stage.h - ring,
+              left: box.x + payload.target.x * box.w - ring,
+              top: box.y + payload.target.y * box.h - ring,
               width: ring * 2,
               height: ring * 2,
               borderRadius: ring,
@@ -67,8 +92,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   art: {
-    width: '100%',
-    height: '100%',
+    position: 'absolute',
   },
   ring: {
     position: 'absolute',
