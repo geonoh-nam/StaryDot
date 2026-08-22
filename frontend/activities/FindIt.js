@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
-import { isHit } from './rules';
 
 // Rewritten by backend/server/tools/puzzle-frames.mjs — keep the marker comments.
 // FIND_IMAGES_START
@@ -40,21 +39,22 @@ export default function FindIt({ payload, buddy, stage, onSolve, setHintAt }) {
 
   const box = imageBox(stage);
 
+  const ring = payload.target.r * box.w;
+
   const onTap = (e) => {
     if (found) return;
-    const point = {
-      x: (e.nativeEvent.locationX - box.x) / box.w,
-      y: (e.nativeEvent.locationY - box.y) / box.h,
-    };
-    if (!isHit(point, payload.target)) return;
+    // Hit-test in the box's own pixels so the circle the child sees is the circle that counts —
+    // isHit compares fractions of possibly different-length axes, which isn't circular here
+    // since the box's aspect ratio (940:529) is never square.
+    const dx = e.nativeEvent.locationX - (box.x + payload.target.x * box.w);
+    const dy = e.nativeEvent.locationY - (box.y + payload.target.y * box.h);
+    if (Math.hypot(dx, dy) > ring) return;
     setFound(true);
     buddy?.moveTo({ x: payload.target.x, y: Math.max(0.12, payload.target.y - 0.2) });
     buddy?.say('answer.right');
     buddy?.react('right');
     onSolve();
   };
-
-  const ring = payload.target.r * box.w;
 
   return (
     <Pressable style={styles.board} onPress={onTap}>
