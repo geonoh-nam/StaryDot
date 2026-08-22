@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 
 const ITEM_ART = {
@@ -7,16 +7,26 @@ const ITEM_ART = {
 };
 
 const ROW_Y = 0.34;
+const DONE_DELAY_MS = 900; // let the spoken number land before the finishing line
 
 // Counting is the activity — there is no number to pick. Each tap moves the buddy onto the
 // thing just counted and it says the number out loud.
 export default function CountIt({ payload, buddy, stage, onSolve, setHintAt }) {
   const [counted, setCounted] = useState(0);
   const slots = Array.from({ length: payload.n }, (_, i) => (i + 1) / (payload.n + 1));
+  const doneTimer = useRef(null);
+
+  // cells shrink once the row is crowded, so neighbours always keep a real gap
+  const spacingPx = stage.w / (payload.n + 1);
+  const cellSize = Math.min(120, spacingPx * 0.85);
+  const artSize = cellSize * (96 / 120);
 
   useEffect(() => {
     setHintAt({ x: slots[0], y: ROW_Y });
     buddy?.say(payload.ask || 'quiz.ask');
+    return () => {
+      if (doneTimer.current) clearTimeout(doneTimer.current);
+    };
   }, []);
 
   const tap = (index) => {
@@ -26,9 +36,11 @@ export default function CountIt({ payload, buddy, stage, onSolve, setHintAt }) {
     buddy?.moveTo({ x: slots[index], y: Math.max(0.12, ROW_Y - 0.16) });
     buddy?.say(`count.n:${next}`);
     if (next >= payload.n) {
-      buddy?.say('count.done');
-      buddy?.react('right');
-      onSolve();
+      doneTimer.current = setTimeout(() => {
+        buddy?.say('count.done');
+        buddy?.react('right');
+        onSolve();
+      }, DONE_DELAY_MS);
     } else {
       setHintAt({ x: slots[next], y: ROW_Y });
     }
@@ -41,14 +53,19 @@ export default function CountIt({ payload, buddy, stage, onSolve, setHintAt }) {
           key={i}
           style={[
             styles.cell,
-            { left: x * stage.w - 60, top: ROW_Y * stage.h - 60 },
+            {
+              width: cellSize,
+              height: cellSize,
+              left: x * stage.w - cellSize / 2,
+              top: ROW_Y * stage.h - cellSize / 2,
+            },
             i < counted && styles.cellDone,
           ]}
           onPress={() => tap(i)}
         >
           <Image
             source={ITEM_ART[payload.item] || ITEM_ART.star}
-            style={styles.art}
+            style={{ width: artSize, height: artSize }}
             resizeMode="contain"
           />
         </Pressable>
@@ -67,17 +84,11 @@ const styles = StyleSheet.create({
   },
   cell: {
     position: 'absolute',
-    width: 120,
-    height: 120,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 24,
   },
   cellDone: {
     backgroundColor: '#e6f0ff',
-  },
-  art: {
-    width: 96,
-    height: 96,
   },
 });
