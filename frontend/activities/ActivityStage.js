@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Modal, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Buddy from './Buddy';
 import CountIt from './CountIt';
 import DragMatch from './DragMatch';
@@ -91,27 +92,33 @@ export default function ActivityStage({ activity, onDone }) {
       supportedOrientations={['landscape', 'landscape-left', 'landscape-right']}
       onRequestClose={() => finish(false)}
     >
-      <View
-        style={[styles.stage, { width: win.width, height: win.height }]}
-        onLayout={(e) => {
-          const { width, height } = e.nativeEvent.layout;
-          setStage({ w: width, h: height });
-        }}
-      >
-        {stage.w ? (
-          <Body
-            payload={activity.payload}
-            buddy={buddyRef.current}
-            stage={stage}
-            onSolve={() => scheduleFinish(true, 1400)}
-            setHintAt={(point) => {
-              hintAt.current = point;
-              setHintAtTick((n) => n + 1);
-            }}
-          />
-        ) : null}
-        <Buddy ref={buddyRef} character={character} stage={stage} />
-      </View>
+      {/* A Modal mounts into its own native hierarchy, so a GestureHandlerRootView outside
+          the Modal never reaches the gestures rendered inside it (react-native-gesture-handler
+          docs, and see App.js's TraceWord/other Modal for the same fix). Without one here,
+          DragMatch's Pan gesture receives no touches at all. */}
+      <GestureHandlerRootView style={[styles.stage, { width: win.width, height: win.height }]}>
+        <View
+          style={[styles.stage, { width: win.width, height: win.height }]}
+          onLayout={(e) => {
+            const { width, height } = e.nativeEvent.layout;
+            setStage({ w: width, h: height });
+          }}
+        >
+          {stage.w ? (
+            <Body
+              payload={activity.payload}
+              buddy={buddyRef.current}
+              stage={stage}
+              onSolve={() => scheduleFinish(true, 1400)}
+              setHintAt={(point) => {
+                hintAt.current = point;
+                setHintAtTick((n) => n + 1);
+              }}
+            />
+          ) : null}
+          <Buddy ref={buddyRef} character={character} stage={stage} />
+        </View>
+      </GestureHandlerRootView>
     </Modal>
   );
 }
