@@ -24,6 +24,7 @@ const voices = {
 };
 
 let urlPlayer = null;
+let linePlayer = null;
 
 export function speak(name) {
   const p = voices[name];
@@ -49,13 +50,14 @@ export function speakUrl(uri) {
 }
 
 // A voice line that arrives as a bundled module rather than a fixed name. Players are made
-// on demand and thrown away — only one line plays at a time.
+// on demand and thrown away — only one line plays at a time. Its own slot, separate from
+// urlPlayer, so a reaction line never cuts off question audio mid-word.
 export function playVoice(mod) {
   if (!mod) return;
   try {
-    if (urlPlayer) urlPlayer.remove();
-    urlPlayer = createAudioPlayer(mod);
-    urlPlayer.play();
+    if (linePlayer) linePlayer.remove();
+    linePlayer = createAudioPlayer(mod);
+    linePlayer.play();
   } catch (e) {
     // ignore playback races
   }
@@ -64,6 +66,7 @@ export function playVoice(mod) {
 export function stopSpeaking() {
   try {
     if (urlPlayer) urlPlayer.pause();
+    if (linePlayer) linePlayer.pause();
     Object.values(voices).forEach((p) => p.pause());
   } catch (e) {
     // ignore

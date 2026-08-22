@@ -15,10 +15,8 @@ export function sayLine(character, key, last) {
   const text = pickLine(pool, last);
   if (text === null) return null;
   const clips = (VOICE[character] || {})[key] || [];
-  if (clips.length) {
-    const idx = pool.indexOf(text);
-    playVoice(clips[idx >= 0 && idx < clips.length ? idx : 0]);
-  }
+  const idx = pool.indexOf(text);
+  if (clips[idx]) playVoice(clips[idx]);
   return text;
 }
 
