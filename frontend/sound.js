@@ -20,11 +20,13 @@ const voices = {
   correct: createAudioPlayer(require('./assets/voice/correct.m4a')),
   retry: createAudioPlayer(require('./assets/voice/retry.m4a')),
   'draw-topic': createAudioPlayer(require('./assets/voice/draw-topic.m4a')),
+  traceword: createAudioPlayer(require('./assets/voice/traceword.m4a')),
 };
 
 let urlPlayer = null;
 
 export function speak(name) {
+  return; // voice lines disabled
   const p = voices[name];
   if (!p) return;
   try {
@@ -37,6 +39,7 @@ export function speak(name) {
 
 // One line of question audio, streamed straight from wherever the DB says it lives.
 export function speakUrl(uri) {
+  return; // voice lines disabled
   if (!uri) return;
   try {
     if (urlPlayer) urlPlayer.remove();

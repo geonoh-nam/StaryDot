@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS video (
   emoji        TEXT,
   color        TEXT,
   status       TEXT NOT NULL,
+  crop_bottom  REAL NOT NULL DEFAULT 0,
   created_at   INTEGER NOT NULL
 );
 CREATE TABLE IF NOT EXISTS subtitle (
@@ -69,7 +70,18 @@ export function openDb(file) {
   const db = new DatabaseSync(file);
   db.exec('PRAGMA foreign_keys = ON');
   db.exec(SCHEMA);
+  migrate(db);
   return db;
+}
+
+// CREATE TABLE IF NOT EXISTS leaves an existing table alone, so a new column never
+// reaches a DB that already has rows. Add it here instead of asking everyone to
+// delete stary.db.
+function migrate(db) {
+  const cols = db.prepare('PRAGMA table_info(video)').all().map((c) => c.name);
+  if (!cols.includes('crop_bottom')) {
+    db.exec('ALTER TABLE video ADD COLUMN crop_bottom REAL NOT NULL DEFAULT 0');
+  }
 }
 
 export function upsertCategory(db, { id, label, sort }) {
@@ -81,14 +93,15 @@ export function upsertCategory(db, { id, label, sort }) {
 
 export function insertVideo(db, v) {
   db.prepare(
-    `INSERT INTO video (id, category_id, title, duration_sec, file_path, thumb_path, emoji, color, status, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?)
+    `INSERT INTO video (id, category_id, title, duration_sec, file_path, thumb_path, emoji, color, status, crop_bottom, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?)
      ON CONFLICT(id) DO UPDATE SET
        category_id = excluded.category_id, title = excluded.title,
        duration_sec = excluded.duration_sec, file_path = excluded.file_path,
-       thumb_path = excluded.thumb_path, emoji = excluded.emoji, color = excluded.color`
+       thumb_path = excluded.thumb_path, emoji = excluded.emoji, color = excluded.color,
+       crop_bottom = excluded.crop_bottom`
   ).run(v.id, v.category_id, v.title, v.duration_sec, v.file_path, v.thumb_path ?? null,
-        v.emoji ?? null, v.color ?? null, Date.now());
+        v.emoji ?? null, v.color ?? null, v.crop_bottom ?? 0, Date.now());
 }
 
 export function replaceSubtitles(db, videoId, cues) {

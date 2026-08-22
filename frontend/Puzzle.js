@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { PanResponder, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Animated, PanResponder, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from './Typography';
 import Svg, { Polygon, Rect, Defs, ClipPath, Image as SvgImage } from 'react-native-svg';
 
 const FRAME = require('./assets/puzzle_frame.png');
-const BW = 760;
-const BH = 428;
+const BW = 940;
+const BH = 529;
 const SNAP_DIST = 55;
 
 const computeGeom = (p) => {
@@ -71,16 +71,24 @@ function makePieces() {
 const ptsStr = (pts) => pts.map((q) => `${q[0]},${q[1]}`).join(' ');
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-export default function PuzzleScreen({ onDone }) {
+export default function PuzzleScreen({ image, onDone }) {
+  // The scene the child just watched, when the activity carries one; the sample art otherwise.
+  const ART = image || FRAME;
   const PIECES = useMemo(makePieces, []);
   const [layout, setLayout] = useState(null);
   const posRef = useRef(null); // [{x,y,placed}]
+  const animRef = useRef(PIECES.map(() => new Animated.ValueXY({ x: 0, y: 0 })));
   const startRef = useRef({});
   const [, force] = useState(0);
   const rerender = () => force((n) => n + 1);
 
-  const boardLeft = layout ? (layout.w - BW) / 2 : 0;
-  const boardTop = layout ? (layout.h - BH) / 2 : 0;
+  // Board geometry stays in BW/BH units; `fit` scales it to whatever room the screen gives, so a
+  // bigger board never runs off the edges and the loose pieces keep a lane above and below it.
+  const fit = layout ? Math.min((layout.w - 40) / BW, (layout.h - 260) / BH, 1) : 1;
+  const bw = BW * fit;
+  const bh = BH * fit;
+  const boardLeft = layout ? (layout.w - bw) / 2 : 0;
+  const boardTop = layout ? (layout.h - bh) / 2 : 0;
 
   // Scatter pieces around the board once we know the screen size (clamped on-screen).
   useEffect(() => {
@@ -89,12 +97,13 @@ export default function PuzzleScreen({ onDone }) {
     posRef.current = PIECES.map((pc, i) => {
       const col = Math.floor(i / 2);
       const bottom = i % 2 === 0;
-      const x = clamp(24 + col * step, 8, layout.w - pc.w - 8);
-      const y = bottom ? layout.h - pc.h - 16 : 16;
+      const x = clamp(24 + col * step, 8, layout.w - pc.w * fit - 8);
+      const y = bottom ? layout.h - pc.h * fit - 16 : 16;
+      animRef.current[i].setValue({ x, y });
       return { x, y, placed: false };
     });
     rerender();
-  }, [layout]);
+  }, [layout, fit]);
 
   const responders = useMemo(() => {
     if (!layout) return [];
@@ -108,28 +117,37 @@ export default function PuzzleScreen({ onDone }) {
         onPanResponderMove: (e, g) => {
           const s = startRef.current[idx];
           if (!s) return;
-          posRef.current[idx] = {
+          const next = {
             placed: false,
-            x: clamp(s.x + g.dx, 0, layout.w - pc.w),
-            y: clamp(s.y + g.dy, 0, layout.h - pc.h),
+            x: clamp(s.x + g.dx, 0, layout.w - pc.w * fit),
+            y: clamp(s.y + g.dy, 0, layout.h - pc.h * fit),
           };
-          rerender();
+          posRef.current[idx] = next;
+          // Move the view directly: a React re-render per finger sample is what made it stutter.
+          animRef.current[idx].setValue({ x: next.x, y: next.y });
         },
         onPanResponderRelease: () => {
-          const tx = boardLeft + pc.home.x;
-          const ty = boardTop + pc.home.y;
+          const tx = boardLeft + pc.home.x * fit;
+          const ty = boardTop + pc.home.y * fit;
           const p = posRef.current[idx];
           if (Math.hypot(p.x - tx, p.y - ty) < SNAP_DIST) {
             posRef.current[idx] = { x: tx, y: ty, placed: true };
+            // Snap home with a spring so the piece settles instead of jumping.
+            Animated.spring(animRef.current[idx], {
+              toValue: { x: tx, y: ty },
+              useNativeDriver: false,
+              speed: 20,
+              bounciness: 8,
+            }).start();
+            rerender();
           }
-          rerender();
           if (posRef.current.every((q) => q.placed)) {
-            setTimeout(onDone, 700);
+            setTimeout(() => onDone(true), 700);
           }
         },
       })
     );
-  }, [layout, boardLeft, boardTop]);
+  }, [layout, boardLeft, boardTop, fit]);
 
   return (
     <View style={styles.overlay} onLayout={(e) => setLayout({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}>
@@ -138,10 +156,12 @@ export default function PuzzleScreen({ onDone }) {
       </View>
 
       {layout ? (
-        <Svg style={[styles.board, { left: boardLeft, top: boardTop }]} width={BW} height={BH} viewBox={`0 0 ${BW} ${BH}`}>
+        <Svg style={[styles.board, { left: boardLeft, top: boardTop }]} width={bw} height={bh} viewBox={`0 0 ${BW} ${BH}`}>
           <Rect x={0} y={0} width={BW} height={BH} fill="#dfe7f5" />
-          <SvgImage href={FRAME} x={0} y={0} width={BW} height={BH} preserveAspectRatio="xMidYMid slice" opacity={0.3} />
-          <Rect x={0} y={0} width={BW} height={BH} fill="none" stroke="#b9c8e6" strokeWidth={3} />
+          <SvgImage href={ART} x={0} y={0} width={BW} height={BH} preserveAspectRatio="xMidYMid slice" opacity={0.3} />
+          {/* Square frame: a thick outer rim with a thin inner line, so the board reads as a tray. */}
+          <Rect x={5} y={5} width={BW - 10} height={BH - 10} fill="none" stroke="#609EF5" strokeWidth={10} />
+          <Rect x={16} y={16} width={BW - 32} height={BH - 32} fill="none" stroke="#b9c8e6" strokeWidth={2} />
           {PIECES.map((pc) => (
             <Polygon key={pc.id} points={ptsStr(pc.pts)} fill="none" stroke="#ffffff" strokeWidth={2} />
           ))}
@@ -152,19 +172,23 @@ export default function PuzzleScreen({ onDone }) {
         ? PIECES.map((pc, i) => {
             const p = posRef.current[i];
             return (
-              <View
+              <Animated.View
                 key={pc.id}
                 {...responders[i].panHandlers}
-                style={[styles.piece, { left: p.x, top: p.y, width: pc.w, height: pc.h }]}
+                style={[
+                  styles.piece,
+                  { width: pc.w * fit, height: pc.h * fit, transform: animRef.current[i].getTranslateTransform() },
+                  p.placed && styles.piecePlaced,
+                ]}
               >
-                <Svg width={pc.w} height={pc.h} viewBox={`0 0 ${pc.w} ${pc.h}`}>
+                <Svg width={pc.w * fit} height={pc.h * fit} viewBox={`0 0 ${pc.w} ${pc.h}`}>
                   <Defs>
                     <ClipPath id={`clip-${pc.id}`}>
                       <Polygon points={ptsStr(pc.local)} />
                     </ClipPath>
                   </Defs>
                   <SvgImage
-                    href={FRAME}
+                    href={ART}
                     x={-pc.home.x}
                     y={-pc.home.y}
                     width={BW}
@@ -174,12 +198,12 @@ export default function PuzzleScreen({ onDone }) {
                   />
                   <Polygon points={ptsStr(pc.local)} fill="none" stroke="#ffffff" strokeWidth={3} />
                 </Svg>
-              </View>
+              </Animated.View>
             );
           })
         : null}
 
-      <TouchableOpacity style={styles.skip} onPress={onDone}>
+      <TouchableOpacity style={styles.skip} onPress={() => onDone(false)}>
         <Text style={styles.skipText}>건너뛰기</Text>
       </TouchableOpacity>
     </View>
@@ -196,7 +220,12 @@ const styles = StyleSheet.create({
   },
   piece: {
     position: 'absolute',
+    left: 0,
+    top: 0,
     zIndex: 4,
+  },
+  piecePlaced: {
+    zIndex: 3,
   },
   topic: {
     position: 'absolute',

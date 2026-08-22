@@ -21,8 +21,8 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { BlurView } from 'expo-blur';
-import Svg, { Circle, Defs, G, LinearGradient, Path, Polygon, Rect, Stop } from 'react-native-svg';
-import { AlphaType, Canvas, ColorType, Group, Image as SkiaImage, Path as SkiaPath, Skia, useImage } from '@shopify/react-native-skia';
+import Svg, { Circle, Defs, G, LinearGradient, Path, Polygon, RadialGradient, Rect, Stop } from 'react-native-svg';
+import { AlphaType, Canvas, ColorType, Group, Image as SkiaImage, Path as SkiaPath, Skia, useFont, useImage } from '@shopify/react-native-skia';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Rea, {
   Extrapolation,
@@ -31,8 +31,13 @@ import Rea, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  makeMutable,
   withDecay,
+  withDelay,
+  withRepeat,
+  withSequence,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector, GestureHandlerRootView, PointerType } from 'react-native-gesture-handler';
 import getStroke from 'perfect-freehand';
@@ -44,21 +49,62 @@ import * as ImagePicker from 'expo-image-picker';
 
 // The content server runs beside the dev server, so its host is the one we are bundling from.
 const CONTENT_PORT = 5056;
+// Videos pushed to the app's own folder play without any storage permission, and without a server.
+const LOCAL_VIDEO_DIR = 'file:///sdcard/Android/data/com.flyai.patti/files/video/';
+const OFFLINE_LIBRARY = require('./assets/library.json');
+// Activity plans ship with the app too, so a tablet with no server still asks real questions.
+const OFFLINE_ACTIVITIES = require('./assets/activities.json');
+// Frames grabbed at each puzzle's own timestamp, keyed by the name the activity payload carries.
+const PUZZLE_IMAGES = {
+  'teenieping-01-90': require('./assets/puzzles/teenieping-01-90.png'),
+};
 function contentBase() {
   const hostUri = Constants.expoConfig?.hostUri || '';
   const host = Platform.OS === 'android' ? hostUri.split(':')[0] || 'localhost' : 'localhost';
   return `http://${host}:${CONTENT_PORT}`;
 }
 
+function GradientRim({ radius = 34, width = 6 }) {
+  return (
+    <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+      <Defs>
+        <LinearGradient id="rimTheme" x1="0" y1="0" x2="1" y2="1">
+          <Stop offset="0" stopColor="#609EF5" />
+          <Stop offset="0.55" stopColor="#00CFE9" />
+          <Stop offset="1" stopColor="#ffffff" />
+        </LinearGradient>
+      </Defs>
+      {/* Drawn on the edge at double width so the outer half clips away, leaving an inner rim. */}
+      <Rect x="0" y="0" width="100%" height="100%" rx={radius} fill="none" stroke="url(#rimTheme)" strokeWidth={width * 2} />
+    </Svg>
+  );
+}
+
+// One place that talks to the content server. Failures are swallowed: a missing server must
+// never stop a child from watching, it only means today's records are not kept.
+async function api(path, options) {
+  try {
+    const r = await fetch(contentBase() + path, {
+      headers: { 'Content-Type': 'application/json' },
+      ...options,
+      body: options?.body ? JSON.stringify(options.body) : undefined,
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) {
+    return null;
+  }
+}
+
 const mmss = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
 
 // Card art, colours and the character's line stay in the app; the server owns the episodes.
 const SERIES_ART = {
-  teenieping: { color: '#ff5fa2', tint: '#fff0f6', accent: '#e0327c', line: '“같이보자츄~”', thumb: require('./assets/characters/thumbs/thumb1.png') },
-  tayo: { color: '#2b7fd7', tint: '#eef5ff', accent: '#1b5fae', line: '“꼬마버스 타요, 출발합니다!”', thumb: require('./assets/characters/thumbs/thumb2.png') },
-  bread: { color: '#f2a65a', tint: '#fff6ec', accent: '#a55b1e', line: '“어서 오세요, 브레드이발소!”', artScale: 0.86, thumb: require('./assets/characters/thumbs/thumb6.png') },
-  shark: { color: '#7c5cff', tint: '#f3f0ff', accent: '#ffb703', line: '“아기 상어 뚜루루 뚜루~”', thumb: require('./assets/characters/thumbs/thumb4.png') },
-  pororo: { color: '#e5484d', tint: '#fff1f0', accent: '#1f6fd0', line: '“노는 게 제일 좋아!”', thumb: require('./assets/characters/thumbs/thumb5.png') },
+  teenieping: { topic: '내가 좋아하는 티니핑', color: '#ff5fa2', tint: '#fff0f6', accent: '#e0327c', line: '“같이보자츄~”', thumb: require('./assets/characters/thumbs/thumb1.png') },
+  tayo: { topic: '내가 타고 싶은 자동차', color: '#2b7fd7', tint: '#eef5ff', accent: '#1b5fae', line: '“꼬마버스 타요, 출발합니다!”', thumb: require('./assets/characters/thumbs/thumb2.png') },
+  bread: { topic: '맛있는 빵', color: '#f5c33b', tint: '#fffaec', accent: '#a8760c', line: '“어서 오세요, 브레드이발소!”', thumb: require('./assets/characters/thumbs/thumb6.png') },
+  shark: { topic: '바다 친구들', color: '#7c5cff', tint: '#f3f0ff', accent: '#ffb703', line: '“아기 상어 뚜루루 뚜루~”', thumb: require('./assets/characters/thumbs/thumb4.png') },
+  pororo: { topic: '눈 내리는 날', color: '#e5484d', tint: '#fff1f0', accent: '#1f6fd0', line: '“노는 게 제일 좋아!”', thumb: require('./assets/characters/thumbs/thumb5.png') },
 };
 
 // Turn one /library category into the shape the screens already expect.
@@ -75,8 +121,9 @@ function toSeries(cat, base) {
       title: v.title,
       duration: mmss(v.duration_sec),
       color: v.color || art.color,
-      still: v.thumbPath ? { uri: base + v.thumbPath } : null,
-      source: { uri: `${base}/media/video/${v.id}.mp4` },
+      still: base && v.thumbPath ? { uri: base + v.thumbPath } : null,
+      // Local copy first: it plays with the laptop off, and never buffers over wifi.
+      source: { uri: `${LOCAL_VIDEO_DIR}${v.id}.mp4` },
     })),
   };
 }
@@ -197,18 +244,221 @@ const LIBRARY = [
   },
 ];
 
-const quiz = {
-  title: '우아핑의 색깔은?',
-  // audioUrl: filled from the content DB once questions are served from there.
-  audioUrl: null,
-  options: [
-    { label: '노랑색', color: '#f0ae03', bg: '#fffaf0', meaning: '병아리처럼 밝고 환한 색이에요.', example: '노랑색 우산을 쓰고 나갔어요.' },
-    { label: '보라색', color: '#9b5de5', bg: '#f6f0ff', meaning: '포도처럼 진하고 신비로운 색이에요.', example: '보라색 꽃이 활짝 폈어요.' },
-    { label: '하늘색', color: '#00CFE9', bg: '#f1fdff', meaning: '맑은 날 하늘처럼 시원한 색이에요.', example: '하늘색 크레파스로 바다를 그렸어요.' },
-    { label: '핑크색', color: '#e24e9e', bg: '#fff4fa', meaning: '복숭아처럼 부드럽고 달콤한 색이에요.', example: '핑크색 리본을 머리에 달았어요.' },
-  ],
-  answer: '하늘색',
+// Question kinds the content pipeline can author. The screen only needs `type` to label them;
+// everything else is the same four-option shape.
+const QUIZ_KINDS = {
+  // Keys match oneshot/schemas.py exactly, so a DB row needs no translation on the way in.
+  그림_속_대상_찾기: '그림 속 대상 찾기',
+  이야기_되새기기: '이야기 되새기기',
+  흉내_내는_말_이해: '흉내 내는 말 이해',
+  올바른_낱말_찾기: '올바른 낱말 찾기',
+  감정_추론: '감정 추론',
+  원인과_결과: '원인과 결과',
+  사물_첫글자_찾기: '사물 첫글자 찾기',
+  그림과_낱말_연결: '그림과 낱말 연결',
+  반대말_찾기: '반대말 찾기',
+  빠진_글자_완성: '빠진 글자 완성',
+  이야기_핵심_주제: '이야기 핵심 주제',
+  같은_글자로_시작하는_낱말: '같은 글자로 시작하는 낱말',
+  두_낱말_합치기: '두 낱말 합치기',
+  사건의_순서_파악: '사건의 순서 파악',
+  색_찾기: '색 찾기',
+  수량_확인: '수량 확인',
 };
+
+
+// Demo questions until the pipeline fills the activity table: one per template, so the variety
+// the pipeline will produce is visible today. Keys match oneshot/schemas.py.
+const opt = (label, color, bg, meaning, example) => ({ label, color, bg, meaning, example });
+const C = {
+  yellow: ['#f0ae03', '#fffaf0'],
+  purple: ['#9b5de5', '#f6f0ff'],
+  sky: ['#00CFE9', '#f1fdff'],
+  pink: ['#e24e9e', '#fff4fa'],
+  green: ['#2fa96b', '#eefaf2'],
+  blue: ['#5b8def', '#f0f5ff'],
+  orange: ['#e07a3c', '#fff5ee'],
+  grey: ['#8a97b1', '#f4f7fe'],
+};
+
+const QUIZ_POOL = [
+  {
+    kind: '색_찾기', title: '우아핑의 색깔은?', answer: '하늘색',
+    options: [
+      opt('노랑색', ...C.yellow, '병아리처럼 밝고 환한 색이에요.', '노랑색 우산을 쓰고 나갔어요.'),
+      opt('보라색', ...C.purple, '포도처럼 진하고 신비로운 색이에요.', '보라색 꽃이 활짝 폈어요.'),
+      opt('하늘색', ...C.sky, '맑은 날 하늘처럼 시원한 색이에요.', '하늘색 크레파스로 바다를 그렸어요.'),
+      opt('핑크색', ...C.pink, '복숭아처럼 부드럽고 달콤한 색이에요.', '핑크색 리본을 머리에 달았어요.'),
+    ],
+  },
+  {
+    kind: '감정_추론', title: '친구가 넘어졌을 때 어떤 마음일까?', answer: '속상해요',
+    options: [
+      opt('속상해요', ...C.blue, '마음이 아프고 서운한 기분이에요.', '장난감이 부서져서 속상해요.'),
+      opt('신나요', ...C.yellow, '즐겁고 들뜬 기분이에요.', '소풍 가는 날이라 신나요.'),
+      opt('무서워요', ...C.purple, '겁이 나고 조마조마해요.', '천둥 소리가 무서워요.'),
+      opt('배고파요', ...C.orange, '먹고 싶은 마음이 들어요.', '점심시간이라 배고파요.'),
+    ],
+  },
+  {
+    kind: '반대말_찾기', title: "'크다'의 반대말은?", answer: '작다',
+    options: [
+      opt('작다', ...C.green, '크기가 크지 않아요.', '개미는 아주 작다.'),
+      opt('높다', ...C.blue, '위로 많이 올라가 있어요.', '산이 정말 높다.'),
+      opt('빠르다', ...C.pink, '움직임이 아주 빨라요.', '치타는 빠르다.'),
+      opt('무겁다', ...C.grey, '들기 힘들 만큼 무게가 나가요.', '가방이 무겁다.'),
+    ],
+  },
+  {
+    kind: '수량_확인', title: '화면에 사과가 몇 개 있을까?', answer: '3개',
+    options: [
+      opt('1개', ...C.yellow, '하나예요.', '사탕이 1개 남았어요.'),
+      opt('2개', ...C.green, '둘이에요.', '신발은 2개가 한 켤레예요.'),
+      opt('3개', ...C.pink, '셋이에요.', '풍선을 3개 들었어요.'),
+      opt('5개', ...C.blue, '다섯이에요.', '손가락은 한 손에 5개예요.'),
+    ],
+  },
+  {
+    kind: '사물_첫글자_찾기', title: "'바나나'는 어떤 글자로 시작할까?", answer: '바',
+    options: [
+      opt('바', ...C.yellow, "'바나나'의 첫 글자예요.", '바나나는 노랗다.'),
+      opt('가', ...C.green, "'가방'의 첫 글자예요.", '가방을 메고 갔어요.'),
+      opt('다', ...C.sky, "'다리'의 첫 글자예요.", '다리를 건넜어요.'),
+      opt('마', ...C.pink, "'마차'의 첫 글자예요.", '마차가 지나가요.'),
+    ],
+  },
+  {
+    kind: '같은_글자로_시작하는_낱말', title: "'구름'과 같은 글자로 시작하는 낱말은?", answer: '구두',
+    options: [
+      opt('구두', ...C.grey, '발에 신는 신발이에요.', '아빠가 구두를 신었어요.'),
+      opt('사과', ...C.pink, '빨갛고 달콤한 과일이에요.', '사과를 한 입 먹었어요.'),
+      opt('나무', ...C.green, '잎이 자라는 큰 식물이에요.', '나무 그늘에서 쉬었어요.'),
+      opt('바다', ...C.sky, '넓고 푸른 물이에요.', '바다에서 헤엄쳤어요.'),
+    ],
+  },
+  {
+    kind: '그림_속_대상_찾기', title: '화면에 있었던 것은?', answer: '풍선',
+    options: [
+      opt('풍선', ...C.pink, '바람을 넣어 둥글게 만든 놀잇감이에요.', '풍선이 하늘로 날아갔어요.'),
+      opt('자전거', ...C.blue, '두 바퀴로 타는 탈것이에요.', '자전거를 타고 공원에 갔어요.'),
+      opt('우산', ...C.purple, '비를 막아주는 물건이에요.', '비가 와서 우산을 폈어요.'),
+      opt('의자', ...C.orange, '앉을 때 쓰는 가구예요.', '의자에 앉아 밥을 먹었어요.'),
+    ],
+  },
+  {
+    kind: '그림과_낱말_연결', title: '이 그림의 이름은 무엇일까?', answer: '토끼',
+    options: [
+      opt('토끼', ...C.pink, '귀가 길고 깡충 뛰는 동물이에요.', '토끼가 당근을 먹어요.'),
+      opt('거북', ...C.green, '단단한 등딱지가 있는 동물이에요.', '거북이 천천히 걸어요.'),
+      opt('여우', ...C.orange, '꼬리가 복슬복슬한 동물이에요.', '여우가 숲으로 갔어요.'),
+      opt('오리', ...C.yellow, '물에서 헤엄치는 새예요.', '오리가 연못에서 헤엄쳐요.'),
+    ],
+  },
+  {
+    kind: '빠진_글자_완성', title: "호□이 - 빠진 글자는?", answer: '랑',
+    options: [
+      opt('랑', ...C.orange, "'호랑이'가 완성돼요.", '호랑이가 어흥 하고 울어요.'),
+      opt('두', ...C.grey, "'호두'가 되는 글자예요.", '호두를 깨서 먹었어요.'),
+      opt('수', ...C.sky, "'호수'가 되는 글자예요.", '호수에 오리가 있어요.'),
+      opt('박', ...C.green, "'호박'이 되는 글자예요.", '호박죽을 먹었어요.'),
+    ],
+  },
+  {
+    kind: '올바른_낱말_찾기', title: '바르게 쓴 낱말은?', answer: '깨끗이',
+    options: [
+      opt('깨끗이', ...C.sky, '먼지 없이 말끔하게라는 뜻이에요.', '손을 깨끗이 씻었어요.'),
+      opt('깨끄시', ...C.grey, '틀린 표기예요.', '바르게는 깨끗이라고 써요.'),
+      opt('깻끗이', ...C.grey, '틀린 표기예요.', '바르게는 깨끗이라고 써요.'),
+      opt('깨끗히', ...C.grey, '틀린 표기예요.', '바르게는 깨끗이라고 써요.'),
+    ],
+  },
+  {
+    kind: '두_낱말_합치기', title: "'꽃' + '병' 을 합치면?", answer: '꽃병',
+    options: [
+      opt('꽃병', ...C.pink, '꽃을 꽂아 두는 병이에요.', '꽃병에 장미를 꽂았어요.'),
+      opt('병꽃', ...C.grey, '거꾸로 붙인 말이에요.', '바른 말은 꽃병이에요.'),
+      opt('꽃집', ...C.green, '꽃을 파는 가게예요.', '꽃집에서 꽃을 샀어요.'),
+      opt('물병', ...C.sky, '물을 담는 병이에요.', '물병에 물을 채웠어요.'),
+    ],
+  },
+  {
+    kind: '흉내_내는_말_이해', title: '비가 내리는 소리는?', answer: '주룩주룩',
+    options: [
+      opt('주룩주룩', ...C.sky, '비가 세차게 내리는 소리예요.', '비가 주룩주룩 내려요.'),
+      opt('사각사각', ...C.green, '연필로 쓰는 소리예요.', '연필이 사각사각 소리를 내요.'),
+      opt('데굴데굴', ...C.orange, '공이 구르는 모습이에요.', '공이 데굴데굴 굴러가요.'),
+      opt('반짝반짝', ...C.yellow, '빛나는 모습이에요.', '별이 반짝반짝 빛나요.'),
+    ],
+  },
+  {
+    kind: '이야기_되새기기', title: '주인공이 하려던 일은?', answer: '친구 찾기',
+    options: [
+      opt('친구 찾기', ...C.blue, '잃어버린 친구를 찾는 일이에요.', '숲에서 친구를 찾았어요.'),
+      opt('밥 짓기', ...C.orange, '밥을 만드는 일이에요.', '엄마가 밥을 지었어요.'),
+      opt('그림 그리기', ...C.pink, '종이에 그림을 그리는 일이에요.', '바다를 그렸어요.'),
+      opt('잠자기', ...C.purple, '눈을 감고 쉬는 일이에요.', '일찍 잠자러 갔어요.'),
+    ],
+  },
+  {
+    kind: '원인과_결과', title: '우산을 쓴 까닭은?', answer: '비가 와서',
+    options: [
+      opt('비가 와서', ...C.sky, '비를 맞지 않으려고 우산을 써요.', '비가 와서 우산을 폈어요.'),
+      opt('배가 고파서', ...C.orange, '먹고 싶을 때 하는 말이에요.', '배가 고파서 밥을 먹었어요.'),
+      opt('졸려서', ...C.purple, '잠이 올 때 하는 말이에요.', '졸려서 하품이 나요.'),
+      opt('심심해서', ...C.grey, '할 일이 없을 때 하는 말이에요.', '심심해서 그림을 그렸어요.'),
+    ],
+  },
+  {
+    kind: '사건의_순서_파악', title: '가장 먼저 일어난 일은?', answer: '집을 나섰어요',
+    options: [
+      opt('집을 나섰어요', ...C.green, '밖으로 나가는 일이에요.', '아침에 집을 나섰어요.'),
+      opt('버스를 탔어요', ...C.blue, '버스에 오르는 일이에요.', '정류장에서 버스를 탔어요.'),
+      opt('학교에 왔어요', ...C.yellow, '학교에 도착한 일이에요.', '드디어 학교에 왔어요.'),
+      opt('밥을 먹었어요', ...C.orange, '음식을 먹는 일이에요.', '점심에 밥을 먹었어요.'),
+    ],
+  },
+  {
+    kind: '이야기_핵심_주제', title: '이 이야기가 알려주는 것은?', answer: '친구를 도와요',
+    options: [
+      opt('친구를 도와요', ...C.pink, '어려운 친구를 돕는 마음이에요.', '넘어진 친구를 도와줬어요.'),
+      opt('빨리 달려요', ...C.blue, '속도를 내는 일이에요.', '운동장을 빨리 달렸어요.'),
+      opt('혼자 놀아요', ...C.grey, '혼자서 노는 일이에요.', '방에서 혼자 놀았어요.'),
+      opt('많이 먹어요', ...C.orange, '음식을 많이 먹는 일이에요.', '밥을 많이 먹었어요.'),
+    ],
+  },
+].map((q) => ({ ...q, audioUrl: null }));
+
+// Which questions this episode asks. Ported from oneshot/plan_types.py: kinds the child gets
+// wrong come up more often, but only after enough attempts to tell a stumble from a pattern.
+const MIN_ATTEMPTS = 3;
+const MAX_BOOST = 2.0;
+
+function pickQuizzes(history, count) {
+  const attempts = {};
+  const wrong = {};
+  for (const h of history || []) {
+    attempts[h.kind] = (attempts[h.kind] || 0) + 1;
+    if (!h.correct) wrong[h.kind] = (wrong[h.kind] || 0) + 1;
+  }
+  const weightOf = (kind) => {
+    const n = attempts[kind] || 0;
+    if (n < MIN_ATTEMPTS) return 1;
+    return 1 + MAX_BOOST * ((wrong[kind] || 0) / n);
+  };
+
+  const remaining = QUIZ_POOL.map((q, i) => i);
+  const picks = [];
+  while (picks.length < count && remaining.length) {
+    const weights = remaining.map((i) => weightOf(QUIZ_POOL[i].kind));
+    const total = weights.reduce((a, b) => a + b, 0);
+    let roll = Math.random() * total;
+    let at = 0;
+    while (at < weights.length - 1 && roll > weights[at]) { roll -= weights[at]; at += 1; }
+    picks.push(remaining[at]);
+    remaining.splice(at, 1);
+  }
+  return picks;
+}
 
 // Button that dips slightly when pressed for tactile feedback.
 function TapScale({ style, onPress, children, activeScale = 0.94 }) {
@@ -252,10 +502,43 @@ export default function App() {
   const [guardianSettings, setGuardianSettings] = useState(DEFAULT_SETTINGS);
   // Until the saved profile is read back, onboarding must not flash on an returning child's tablet.
   const [restored, setRestored] = useState(false);
+
+  // Opening a video: ask the server for its activity plan and open a session to record against.
+  const startWatching = (video) => {
+    setPicks(pickQuizzes(quizHistory, 3));
+    setPlan([]);
+    sessionId.current = null;
+    if (video?.id) {
+      const bundled = OFFLINE_ACTIVITIES[video.id] || [];
+      setPlan(bundled);
+      api(`/videos/${video.id}`).then((v) => {
+        if (!v?.activities?.length) return;
+        const ours = bundled.filter((a) => a.type !== 'quiz');
+        setPlan([...v.activities, ...ours].sort((a, b) => (a.at_sec ?? a.at) - (b.at_sec ?? b.at)));
+      });
+      if (childId) {
+        api('/sessions', { method: 'POST', body: { child_id: childId, video_id: video.id } })
+          .then((res) => { sessionId.current = res?.id || null; });
+      }
+    }
+    setScreen('watch');
+  };
+  // A returning child still watches the intro; only the setup steps are skipped.
+  const [onboarded, setOnboarded] = useState(false);
+  const [introDone, setIntroDone] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [series, setSeries] = useState(LIBRARY[0].videos);
+  const [contentUp, setContentUp] = useState(false);
+  const [childId, setChildId] = useState(null);
+  const sessionId = useRef(null);
+  // Server-authored activity plan for the video being watched; empty means use the built-in one.
+  const [plan, setPlan] = useState([]);
+  const [quizHistory, setQuizHistory] = useState([]);
+  const [picks, setPicks] = useState([0, 1, 2]);
+  const [seekTo, setSeekTo] = useState(null);
   const [drawStrokes, setDrawStrokes] = useState([]);
   const [savedDrawing, setSavedDrawing] = useState(null);
+  const drawTopic = (selectedSeries && selectedSeries.topic) || SERIES_ART[selectedSeries?.id]?.topic || '내가 좋아하는 것';
   const [words, setWords] = useState([]);
   const [drawCanvasSize, setDrawCanvasSize] = useState({ width: 620, height: 380 });
   const [doodleStrokes, setDoodleStrokes] = useState([]);
@@ -265,7 +548,11 @@ export default function App() {
   const [characterError, setCharacterError] = useState('');
   const [quizDone, setQuizDone] = useState(false);
   const [log, setLog] = useState({ quiz: 0, drawing: 0, skip: 0 });
-  const [quizCorrectCount, setQuizCorrectCount] = useState(0);
+  const [quizCorrectCount, setQuizCorrectCount] = useState(__DEV__ ? 1000 : 0);
+  const [fedCount, setFedCount] = useState(0);
+  // Which question the child is answering, so the word book stores that question's options.
+  const quizAsked = useRef(0);
+  const lastQuiz = useRef(null);
   const [tab, setTab] = useState('library');
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [evolving, setEvolving] = useState(false);
@@ -282,8 +569,14 @@ export default function App() {
         const built = cats.map((c) => toSeries(c, base)).filter(Boolean);
         // Keep the built-in row when the server is unreachable or still empty.
         if (built.length) setSeries(built);
+        setContentUp(built.length > 0);
       })
-      .catch(() => {});
+      .catch(() => {
+        // No server: fall back to the library shipped with the app, playing the local video files.
+        const built = OFFLINE_LIBRARY.map((c) => toSeries(c, '')).filter(Boolean);
+        if (built.length) setSeries(built);
+        setContentUp(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -294,17 +587,25 @@ export default function App() {
         if (saved.profile) setChildProfile({ ...DEFAULT_PROFILE, ...saved.profile });
         if (saved.settings) setGuardianSettings({ ...DEFAULT_SETTINGS, ...saved.settings });
         if (saved.words) setWords(saved.words);
+        if (saved.childId) setChildId(saved.childId);
+        if (saved.quizHistory) setQuizHistory(saved.quizHistory);
         // Setup already done on this tablet: go straight to the child's screen.
-        if (saved.settings?.consent) setScreen('main');
+        if (saved.settings?.consent) setOnboarded(true);
       })
       .catch(() => {})
       .finally(() => setRestored(true));
   }, []);
 
   useEffect(() => {
+    // Waits for the saved profile, so a slow read never drops a returning child into onboarding.
+    if (!introDone || !restored) return;
+    setScreen(onboarded ? 'main' : 'welcome');
+  }, [introDone, restored, onboarded]);
+
+  useEffect(() => {
     if (!restored) return; // never write the defaults over a saved profile before it is read
-    AsyncStorage.setItem(STORE_KEY, JSON.stringify({ profile: childProfile, settings: guardianSettings, words })).catch(() => {});
-  }, [restored, childProfile, guardianSettings, words]);
+    AsyncStorage.setItem(STORE_KEY, JSON.stringify({ profile: childProfile, settings: guardianSettings, words, childId, quizHistory })).catch(() => {});
+  }, [restored, childProfile, guardianSettings, words, childId, quizHistory]);
 
   // The tablet's own back gesture should walk the app back, not drop the child out of it.
   useEffect(() => {
@@ -328,32 +629,53 @@ export default function App() {
     return () => sub.remove();
   }, [screen]);
 
-  const runGeneration = async (strokes, canvasSize) => {
+  const CHARACTER_API = 'https://storydot-character.falai.workers.dev/generate-character';
+
+  const strokesToPng = (strokes, canvasSize) => {
+    const w = Math.max(1, Math.round(canvasSize.width));
+    const h = Math.max(1, Math.round(canvasSize.height));
+    const surface = Skia.Surface.MakeOffscreen(w, h);
+    if (!surface) return null;
+    const canvas = surface.getCanvas();
+    canvas.clear(Skia.Color('#ffffff'));
+    for (const stroke of strokes) {
+      const pts = stroke.points || stroke;
+      if (!pts || pts.length < 2) continue;
+      const path = Skia.Path.Make();
+      pts.forEach((q, i) => (i ? path.lineTo(q.x, q.y) : path.moveTo(q.x, q.y)));
+      const paint = Skia.Paint();
+      paint.setColor(Skia.Color(stroke.color || '#111111'));
+      paint.setStyle(1); // stroke
+      paint.setStrokeWidth(stroke.thickness || 8);
+      paint.setStrokeCap(1); // round
+      paint.setStrokeJoin(1);
+      paint.setAntiAlias(true);
+      canvas.drawPath(path, paint);
+    }
+    return surface.makeImageSnapshot().encodeToBase64();
+  };
+
+  const runGeneration = async (strokes, canvasSize, topic) => {
     setCharacterError('');
     setCharacterStatus('loading');
     try {
       if (!strokes || !strokes.length) {
         throw new Error('먼저 그림을 그려주세요.');
       }
-      // Real device needs the Mac's LAN IP. Take it from the dev server we are already
-      // bundling from, so a changed wifi/IP never silently points at a dead host again.
-      const hostUri = Constants.expoConfig?.hostUri || '';
-      const host = Platform.OS === 'android' ? hostUri.split(':')[0] || 'localhost' : 'localhost';
+      const imageBase64 = strokesToPng(strokes, canvasSize);
+      if (!imageBase64) {
+        throw new Error('그림을 이미지로 만들지 못했어요.');
+      }
       // Without this the fetch hangs forever on an unreachable host and the screen looks frozen.
       const abort = new AbortController();
       const timeout = setTimeout(() => abort.abort(), 90000);
       let response;
       try {
-        response = await fetch(`http://${host}:5055/generate-character`, {
+        response = await fetch(CHARACTER_API, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           signal: abort.signal,
-          body: JSON.stringify({
-            source: 'drawn-in-app',
-            strokes,
-            canvasWidth: canvasSize.width,
-            canvasHeight: canvasSize.height,
-          }),
+          body: JSON.stringify({ imageBase64, topic }),
         });
       } finally {
         clearTimeout(timeout);
@@ -424,7 +746,7 @@ export default function App() {
             />
           )}
           <ScreenFade screenKey={screen}>
-          {screen === 'intro' && <IntroScreen onDone={() => setScreen('welcome')} logo={<StaryLogo size={54} />} />}
+          {screen === 'intro' && <IntroScreen onDone={() => setIntroDone(true)} logo={<StaryLogo size={54} textColor="#ffffff" />} />}
           {screen === 'welcome' && <OnboardIntroScreen onNext={() => setScreen('profile')} />}
           {screen === 'profile' && (
             <ChildProfileScreen profile={childProfile} onChange={setChildProfile} onNext={() => setScreen('guardian')} />
@@ -434,7 +756,18 @@ export default function App() {
               settings={guardianSettings}
               onChange={setGuardianSettings}
               onBack={() => setScreen('profile')}
-              onDone={() => setScreen('main')}
+              onDone={() => {
+                const months = ageInMonths(childProfile.birth);
+                api('/children', {
+                  method: 'POST',
+                  body: {
+                    name: childProfile.name || '친구',
+                    age: months == null ? 5 : Math.floor(months / 12),
+                    daily_limit_min: guardianSettings.dailyLimit,
+                  },
+                }).then((res) => res?.id && setChildId(res.id));
+                setScreen('main');
+              }}
             />
           )}
           {screen === 'main' && (
@@ -444,6 +777,18 @@ export default function App() {
               onStart={(v) => { setSelectedSeries(v || null); setScreen('home'); }}
               onMenu={(key) => { setSelectedSeries(null); setTab(key); setScreen('home'); }}
               onJump={(key) => { if (key === 'detail' || key === 'watch') setSelectedVideo(series[0]?.episodes?.[0] || LIBRARY[1].videos[0]); setScreen(key); }}
+              contentUp={contentUp}
+              onReset={() => {
+                AsyncStorage.removeItem(STORE_KEY).catch(() => {});
+                setChildProfile(DEFAULT_PROFILE);
+                setGuardianSettings(DEFAULT_SETTINGS);
+                setWords([]);
+                setFedCount(0);
+                setQuizCorrectCount(__DEV__ ? 1000 : 0);
+                setOnboarded(false);
+                setIntroDone(false);
+                setScreen('intro');
+              }}
             />
           )}
           {screen === 'home' && selectedSeries && (
@@ -461,11 +806,22 @@ export default function App() {
               tab={tab}
               onTab={setTab}
               onBack={() => setScreen('main')}
+              onJumpMoment={(videoId, at) => {
+                const all = series.flatMap((c) => c.episodes || []);
+                const video = all.find((v) => v.id === videoId) || all[0];
+                setSelectedVideo(video || null);
+                setSeekTo(Math.max(0, at - 4));
+                startWatching(video);
+              }}
               settings={guardianSettings}
               onSettings={setGuardianSettings}
               words={words}
+              report={report}
+              feed={quizCorrectCount}
+              fed={fedCount}
+              onFeed={() => setFedCount((n) => n + 1)}
               onEditProfile={() => setScreen('profile')}
-              onStart={(v) => { setSelectedVideo(v || null); setScreen('watch'); }}
+              onStart={(v) => { setSelectedVideo(v || null); startWatching(v); }}
             />
           )}
           {screen === 'detail' && selectedVideo && (
@@ -473,20 +829,22 @@ export default function App() {
               video={selectedVideo}
               series={selectedSeries}
               onClose={() => setScreen('home')}
-              onStart={() => setScreen('watch')}
+              onStart={() => startWatching(selectedVideo)}
             />
           )}
           {screen === 'watch' && (
             <WatchScreen
               source={selectedVideo?.source}
               quizDone={quizDone}
+              onQuizAsk={(i, asked) => { quizAsked.current = i; lastQuiz.current = asked || null; }}
               onQuizCorrect={() => {
                 setQuizDone(true);
                 setWords((prev) => {
                   const seen = new Set(prev.map((w) => w.word));
-                  const fresh = quiz.options
+                  const q = lastQuiz.current || QUIZ_POOL[quizAsked.current] || QUIZ_POOL[0];
+                  const fresh = q.options
                     .filter((o) => !seen.has(o.label))
-                    .map((o) => ({ word: o.label, meaning: o.meaning, example: o.example, color: o.color, answer: o.label === quiz.answer }));
+                    .map((o) => ({ word: o.label, meaning: o.meaning || '', example: o.example || '', color: o.color, answer: o.label === q.answer }));
                   return [...fresh, ...prev];
                 });
                 setLog((prev) => ({ ...prev, quiz: Math.max(prev.quiz, 1) }));
@@ -498,6 +856,18 @@ export default function App() {
                 });
               }}
               onQuizSkip={() => setLog((prev) => ({ ...prev, skip: prev.skip + 1 }))}
+              plan={plan}
+              picks={picks}
+              seekTo={seekTo}
+              onResult={(activityId, result, kind) => {
+                if (kind) setQuizHistory((prev) => [...prev.slice(-99), { kind, correct: result === 'correct' }]);
+                if (!sessionId.current || !activityId) return;
+                api('/activity-results', { method: 'POST', body: { session_id: sessionId.current, activity_id: activityId, result } });
+              }}
+              onWatched={(sec) => {
+                if (!sessionId.current) return;
+                api(`/sessions/${sessionId.current}`, { method: 'PATCH', body: { watched_sec: sec } });
+              }}
               onFinish={() => setScreen('activities')}
               onBack={() => setScreen('home')}
               onHome={() => setScreen('main')}
@@ -513,13 +883,14 @@ export default function App() {
           )}
           {screen === 'drawing' && (
             <DrawingScreen
+              topic={drawTopic}
               strokes={drawStrokes}
               status={characterStatus}
               error={characterError}
               characterImage={characterImage}
               onChangeStrokes={setDrawStrokes}
               onCanvasSize={setDrawCanvasSize}
-              onConvert={() => runGeneration(drawStrokes, drawCanvasSize)}
+              onConvert={() => runGeneration(drawStrokes, drawCanvasSize, drawTopic)}
               onSave={() => { setSavedDrawing({ strokes: drawStrokes, size: drawCanvasSize }); completeDrawing(); }}
               onDone={completeDrawing}
               onSkip={() => {
@@ -543,7 +914,7 @@ export default function App() {
               characterImage={characterImage}
               savedDrawing={savedDrawing}
               onReplay={() => setScreen('watch')}
-              onOtherVideos={() => { setSelectedSeries(null); setTab('library'); setScreen('home'); }}
+              onOtherVideos={() => { setSelectedSeries(null); setTab('library'); setScreen('main'); }}
               onCharacter={() => { setSelectedSeries(null); setTab('character'); setScreen('home'); }}
             />
           )}
@@ -559,12 +930,12 @@ export default function App() {
 // Distance from a Text box's top edge down to the cap line, as a share of font size.
 const CAP_TOP_RATIO = -0.11;
 
-// Wordmark: "Stary" with a ringed star riding as a superscript — ring and star share the brand cyan.
+// Wordmark: "Story" with a ringed star riding as a superscript — ring and star share the brand blue.
 function StaryLogo({ size = 26, color = '#609EF5', textColor = TEXT_ON_DARK }) {
   const mark = size * 0.5;
   return (
     <View style={styles.logoRow}>
-      <Text style={[styles.logoWord, { fontSize: size, color: textColor }]}>Stary</Text>
+      <Text style={[styles.logoWord, { fontSize: size, color: textColor }]}>Story</Text>
       <Text style={[styles.logoWord, { fontSize: size, color, marginLeft: size * 0.16 }]}>Dot</Text>
       <Svg width={mark} height={mark} viewBox="0 0 32 32" // The text box starts above the cap line, so nudge the mark down to sit level with the S.
         style={{ marginLeft: size * 0.06, marginTop: size * CAP_TOP_RATIO }}>
@@ -583,7 +954,7 @@ function TabletHeader({ rightLabel, onHome, onReport, onTab }) {
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={onHome}>
-        <StaryLogo size={30} />
+        <StaryLogo size={20} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.headerMenu} onPress={() => (onTab ? setOpen((v) => !v) : onReport())} accessibilityLabel={rightLabel}>
         <View style={styles.headerMenuLine} />
@@ -619,6 +990,7 @@ function TabletHeader({ rightLabel, onHome, onReport, onTab }) {
 
 const TABS = [
   { key: 'library', label: '영상', icon: '▶' },
+  { key: 'parent', label: '부모 리포트', icon: '▤' },
   { key: 'character', label: '캐릭터', icon: '★' },
   { key: 'words', label: '단어장', icon: '가' },
   { key: 'settings', label: '설정', icon: '⚙' },
@@ -659,14 +1031,14 @@ function CardSheen({ color }) {
   return (
     <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
       <Defs>
-        <LinearGradient id="sheen" x1="0" y1="0" x2="0.35" y2="1">
-          <Stop offset="0" stopColor="#ffffff" stopOpacity="0.28" />
-          <Stop offset="0.55" stopColor="#ffffff" stopOpacity="0.06" />
-          <Stop offset="1" stopColor="#000000" stopOpacity="0.12" />
+        <LinearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">
+          <Stop offset="0" stopColor="#ffffff" stopOpacity="0" />
+          <Stop offset="0.5" stopColor="#ffffff" stopOpacity="0.12" />
+          <Stop offset="1" stopColor="#ffffff" stopOpacity="0.45" />
         </LinearGradient>
-        <LinearGradient id={rim} x1="0" y1="0" x2="0.4" y2="1">
-          <Stop offset="0" stopColor={lighten(color, 0.75)} />
-          <Stop offset="1" stopColor={lighten(color, 0.15)} />
+        <LinearGradient id={rim} x1="0" y1="0" x2="1" y2="1">
+          <Stop offset="0" stopColor={color} />
+          <Stop offset="1" stopColor={lighten(color, 0.8)} />
         </LinearGradient>
       </Defs>
       <Rect x="0" y="0" width="100%" height="100%" rx={CARD_RADIUS} fill="url(#sheen)" />
@@ -703,6 +1075,7 @@ const STAR_BUDDY = require('./assets/characters/star-buddy.png');
 
 const BUDDY_MENU = [
   { key: 'character', label: '캐릭터', icon: '★' },
+  { key: 'parent', label: '부모 리포트', icon: '▤' },
   { key: 'words', label: '단어장', icon: '가' },
   { key: 'settings', label: '설정', icon: '⚙' },
 ];
@@ -739,8 +1112,8 @@ function StarBuddy({ onPress }) {
         source={STAR_BUDDY}
         resizeMode="contain"
         style={{
-          width: 128,
-          height: 128,
+          width: 190,
+          height: 190,
           transform: [
             { translateY: float.interpolate({ inputRange: [0, 1], outputRange: [0, -10] }) },
             { rotate: float.interpolate({ inputRange: [0, 1], outputRange: ['-4deg', '4deg'] }) },
@@ -769,7 +1142,14 @@ const DEBUG_SCREENS = [
   ['report', '활동 리포트'],
 ];
 
-function DebugJump({ onJump }) {
+const DEBUG_TABS = [
+  ['quizdebug', '문제 목록'],
+  ['character', '캐릭터'],
+  ['words', '단어장'],
+  ['settings', '설정'],
+];
+
+function DebugJump({ onJump, onTab, onReset, contentUp }) {
   const [open, setOpen] = useState(false);
   if (!__DEV__) return null;
   return (
@@ -778,19 +1158,45 @@ function DebugJump({ onJump }) {
         <Text style={styles.debugBtnText}>{open ? '✕' : '⚙'}</Text>
       </TouchableOpacity>
       {open ? (
-        <View style={styles.debugList}>
-          {DEBUG_SCREENS.map(([key, label]) => (
-            <TouchableOpacity key={key} style={styles.debugItem} onPress={() => { setOpen(false); onJump(key); }}>
-              <Text style={styles.debugItemText}>{label}</Text>
+        <>
+          <Pressable style={styles.debugBackdrop} onPress={() => setOpen(false)} />
+          <View style={styles.debugPanel}>
+            {/* Whether the content server answered tells us at a glance why the library is empty. */}
+            <View style={styles.debugStatus}>
+              <View style={[styles.debugDot, { backgroundColor: contentUp ? '#2fa96b' : '#e5484d' }]} />
+              <Text style={styles.debugStatusText}>콘텐츠 서버 {contentUp ? '연결됨' : '끊김'}</Text>
+            </View>
+
+            <Text style={styles.debugGroup}>화면</Text>
+            <View style={styles.debugChips}>
+              {DEBUG_SCREENS.map(([key, label]) => (
+                <TouchableOpacity key={key} style={styles.debugChip} onPress={() => { setOpen(false); onJump(key); }}>
+                  <Text style={styles.debugChipText}>{label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <Text style={styles.debugGroup}>탭</Text>
+            <View style={styles.debugChips}>
+              {DEBUG_TABS.map(([key, label]) => (
+                <TouchableOpacity key={key} style={styles.debugChip} onPress={() => { setOpen(false); onTab(key); }}>
+                  <Text style={styles.debugChipText}>{label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <Text style={styles.debugGroup}>데이터</Text>
+            <TouchableOpacity style={[styles.debugChip, styles.debugDanger]} onPress={() => { setOpen(false); onReset(); }}>
+              <Text style={styles.debugDangerText}>저장 데이터 지우고 온보딩부터</Text>
             </TouchableOpacity>
-          ))}
-        </View>
+          </View>
+        </>
       ) : null}
     </View>
   );
 }
 
-function MainScreen({ series, profile, onStart, onMenu, onJump }) {
+function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, contentUp }) {
   const win = useWindowDimensions();
   const [menuOpen, setMenuOpen] = useState(false);
   const bubble = useRef(new Animated.Value(0)).current;
@@ -830,7 +1236,7 @@ function MainScreen({ series, profile, onStart, onMenu, onJump }) {
 
   return (
     <View style={styles.mainScreen}>
-      <DebugJump onJump={onJump} />
+      <DebugJump onJump={onJump} onTab={onMenu} onReset={onReset} contentUp={contentUp} />
       {/* Whose tablet this is: the child's own photo and name, top-left. */}
       <View style={styles.mainWho}>
         {profile.photo ? (
@@ -952,6 +1358,7 @@ function VideoDetailScreen({ video, series, onClose, onStart }) {
       </TouchableOpacity>
 
       <View style={styles.detailThumb}>
+        <GradientRim radius={24} width={6} />
         {/* Until per-video stills exist, frames pulled from the demo video stand in. */}
         <Image source={video.still || THUMBS[0]} style={styles.detailThumbImg} resizeMode="cover" />
         {/* Absolute overlay, so the button centres on the still instead of being pushed below it. */}
@@ -1025,12 +1432,12 @@ function SeriesScreen({ series, onBack, onStart }) {
   const episodeW = Math.floor((win.width - 48 - SERIES_HERO_W - 24 - 32) / 3);
   const episodes = series.episodes || [];
   return (
-    <View style={[styles.seriesScreen, { backgroundColor: series.tint || '#f5f8ff' }]}>
+    <View style={styles.seriesScreen}>
       <View style={styles.seriesHeader}>
         <TouchableOpacity style={styles.seriesBack} onPress={onBack}>
           <Text style={styles.seriesBackText}>← 뒤로</Text>
         </TouchableOpacity>
-        <Text style={[styles.seriesTitle, { color: series.accent || BG }]}>{series.title}</Text>
+        <Text style={styles.seriesTitle}>{series.title}</Text>
         <Text style={styles.seriesCount}>동영상 {episodes.length}개</Text>
       </View>
 
@@ -1073,6 +1480,903 @@ function SeriesScreen({ series, onBack, onStart }) {
         </View>
       </View>
     </View>
+  );
+}
+
+// The child's own star: quizzes earn food, feeding it makes the star grow.
+// One candy is one percent, and the star changes shape at each checkpoint.
+const GROWTH_CHECKPOINTS = [0, 50, 100];
+const GROWTH_PER_CANDY = 20;
+
+// Backdrops the child can switch between; drawn as a gradient so no art has to ship.
+const SCENES = [
+  { id: 'space', label: '우주', sky: '#0d1b3e', ground: '#1b2f63', image: require('./assets/scenes/space.png') },
+  { id: 'sky', label: '하늘', sky: '#7cc4f5', ground: '#d9eeff', image: require('./assets/scenes/sky.png') },
+  { id: 'sea', label: '바다', sky: '#0a4f7a', ground: '#23a6c9', image: require('./assets/scenes/sea.png') },
+  { id: 'forest', label: '숲', sky: '#1f5c3a', ground: '#69b06a', image: require('./assets/scenes/forest.png') },
+];
+
+// Fixed sprinkle, so the sky does not reshuffle on every render.
+const CANDY_ICON = require('./assets/scenes/candy.png');
+const CLOSET_ICON = require('./assets/scenes/closet.png');
+
+const STAR_FIELD = Array.from({ length: 46 }, (_, i) => ({
+  x: (i * 37) % 100,
+  y: (i * 61) % 70,
+  r: 1 + ((i * 7) % 3) * 0.7,
+  o: 0.4 + ((i * 13) % 5) * 0.12,
+}));
+
+// The star the child starts with, and the two it can become once the bar is full.
+const STAGE1_ART = require('./assets/characters/stage1.png');
+const EVOLUTIONS = [
+  { id: 'dino', label: '아기 공룡', art: require('./assets/characters/stage2-dino.png'), grown: require('./assets/characters/stage3-dino.png') },
+  { id: 'bunny', label: '아기 토끼', art: require('./assets/characters/stage2-bunny.png'), grown: require('./assets/characters/stage3-bunny.png') },
+];
+
+// Two full bars: the first picks a path, the second grows that path up.
+const FULL_BAR = 100;
+
+const SPARKS = Array.from({ length: 10 }, (_, i) => ({
+  angle: (i / 10) * Math.PI * 2,
+  delay: i * 45,
+}));
+
+// The star glows harder as it fills, flashes when a form is chosen, and the new character springs
+// out of the light. Everything runs on the UI thread so it stays smooth while the panel re-renders.
+// Idle float lives outside React: nothing that happens in a render can restart it, so the star
+// keeps drifting on its own clock however often the panel re-renders.
+const IDLE = makeMutable(0);
+let idleStarted = false;
+
+const StarStage = React.memo(function StarStage({ art, ready, evolved, feedTick = 0, tapTick = 0 }) {
+  const pulse = useSharedValue(0);
+  const flash = useSharedValue(0);
+  const pop = useSharedValue(1);
+  const burst = useSharedValue(0);
+  const nibble = useSharedValue(0);
+  const hop = useSharedValue(0);
+  const idle = IDLE;
+
+  useEffect(() => {
+    if (idleStarted) return;
+    idleStarted = true;
+    IDLE.value = withRepeat(withTiming(1, { duration: 1700 }), -1, true);
+  }, []);
+
+  useEffect(() => {
+    if (ready && !evolved) {
+      pulse.value = withRepeat(withTiming(1, { duration: 900 }), -1, true);
+    } else {
+      pulse.value = withTiming(0, { duration: 500 });
+    }
+  }, [ready, evolved]);
+
+  // A quick squash on every candy: feedback that lands on the star, not a number floating away.
+  useEffect(() => {
+    if (!feedTick) return;
+    nibble.value = withSequence(
+      withTiming(1, { duration: 130 }),
+      withSpring(0, { damping: 8, stiffness: 180 })
+    );
+  }, [feedTick]);
+
+  // Poke the star and it hops — the reward for touching it at all.
+  useEffect(() => {
+    if (!tapTick) return;
+    hop.value = withSequence(
+      withTiming(1, { duration: 170 }),
+      withSpring(0, { damping: 7, stiffness: 150 })
+    );
+  }, [tapTick]);
+
+  useEffect(() => {
+    if (!evolved) return;
+    // Flash white, throw sparks, then let the new shape settle.
+    flash.value = withSequence(withTiming(1, { duration: 160 }), withTiming(0, { duration: 620 }));
+    burst.value = withSequence(withTiming(1, { duration: 620 }), withTiming(0, { duration: 0 }));
+    pop.value = withSequence(
+      withTiming(0.35, { duration: 0 }),
+      withDelay(140, withSpring(1.12, { damping: 7, stiffness: 130 })),
+      withSpring(1, { damping: 12, stiffness: 140 })
+    );
+  }, [evolved]);
+
+  const glowStyle = useAnimatedStyle(() => ({
+    opacity: Math.max(0.35 + pulse.value * 0.5, flash.value),
+    transform: [{ scale: 0.85 + pulse.value * 0.22 + flash.value * 0.5 }],
+  }));
+
+  // One clean ring travelling outward at the moment of change.
+  const ringStyle = useAnimatedStyle(() => ({
+    opacity: burst.value > 0 ? (1 - burst.value) * 0.8 : 0,
+    transform: [{ scale: 0.5 + burst.value * 1.6 }],
+  }));
+
+  const artStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: -10 * idle.value - 34 * hop.value },
+      { rotate: `${-2.5 + idle.value * 5 + hop.value * 6}deg` },
+      { scaleX: pop.value * (1 + idle.value * 0.02) * (1 + nibble.value * 0.14) * (1 - hop.value * 0.06) },
+      { scaleY: pop.value * (1 + idle.value * 0.02) * (1 - nibble.value * 0.1) * (1 + hop.value * 0.08) },
+    ],
+    opacity: 1 - flash.value * 0.65,
+  }));
+
+  return (
+    <View style={styles.starWrap}>
+      {/* Soft halo: a radial gradient, not a flat white disc — a hard circle reads as cheap. */}
+      <Rea.View pointerEvents="none" style={[styles.starGlow, glowStyle]}>
+        <Svg width={360} height={360}>
+          <Defs>
+            <RadialGradient id="halo" cx="50%" cy="50%" r="50%">
+              <Stop offset="0" stopColor="#ffffff" stopOpacity="0.95" />
+              <Stop offset="0.45" stopColor="#cfe4ff" stopOpacity="0.45" />
+              <Stop offset="1" stopColor="#8bb8ff" stopOpacity="0" />
+            </RadialGradient>
+          </Defs>
+          <Circle cx={180} cy={180} r={180} fill="url(#halo)" />
+        </Svg>
+      </Rea.View>
+      <Rea.View pointerEvents="none" style={[styles.starRing, ringStyle]} />
+      {SPARKS.map((sp, i) => (
+        <Spark key={i} spark={sp} burst={burst} />
+      ))}
+      <Rea.View style={artStyle}>
+        <Image source={art} style={styles.starArt} resizeMode="contain" />
+      </Rea.View>
+    </View>
+  );
+});
+
+function Spark({ spark, burst }) {
+  const style = useAnimatedStyle(() => {
+    const t = burst.value;
+    const distance = 60 + t * 130;
+    return {
+      opacity: t > 0 ? 1 - t : 0,
+      transform: [
+        { translateX: Math.cos(spark.angle) * distance },
+        { translateY: Math.sin(spark.angle) * distance },
+        { scale: 0.4 + (1 - t) * 0.9 },
+      ],
+    };
+  });
+  return <Rea.View pointerEvents="none" style={[styles.spark, style]} />;
+}
+
+// How much speed a thrown star keeps off a wall, and how fast it coasts to a stop.
+const WALL_BOUNCE = 0.5;
+const FLING_FRICTION = 0.94;
+
+// How long the star waits before dozing off, and how close a candy has to land to be eaten.
+const SLEEP_AFTER_MS = 12000;
+const FEED_REACH = 150;
+
+// One heart from a stroke: floats up out of the star's fur and fades.
+function Heart({ dx, dy }) {
+  const rise = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(rise, { toValue: 1, duration: 900, useNativeDriver: true }).start();
+  }, []);
+  return (
+    <Animated.Text
+      pointerEvents="none"
+      style={[
+        styles.strokeHeart,
+        {
+          left: 115 + dx,
+          top: 120 + dy,
+          opacity: rise.interpolate({ inputRange: [0, 0.2, 1], outputRange: [0, 1, 0] }),
+          transform: [{ translateY: rise.interpolate({ inputRange: [0, 1], outputRange: [0, -70] }) }],
+        },
+      ]}
+    >
+      ♥
+    </Animated.Text>
+  );
+}
+
+function CharacterScreen({ profile, food, fed, onFeed }) {
+  const [scene, setScene] = useState('space');
+  const [panel, setPanel] = useState(false);
+  const [evolved, setEvolved] = useState(null);
+  const [evolvedAt, setEvolvedAt] = useState(null);
+  const current = SCENES.find((sc) => sc.id === scene) || SCENES[0];
+  const total = fed * GROWTH_PER_CANDY;
+  const chosenAt = evolvedAt ?? 0;
+  // Before choosing, the bar fills to 100; after, it starts again from the moment of the choice.
+  const percent = evolved ? Math.min(FULL_BAR, total - chosenAt) : Math.min(FULL_BAR, total);
+  const grownUp = evolved && percent >= FULL_BAR;
+  const stage = evolved ? (grownUp ? 3 : 2) : 1;
+
+  // The star can be dragged anywhere on its stage and stays where the child drops it.
+  const pos = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  // Limits live in a ref: a new gesture object would remount the star and restart its idle bounce.
+  const limit = useRef({ x: 0, y: 0 });
+  const STAR_SIZE = 230;
+  // Offset-based drag: each move is measured from where the finger went down, so nothing drifts.
+  const [tapTick, setTapTick] = useState(0);
+
+  // Left alone the star dozes off; any touch wakes it up again.
+  const [asleep, setAsleep] = useState(false);
+  const sleepTimer = useRef(null);
+  const wake = () => {
+    setAsleep(false);
+    if (sleepTimer.current) clearTimeout(sleepTimer.current);
+    sleepTimer.current = setTimeout(() => setAsleep(true), SLEEP_AFTER_MS);
+  };
+  useEffect(() => {
+    wake();
+    return () => sleepTimer.current && clearTimeout(sleepTimer.current);
+  }, []);
+
+  // Stroking leaves a short trail of hearts behind the finger.
+  const [hearts, setHearts] = useState([]);
+  const heartId = useRef(0);
+  const strokeRun = useRef(0);
+  const dropHeart = () => {
+    const id = (heartId.current += 1);
+    setHearts((hs) => [...hs.slice(-4), { id, dx: (Math.random() - 0.5) * 110, dy: (Math.random() - 0.5) * 70 }]);
+    setTimeout(() => setHearts((hs) => hs.filter((h) => h.id !== id)), 900);
+  };
+
+  // Where the stage and the candy button sit, so a dropped candy can be matched to the star.
+  const stageSize = useRef({ w: 0, h: 0 });
+  const dockBox = useRef({ x: 0, y: 0 });
+  const candyBox = useRef({ x: 0, y: 0, w: 66, h: 66 });
+  const candyPos = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+
+
+  // Let go mid-swing and the star keeps flying, bouncing off the edges of its stage until it
+  // runs out of speed. Animated.decay cannot bounce, so the throw is stepped by hand.
+  const fling = useRef(null);
+  const stopFling = () => {
+    if (fling.current) cancelAnimationFrame(fling.current);
+    fling.current = null;
+  };
+  useEffect(() => stopFling, []);
+
+  const throwStar = (vx, vy) => {
+    let x = pos.x.__getValue();
+    let y = pos.y.__getValue();
+    let last = null;
+    const step = (now) => {
+      if (last === null) last = now;
+      const dt = Math.min(0.032, (now - last) / 1000);
+      last = now;
+      x += vx * dt;
+      y += vy * dt;
+      const { x: lx, y: ly } = limit.current;
+      let hit = 0;
+      if (x > lx || x < -lx) {
+        x = x > 0 ? lx : -lx;
+        hit = Math.abs(vx);
+        vx = -vx * WALL_BOUNCE;
+      }
+      if (y > ly || y < -ly) {
+        y = y > 0 ? ly : -ly;
+        hit = Math.max(hit, Math.abs(vy));
+        vy = -vy * WALL_BOUNCE;
+      }
+      if (hit > 400) playSound('pop');
+      const damp = Math.pow(FLING_FRICTION, dt * 60);
+      vx *= damp;
+      vy *= damp;
+      pos.setValue({ x, y });
+      fling.current = Math.hypot(vx, vy) > 40 ? requestAnimationFrame(step) : null;
+    };
+    fling.current = requestAnimationFrame(step);
+  };
+
+  const drag = useMemo(
+    () =>
+      Gesture.Pan()
+        .runOnJS(true)
+        .onBegin(() => {
+          stopFling();
+          pos.extractOffset();
+          strokeRun.current = 0;
+          wake();
+        })
+        .onUpdate((e) => {
+          pos.setValue({ x: e.translationX, y: e.translationY });
+          strokeRun.current += Math.abs(e.changeX || 0) + Math.abs(e.changeY || 0);
+          if (strokeRun.current > 70) {
+            strokeRun.current = 0;
+            dropHeart();
+          }
+        })
+        .onEnd((e) => {
+          pos.flattenOffset();
+          const clamp = (v, max) => Math.max(-max, Math.min(max, v));
+          pos.setValue({
+            x: clamp(pos.x.__getValue(), limit.current.x),
+            y: clamp(pos.y.__getValue(), limit.current.y),
+          });
+          if (Math.hypot(e.velocityX, e.velocityY) > 200) throwStar(e.velocityX * 0.7, e.velocityY * 0.7);
+        }),
+    []
+  );
+
+  // Two fingers resize the character; the pan keeps working at the same time.
+  const scale = useRef(new Animated.Value(1)).current;
+  const baseScale = useRef(1);
+  const pinch = useMemo(
+    () =>
+      Gesture.Pinch()
+        .runOnJS(true)
+        .simultaneousWithExternalGesture(drag)
+        .onUpdate((e) => {
+          scale.setValue(Math.max(0.2, Math.min(3, baseScale.current * e.scale)));
+        })
+        .onEnd(() => {
+          baseScale.current = scale.__getValue();
+        }),
+    [drag]
+  );
+
+  const full = percent >= FULL_BAR;
+  const chosen = EVOLUTIONS.find((e) => e.id === evolved);
+
+  // Rebuilt only when the character itself changes — never when candy or scene state moves.
+  // No memo here: re-creating this element remounts the star and restarts its float — that is the
+  // tick. The gesture object is already stable, so plain rendering is safe.
+
+
+
+  // Every feed floats a "+1" above the star, then clears itself.
+  // Tapping fast used to stack separate "+1" badges on top of each other. One badge that counts
+  // up, and keeps its own timer, reads like the star swallowing a handful of candy.
+  const [combo, setCombo] = useState(0);
+  const comboFade = useRef(new Animated.Value(0)).current;
+  const comboTimer = useRef(null);
+  const [feedTick, setFeedTick] = useState(0);
+
+  const feedStar = () => {
+    if (food <= 0) return;
+    wake();
+    playSound('pop');
+    onFeed();
+    setFeedTick((n) => n + 1);
+    setCombo((n) => n + 1);
+    comboFade.stopAnimation();
+    comboFade.setValue(1);
+    if (comboTimer.current) clearTimeout(comboTimer.current);
+    comboTimer.current = setTimeout(() => {
+      Animated.timing(comboFade, { toValue: 0, duration: 400, useNativeDriver: true }).start(() => setCombo(0));
+    }, 700);
+  };
+
+  useEffect(() => () => comboTimer.current && clearTimeout(comboTimer.current), []);
+
+  // Carrying a candy to the star feeds it; the gesture reads the latest feedStar through a ref
+  // so the candy count it checks is never a stale one.
+  const feedRef = useRef(feedStar);
+  feedRef.current = feedStar;
+  const candyDrag = useMemo(
+    () =>
+      Gesture.Pan()
+        .runOnJS(true)
+        .onUpdate((ev) => {
+          candyPos.setValue({ x: ev.translationX, y: ev.translationY });
+        })
+        .onEnd((ev) => {
+          const cx = dockBox.current.x + candyBox.current.x + candyBox.current.w / 2 + ev.translationX;
+          const cy = dockBox.current.y + candyBox.current.y + candyBox.current.h / 2 + ev.translationY;
+          const sx = stageSize.current.w / 2 + pos.x.__getValue();
+          const sy = stageSize.current.h / 2 + pos.y.__getValue();
+          if (Math.hypot(cx - sx, cy - sy) < FEED_REACH) feedRef.current();
+          Animated.spring(candyPos, { toValue: { x: 0, y: 0 }, useNativeDriver: true, friction: 7 }).start();
+        }),
+    []
+  );
+
+  const stageBlock = (
+    <GestureDetector gesture={drag}>
+      <Animated.View style={{ transform: [...pos.getTranslateTransform(), { scale }] }}>
+        {/* Pan claims the touch before a Tap gesture can settle, so a Pressable catches the quick
+            taps; the pan still wins once the finger actually moves. */}
+        <Pressable onPress={() => { wake(); playSound('pop'); setTapTick((n) => n + 1); }}>
+          <StarStage
+            art={chosen ? (grownUp ? chosen.grown : chosen.art) : STAGE1_ART}
+            ready={full && !chosen}
+            evolved={chosen ? `${chosen.id}-${grownUp ? 3 : 2}` : null}
+            feedTick={feedTick}
+            tapTick={tapTick}
+          />
+        </Pressable>
+        {hearts.map((h) => (
+          <Heart key={h.id} dx={h.dx} dy={h.dy} />
+        ))}
+        {asleep ? <Text style={styles.sleepZ} pointerEvents="none">zZZ</Text> : null}
+        {combo ? (
+          <Animated.Text
+            pointerEvents="none"
+            style={[
+              styles.charPopText,
+              {
+                opacity: comboFade,
+                transform: [{ scale: comboFade.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1] }) }],
+              },
+            ]}
+          >
+            +{combo}
+          </Animated.Text>
+        ) : null}
+      </Animated.View>
+    </GestureDetector>
+  );
+
+  return (
+    <View style={styles.charScreen}>
+      <GestureDetector gesture={pinch}>
+      <View
+        style={[styles.charStage, { backgroundColor: current.sky }]}
+        onLayout={(e) => {
+          const { width, height } = e.nativeEvent.layout;
+          stageSize.current = { w: width, h: height };
+          limit.current = { x: Math.max(0, (width - STAR_SIZE) / 2), y: Math.max(0, (height - STAR_SIZE) / 2) };
+        }}
+      >
+        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+          <Defs>
+            <LinearGradient id="scene" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor={current.sky} />
+              <Stop offset="1" stopColor={current.ground} />
+            </LinearGradient>
+          </Defs>
+          <Rect x="0" y="0" width="100%" height="100%" fill="url(#scene)" />
+          {current.stars
+            ? STAR_FIELD.map((st, i) => (
+                <Circle key={i} cx={`${st.x}%`} cy={`${st.y}%`} r={st.r} fill="#ffffff" opacity={st.o} />
+              ))
+            : null}
+        </Svg>
+        {/* Painted backdrops sit over the gradient; the gradient is the fallback for the rest. */}
+        {current.image ? (
+          <Image source={current.image} style={styles.sceneImage} resizeMode="cover" pointerEvents="none" />
+        ) : null}
+
+        <View style={styles.starLayer} pointerEvents="box-none">
+          {stageBlock}
+        </View>
+
+        {full && !chosen ? (
+          <View style={styles.evolveWrap}>
+            <Text style={styles.evolveTitle}>어떤 모습으로 자랄까?</Text>
+            <View style={styles.evolveRow}>
+              {EVOLUTIONS.map((e) => (
+                <TouchableOpacity
+                  key={e.id}
+                  style={styles.evolveCard}
+                  onPress={() => { playSound('fanfare'); setEvolved(e.id); setEvolvedAt(fed * GROWTH_PER_CANDY); }}
+                >
+                  <Image source={e.art} style={styles.evolveArt} resizeMode="contain" />
+                  <Text style={styles.evolveLabel}>{e.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        ) : null}
+
+        {/* Candy and closet live in the scene itself, as pictures with a count on them. */}
+        <View
+          style={styles.charDock}
+          pointerEvents="box-none"
+          onLayout={(e) => {
+            dockBox.current = { x: e.nativeEvent.layout.x, y: e.nativeEvent.layout.y };
+          }}
+        >
+          <TouchableOpacity
+            style={styles.charPanelBtn}
+            onPress={() => { playSound('pop'); setPanel((v) => !v); }}
+          >
+            <Text style={styles.charPanelBtnText}>{panel ? '✕' : '⚙'}</Text>
+          </TouchableOpacity>
+          <GestureDetector gesture={candyDrag}>
+            <Animated.View
+              style={{ transform: candyPos.getTranslateTransform(), zIndex: 6 }}
+              onLayout={(e) => {
+                const { x, y, width, height } = e.nativeEvent.layout;
+                candyBox.current = { x, y, w: width, h: height };
+              }}
+            >
+              <TouchableOpacity style={[styles.charDockBtn, food <= 0 && styles.charItemOff]} onPress={feedStar}>
+                <Image source={CANDY_ICON} style={styles.charDockArt} resizeMode="contain" />
+                <View style={styles.charDockBadge}><Text style={styles.charDockBadgeText}>{food}</Text></View>
+              </TouchableOpacity>
+            </Animated.View>
+          </GestureDetector>
+          <View style={styles.charDockBtn}>
+            <Image source={CLOSET_ICON} style={styles.charDockArt} resizeMode="contain" />
+            <View style={styles.charDockBadge}><Text style={styles.charDockBadgeText}>{stage - 1}</Text></View>
+          </View>
+        </View>
+
+        {panel ? (
+          <View style={styles.charPanel}>
+            <Text style={styles.charCardTitle}>성장도</Text>
+            <View style={styles.charBarTrack}>
+              <View style={[styles.charBarFill, { width: `${percent}%` }]} />
+              {GROWTH_CHECKPOINTS.map((c) => (
+                <View
+                  key={c}
+                  style={[
+                    styles.charCheck,
+                    { left: `${c}%`, marginLeft: c === 0 ? 0 : c === 100 ? -14 : -7 },
+                    percent >= c && styles.charCheckOn,
+                  ]}
+                />
+              ))}
+            </View>
+            <Text style={styles.charGrowthValue}>{stage}단계 · {percent}%</Text>
+            <View style={styles.charPanelLine} />
+            <Text style={styles.charCardTitle}>배경 바꾸기</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.sceneStrip}>
+              {SCENES.map((sc) => (
+                <TouchableOpacity key={sc.id} style={styles.sceneCell} onPress={() => { playSound('pop'); setScene(sc.id); }}>
+                  <Image source={sc.image} style={[styles.sceneThumb, scene === sc.id && styles.sceneThumbOn]} resizeMode="cover" />
+                  <Text style={[styles.sceneLabel, scene === sc.id && styles.sceneLabelOn]}>{sc.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        ) : null}
+      </View>
+      </GestureDetector>
+    </View>
+  );
+}
+
+// The grown-up's view: a month of weeks down the left, what happened in the middle, and what the
+// child kept coming back to on the right.
+const PARENT_WEEKS = ['1주 주간 리포트', '2주 주간 리포트', '3주 주간 리포트', '4주 주간 리포트'];
+
+// Pictures for the topics the pipeline surfaces most often.
+const STAT_ART = {
+  book: require('./assets/scenes/stat-book.png'),
+  quiz: require('./assets/scenes/stat-quiz.png'),
+  puzzle: require('./assets/scenes/stat-puzzle.png'),
+  paint: require('./assets/scenes/stat-paint.png'),
+};
+
+const INTEREST_ART = {
+  '공룡': require('./assets/scenes/interest-dino.png'),
+  '요리': require('./assets/scenes/interest-cook.png'),
+  '우주 · 행성': require('./assets/scenes/interest-planet.png'),
+};
+
+const MOCK_REPORT = [
+  {
+    minutes: [12, 26, 18, 31, 15, 34, 25],
+    stats: { stories: 10, quiz: 16, puzzle: 7, drawing: 4 },
+    deltas: { stories: 2, quiz: 5, puzzle: 4, drawing: -2 },
+    interests: ['공룡', '요리', '우주 · 행성'],
+    sessions: [
+      { from: 10.3, to: 11, span: '10:20 - 11:00', title: '사랑의 하츄핑', words: ['테올데굴', '따뜻하다'] },
+      { from: 4.5, to: 5, span: '4:30 - 5:00', title: '아기상어', words: ['아푸어푸'] },
+    ],
+  },
+  {
+    minutes: [20, 14, 28, 9, 33, 27, 18],
+    stats: { stories: 8, quiz: 21, puzzle: 5, drawing: 6 },
+    deltas: { stories: -2, quiz: 5, puzzle: -2, drawing: 2 },
+    interests: ['바다 생물', '공룡', '색깔'],
+    sessions: [
+      { from: 9.5, to: 10.2, span: '9:30 - 10:10', title: '꼬마버스 타요', words: ['부릉부릉', '신호등'] },
+      { from: 7, to: 7.5, span: '7:00 - 7:30', title: '브레드이발소', words: ['말랑말랑'] },
+    ],
+  },
+  {
+    minutes: [16, 22, 11, 24, 29, 13, 30],
+    stats: { stories: 12, quiz: 18, puzzle: 9, drawing: 3 },
+    deltas: { stories: 4, quiz: -3, puzzle: 4, drawing: -3 },
+    interests: ['숫자', '동물 친구', '노래'],
+    sessions: [
+      { from: 11, to: 11.5, span: '11:00 - 11:30', title: '핑크퐁 아기상어', words: ['뚜루루'] },
+      { from: 5, to: 5.7, span: '5:00 - 5:40', title: '뽀롱뽀롱 뽀로로', words: ['미끄럼틀', '눈사람'] },
+    ],
+  },
+  {
+    minutes: [9, 19, 25, 17, 21, 36, 28],
+    stats: { stories: 11, quiz: 24, puzzle: 6, drawing: 5 },
+    deltas: { stories: -1, quiz: 6, puzzle: -3, drawing: 2 },
+    interests: ['우주 · 행성', '요리', '탈것'],
+    sessions: [
+      { from: 10, to: 10.6, span: '10:00 - 10:35', title: '캐치 티니핑', words: ['반짝반짝', '모자'] },
+      { from: 6.5, to: 7, span: '6:30 - 7:00', title: '꼬마버스 타요', words: ['출발'] },
+    ],
+  },
+];
+const WEEK_DAYS = ['월', '화', '수', '목', '금', '토', '일'];
+// Bars rise from this offset; the average line and its badge hang off the same base.
+const AVG_BASE = 30;
+const CHART_H = 190;
+
+const CLOCK_ART = require('./assets/scenes/clock.png');
+
+function SessionClock({ sessions }) {
+  // Measured off the art: the face centre sits at (102, 94) in its 205x179 frame and the dial
+  // runs to about 66px, so the wedges are anchored to those numbers, not to the bounding box.
+  const W = 168;
+  const H = Math.round((W * 179) / 205);
+  const cx = W * (102 / 205);
+  const cy = H * (94 / 179);
+  const R = W * (66 / 205);
+
+  const wedge = (from, to) => {
+    const a0 = ((from % 12) / 12) * Math.PI * 2 - Math.PI / 2;
+    const a1 = ((to % 12) / 12) * Math.PI * 2 - Math.PI / 2;
+    const large = a1 - a0 > Math.PI ? 1 : 0;
+    return [
+      `M ${cx} ${cy}`,
+      `L ${cx + Math.cos(a0) * R} ${cy + Math.sin(a0) * R}`,
+      `A ${R} ${R} 0 ${large} 1 ${cx + Math.cos(a1) * R} ${cy + Math.sin(a1) * R}`,
+      'Z',
+    ].join(' ');
+  };
+
+  return (
+    <View style={{ width: W, height: H }}>
+      <Image source={CLOCK_ART} style={{ width: W, height: H }} resizeMode="contain" />
+      <Svg width={W} height={H} style={StyleSheet.absoluteFill}>
+        <Defs>
+          <LinearGradient id="wedge" x1="0" y1="0" x2="1" y2="1">
+            <Stop offset="0" stopColor="#8fc0ff" stopOpacity="0.95" />
+            <Stop offset="1" stopColor="#ffffff" stopOpacity="0.15" />
+          </LinearGradient>
+        </Defs>
+        {sessions.map((sn) => (
+          <Path key={sn.span} d={wedge(sn.from, sn.to)} fill="url(#wedge)" />
+        ))}
+        <Circle cx={cx} cy={cy} r={4} fill="#f5d63d" />
+      </Svg>
+    </View>
+  );
+}
+
+// The rim is a gradient, so it has to be drawn — and a drawn rim needs the chip's real size.
+function InterestChip({ label }) {
+  const [box, setBox] = useState({ width: 0, height: 0 });
+  return (
+    <View style={styles.parentChip} onLayout={(e) => setBox(e.nativeEvent.layout)}>
+      {box.width ? (
+        <Svg width={box.width} height={box.height} style={StyleSheet.absoluteFill} pointerEvents="none">
+          <Defs>
+            <LinearGradient id={`chipRim-${label}`} x1="0" y1="0" x2="1" y2="0">
+              <Stop offset="0" stopColor="#609EF5" />
+              <Stop offset="0.5" stopColor="#BADAFF" />
+              <Stop offset="1" stopColor="#609EF5" />
+            </LinearGradient>
+          </Defs>
+          <Rect
+            x={0.8}
+            y={0.8}
+            width={box.width - 1.6}
+            height={box.height - 1.6}
+            rx={(box.height - 1.6) / 2}
+            fill="none"
+            stroke={`url(#chipRim-${label})`}
+            strokeWidth={1.6}
+          />
+        </Svg>
+      ) : null}
+      {INTEREST_ART[label] ? <Image source={INTEREST_ART[label]} style={styles.parentChipArt} resizeMode="contain" /> : null}
+      <Text style={styles.parentChipText}>{label}</Text>
+    </View>
+  );
+}
+
+// Content check without watching a video to the right second: every authored question, openable.
+function QuizDebugScreen({ onPlay }) {
+  return (
+    <ScrollView contentContainerStyle={styles.qdBody} showsVerticalScrollIndicator={false}>
+      {Object.entries(OFFLINE_ACTIVITIES).map(([videoId, activities]) => (
+        <View key={videoId} style={styles.qdGroup}>
+          <Text style={styles.qdVideo}>{videoId} · {activities.length}개</Text>
+          {activities.map((a) => {
+            const payload = typeof a.payload === 'string' ? JSON.parse(a.payload) : a.payload || {};
+            return (
+              <TouchableOpacity
+                key={a.id}
+                style={styles.qdRow}
+                onPress={() => onPlay({ ...payload, kind: payload.activity_template }, videoId, a.at ?? a.at_sec)}
+              >
+                <Text style={styles.qdAt}>{a.at ?? a.at_sec}s</Text>
+                <View style={styles.qdText}>
+                  <Text style={styles.qdKind}>{payload.activity_template || a.type}</Text>
+                  <Text style={styles.qdTitle} numberOfLines={1}>{payload.title || '(퍼즐)'}</Text>
+                </View>
+                <Text style={styles.qdAnswer}>{payload.answer || ''}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      ))}
+
+      <Text style={styles.qdVideo}>데모 문제 · {QUIZ_POOL.length}개</Text>
+      {QUIZ_POOL.map((q, i) => (
+        <TouchableOpacity key={q.kind + i} style={styles.qdRow} onPress={() => onPlay(q)}>
+          <Text style={styles.qdAt}>데모</Text>
+          <View style={styles.qdText}>
+            <Text style={styles.qdKind}>{QUIZ_KINDS[q.kind] || q.kind}</Text>
+            <Text style={styles.qdTitle} numberOfLines={1}>{q.title}</Text>
+          </View>
+          <Text style={styles.qdAnswer}>{q.answer}</Text>
+        </TouchableOpacity>
+      ))}
+    </ScrollView>
+  );
+}
+
+function ParentReportScreen({ profile, report, words }) {
+  const [week, setWeek] = useState(0);
+  const today = new Date();
+  const [month, setMonth] = useState(today.getMonth() + 1);
+  const monthRef = useRef(null);
+  const [chartW, setChartW] = useState(0);
+  // Minutes per day. Real numbers land here once sessions are recorded server-side; the week
+  // selector shifts them so the screen behaves like the finished thing.
+  const data = MOCK_REPORT[week];
+  const minutes = data.minutes;
+  const average = Math.round(minutes.reduce((a, b) => a + b, 0) / minutes.length);
+  const peak = Math.max(...minutes);
+  const newWords = words.slice(0, 4);
+
+  const stats = [
+    { art: STAT_ART.book, value: data.stats.stories, unit: '편', label: '완성한 이야기', delta: data.deltas.stories },
+    { art: STAT_ART.quiz, value: data.stats.quiz, unit: '개', label: '완료한 퀴즈', delta: data.deltas.quiz },
+    { art: STAT_ART.puzzle, value: data.stats.puzzle, unit: '개', label: '완성한 퍼즐', delta: data.deltas.puzzle },
+    { art: STAT_ART.paint, value: data.stats.drawing, unit: '개', label: '완료한 그림', delta: data.deltas.drawing },
+  ];
+
+  const sessions = data.sessions;
+
+  return (
+    <ScrollView contentContainerStyle={styles.parentScroll} showsVerticalScrollIndicator={false}>
+      <View style={styles.parentBody}>
+      <View style={styles.parentCol}>
+        <Text style={styles.parentTitle}>부모 리포트</Text>
+        <Text style={styles.parentSub}>이번 달 아이 학습에 대한 분석을 살펴보세요.</Text>
+
+        <View style={styles.parentMonthWrap}>
+          <TouchableOpacity style={styles.parentMonthNav} onPress={() => setMonth((m) => Math.max(1, m - 1))}>
+            <Text style={styles.parentMonthArrow}>‹</Text>
+          </TouchableOpacity>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.parentMonthRow}
+            ref={monthRef}
+            onLayout={() => monthRef.current?.scrollToEnd({ animated: false })}
+          >
+          {Array.from({ length: today.getMonth() + 1 }, (_, i) => i + 1).map((m) => (
+            <TouchableOpacity key={m} onPress={() => { playSound('pop'); setMonth(m); }}>
+              <View style={[styles.parentMonth, month !== m && styles.parentMonthOff]}>
+                {month === m ? (
+                  <Svg style={StyleSheet.absoluteFill}>
+                    <Defs>
+                      <LinearGradient id="monthGrad" x1="0" y1="0" x2="0.6" y2="1">
+                        <Stop offset="0" stopColor="#7db4ff" />
+                        <Stop offset="1" stopColor="#2f62c4" />
+                      </LinearGradient>
+                    </Defs>
+                    <Rect x="0" y="0" width="100%" height="100%" rx={42} fill="url(#monthGrad)" />
+                  </Svg>
+                ) : null}
+                <Text style={[styles.parentMonthYear, month !== m && styles.parentMonthYearOff]}>{today.getFullYear()}</Text>
+                <Text style={[styles.parentMonthNum, month !== m && styles.parentMonthNumOff]}>{m}</Text>
+              </View>
+            </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <TouchableOpacity style={styles.parentMonthNav} onPress={() => setMonth((m) => Math.min(today.getMonth() + 1, m + 1))}>
+            <Text style={styles.parentMonthArrow}>›</Text>
+          </TouchableOpacity>
+        </View>
+
+        {PARENT_WEEKS.map((label, i) => (
+          <TouchableOpacity
+            key={label}
+            style={[styles.parentWeek, week === i && styles.parentWeekOn]}
+            onPress={() => setWeek(i)}
+          >
+            <Text style={[styles.parentWeekText, week === i && styles.parentWeekTextOn]}>{month}월 {label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <View style={styles.parentDivider} />
+
+      <View style={styles.parentColWide}>
+        <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>데일리 로그</Text></View>
+        <View style={styles.parentLogRow}>
+          <SessionClock sessions={sessions} />
+          <Svg width={26} height={120} style={styles.parentLogLeader} pointerEvents="none">
+            <Path d="M0 34 L24 34" stroke="#1b3a7a" strokeWidth={1.5} strokeDasharray="3 4" />
+            <Path d="M0 92 L24 92" stroke="#1b3a7a" strokeWidth={1.5} strokeDasharray="3 4" />
+          </Svg>
+          <View style={styles.parentLogList}>
+            {sessions.map((sn) => (
+              <View key={sn.span} style={styles.parentLogItem}>
+                <Text style={styles.parentLogTime}>{sn.span}</Text>
+                <View style={styles.parentLogCard}>
+                  <Text style={styles.parentLogTitle}>{sn.title}</Text>
+                  {sn.words.map((w) => (
+                    <Text key={w} style={styles.parentLogWord}>새 단어 : {w}</Text>
+                  ))}
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>이번 주 활동 요약</Text></View>
+        <View style={styles.parentStatGrid}>
+          {stats.map((st) => (
+            <View key={st.label} style={styles.parentStat}>
+              <View style={styles.parentStatHead}>
+                <Image source={st.art} style={styles.parentStatArt} resizeMode="contain" />
+                <Text style={styles.parentStatValue}>{st.value}</Text>
+                <Text style={styles.parentStatUnit}>{st.unit}</Text>
+              </View>
+              <Text style={styles.parentStatLabel}>{st.label}</Text>
+              <Text style={[styles.parentStatDelta, st.delta >= 0 ? styles.deltaUp : styles.deltaDown]}>
+                지난주 대비 {Math.abs(st.delta)}{st.unit} {st.delta >= 0 ? '▲' : '▼'}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.parentDivider} />
+
+      <View style={styles.parentColRight}>
+        <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>숨은 관심사</Text></View>
+        <Text style={styles.parentHint}>최근 2주 시청기록에서 반복적으로 등장한 주제 중심으로 3개 보여드려요</Text>
+        <View style={styles.parentChips}>
+          {data.interests.map((t) => (
+            <InterestChip key={t} label={t} />
+          ))}
+        </View>
+
+        <View style={styles.parentSectionGap} />
+        <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>이번주 활동</Text></View>
+        <View style={styles.parentAvgRow}>
+          <Text style={styles.parentAvg}>일평균 {average}분</Text>
+        </View>
+        <View style={styles.parentChart} onLayout={(e) => setChartW(e.nativeEvent.layout.width)}>
+          <View style={[styles.parentAvgLine, { bottom: AVG_BASE + (average / peak) * 100 }]} pointerEvents="none" />
+          {chartW ? (
+            <Svg width={chartW} height={CHART_H} style={StyleSheet.absoluteFill} pointerEvents="none">
+              <Path
+                d={`M ${chartW * 0.62} 2 L ${chartW * 0.62} ${CHART_H - (AVG_BASE + (average / peak) * 100) - 12}`}
+                stroke="#1b3a7a"
+                strokeWidth={1.5}
+                strokeDasharray="4 4"
+              />
+              <Path
+                d={`M ${chartW * 0.62} ${CHART_H - (AVG_BASE + (average / peak) * 100) - 5} L ${chartW * 0.62 - 4.5} ${CHART_H - (AVG_BASE + (average / peak) * 100) - 13} L ${chartW * 0.62 + 4.5} ${CHART_H - (AVG_BASE + (average / peak) * 100) - 13} Z`}
+                fill="#1b3a7a"
+              />
+              <Circle cx={chartW * 0.62} cy={CHART_H - (AVG_BASE + (average / peak) * 100)} r={4.5} fill="#1b3a7a" />
+            </Svg>
+          ) : null}
+          {minutes.map((m, i) => {
+            const isToday = i === minutes.length - 1;
+            return (
+              <View key={WEEK_DAYS[i]} style={styles.parentBarCell}>
+                <View style={[styles.parentBar, { height: 24 + (m / peak) * 100, backgroundColor: isToday ? '#609EF5' : '#bcd6fb' }]} />
+                <Text style={[styles.parentBarLabel, isToday && styles.parentBarLabelOn]}>{WEEK_DAYS[i]}</Text>
+              </View>
+            );
+          })}
+          <View style={styles.parentBaseline} pointerEvents="none" />
+        </View>
+      </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -1163,13 +2467,26 @@ function SettingsScreen({ profile, settings, onChange, onEditProfile }) {
   );
 }
 
-function HomeScreen({ characterImage, onStart, profile, tab = 'library', onTab, onBack, series, settings, onSettings, onEditProfile, words = [] }) {
+function HomeScreen({ characterImage, onStart, profile, tab = 'library', onTab, onBack, series, settings, onSettings, onEditProfile, words = [], feed = 0, fed = 0, onFeed, report = {}, onJumpMoment }) {
   const [focus, setFocus] = useState(0);
+  const [previewQuiz, setPreviewQuiz] = useState(null);
+  const [previewPick, setPreviewPick] = useState(null);
   // A card on the main screen opens that series; without one, fall back to the popular row.
   const category = series ? { videos: series.episodes || [] } : LIBRARY[0];
 
   return (
     <View style={styles.screen}>
+      {previewQuiz ? (
+        <QuizOverlay
+          quiz={previewQuiz}
+          selected={previewPick}
+          tries={previewPick && previewPick !== previewQuiz.answer ? 1 : 0}
+          onAnswer={setPreviewPick}
+          onRetry={() => setPreviewPick(null)}
+          onResume={() => { setPreviewQuiz(null); setPreviewPick(null); }}
+          onSkip={() => { setPreviewQuiz(null); setPreviewPick(null); }}
+        />
+      ) : null}
       {tab !== 'library' ? (
         <View style={styles.tabScreen}>
           <View style={styles.tabHead}>
@@ -1178,7 +2495,19 @@ function HomeScreen({ characterImage, onStart, profile, tab = 'library', onTab, 
             </TouchableOpacity>
             <Text style={styles.tabHeadTitle}>{(TABS.find((t) => t.key === tab) || {}).label}</Text>
           </View>
-          {tab === 'words' ? (
+          {tab === 'quizdebug' ? (
+            <QuizDebugScreen
+              onPlay={(q, videoId, at) => {
+                // Seeing it in place beats seeing it alone: play the video from just before the cue.
+                if (videoId && onJumpMoment) onJumpMoment(videoId, at);
+                else { setPreviewQuiz(q); setPreviewPick(null); }
+              }}
+            />
+          ) : tab === 'parent' ? (
+            <ParentReportScreen profile={profile} report={report} words={words} />
+          ) : tab === 'character' ? (
+            <CharacterScreen profile={profile} food={feed - fed} fed={fed} onFeed={onFeed} />
+          ) : tab === 'words' ? (
             <WordsScreen words={words} />
           ) : tab === 'settings' ? (
             <SettingsScreen profile={profile} settings={settings} onChange={onSettings} onEditProfile={onEditProfile} />
@@ -1232,18 +2561,149 @@ function HomeScreen({ characterImage, onStart, profile, tab = 'library', onTab, 
 
 // Demo stand-in for the pre-generated content schedule. Later: load per video_id from the
 // analysis pipeline's activities.json — same shape { at: seconds, type }.
-const ACTIVITIES = [
-  { at: 10, type: 'quiz' },
-  { at: 20, type: 'trace' },
+const ACTIVITY_SLOTS = [
+  { at: 10, type: 'quiz', pick: 0 },
+  { at: 20, type: 'quiz', pick: 1, then: 'traceword' },
   { at: 30, type: 'puzzle' },
+  { at: 40, type: 'quiz', pick: 2 },
 ];
+
+// Trace a word over its own outline: the guide letters are a real glyph path, so "did the child
+// stay on the letters?" is answered by asking the path, not by eyeballing a picture.
+const TRACE_FONT = require('./assets/fonts/Pretendard-Bold.otf');
+const TRACE_SIZE = 150;
+const TRACE_TOLERANCE = 26; // a five-year-old's hand wobbles; count near-misses as on the letter
+const TRACE_GRID = 18;
+
+function judgeTrace(glyph, points) {
+  if (!glyph || points.length < 12) return null;
+  const near = (x, y) => {
+    if (glyph.contains(x, y)) return true;
+    for (let a = 0; a < 8; a += 1) {
+      const t = (a * Math.PI) / 4;
+      if (glyph.contains(x + Math.cos(t) * TRACE_TOLERANCE, y + Math.sin(t) * TRACE_TOLERANCE)) return true;
+    }
+    return false;
+  };
+
+  // How much of the writing landed on the letters.
+  let on = 0;
+  for (const p of points) if (near(p.x, p.y)) on += 1;
+  const onRatio = on / points.length;
+
+  // How much of the letters got written over: one scribble in a corner must not pass.
+  const b = glyph.getBounds();
+  let cells = 0;
+  let covered = 0;
+  for (let x = b.x; x < b.x + b.width; x += TRACE_GRID) {
+    for (let y = b.y; y < b.y + b.height; y += TRACE_GRID) {
+      if (!glyph.contains(x, y)) continue;
+      cells += 1;
+      if (points.some((p) => Math.abs(p.x - x) < TRACE_GRID * 1.6 && Math.abs(p.y - y) < TRACE_GRID * 1.6)) covered += 1;
+    }
+  }
+  const coverRatio = cells ? covered / cells : 0;
+  return { onRatio, coverRatio, pass: onRatio >= 0.7 && coverRatio >= 0.45 };
+}
+
+function TraceWordOverlay({ word, onDone }) {
+  const font = useFont(TRACE_FONT, TRACE_SIZE);
+  const [box, setBox] = useState({ width: 0, height: 0 });
+  const [strokes, setStrokes] = useState([]);
+  const [live, setLive] = useState([]);
+  const [verdict, setVerdict] = useState(null);
+
+  const glyph = useMemo(() => {
+    if (!font || !box.width) return null;
+    const w = font.measureText(word).width;
+    return Skia.Path.MakeFromText(word, (box.width - w) / 2, box.height / 2 + TRACE_SIZE * 0.35, font);
+  }, [font, box.width, box.height, word]);
+
+  const pen = useMemo(
+    () =>
+      Gesture.Pan()
+        .runOnJS(true)
+        .minDistance(0)
+        .onBegin((e) => setLive([{ x: e.x, y: e.y }]))
+        .onUpdate((e) => setLive((prev) => [...prev, { x: e.x, y: e.y }]))
+        .onEnd(() => {
+          setLive((prev) => {
+            if (prev.length) setStrokes((all) => [...all, prev]);
+            return [];
+          });
+        }),
+    []
+  );
+
+  const toPath = (pts) => {
+    const p = Skia.Path.Make();
+    pts.forEach((q, i) => (i ? p.lineTo(q.x, q.y) : p.moveTo(q.x, q.y)));
+    return p;
+  };
+
+  const check = () => {
+    const result = judgeTrace(glyph, strokes.flat());
+    if (!result) return;
+    setVerdict(result);
+    if (result.pass) {
+      playSound('success');
+      speak('correct');
+    } else {
+      playSound('wrong');
+      speak('retry');
+    }
+  };
+
+  return (
+    <Modal transparent visible animationType="fade" presentationStyle="overFullScreen" supportedOrientations={['landscape', 'landscape-left', 'landscape-right']} onRequestClose={onDone}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+    <View style={styles.traceWordScrim}>
+    <View style={styles.traceWord}>
+      <Text style={styles.traceWordTitle}>{verdict ? (verdict.pass ? '잘 썼어요!' : '조금만 더 또박또박!') : `'${word}' 를 따라 써 볼까?`}</Text>
+
+      <GestureDetector gesture={pen}>
+        <View style={styles.traceWordPad} onLayout={(e) => setBox(e.nativeEvent.layout)} collapsable={false}>
+          <Canvas style={StyleSheet.absoluteFill}>
+            {glyph ? <SkiaPath path={glyph} color="#dfe6f5" /> : null}
+            {strokes.map((st, i) => (
+              <SkiaPath key={i} path={toPath(st)} color="#171d31" style="stroke" strokeWidth={12} strokeCap="round" strokeJoin="round" />
+            ))}
+            {live.length ? (
+              <SkiaPath path={toPath(live)} color="#171d31" style="stroke" strokeWidth={12} strokeCap="round" strokeJoin="round" />
+            ) : null}
+          </Canvas>
+        </View>
+      </GestureDetector>
+
+      <View style={styles.traceWordActions}>
+        <TouchableOpacity style={styles.lightButton} onPress={() => { setStrokes([]); setVerdict(null); }}>
+          <Text style={styles.lightButtonText}>지우고 다시</Text>
+        </TouchableOpacity>
+        {verdict?.pass ? (
+          <TapScale style={styles.darkButton} onPress={() => { playSound('pop'); onDone(); }}>
+            <Text style={styles.darkButtonText}>영상 이어보기</Text>
+          </TapScale>
+        ) : (
+          <TapScale style={styles.blueButton} onPress={check}>
+            <Text style={styles.blueButtonText}>다 썼어요</Text>
+          </TapScale>
+        )}
+        <TouchableOpacity onPress={onDone}>
+          <Text style={styles.traceWordSkip}>건너뛰기</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+    </View>
+    </GestureHandlerRootView>
+    </Modal>
+  );
+}
 
 // Announcement shown right before each activity starts.
 const ACT_MSG = {
   quiz: { text: '같이 퀴즈 풀어보자!', emoji: '🧠' },
-  trace: { text: '같이 그림 그려보자!', emoji: '✏️' },
   puzzle: { text: '퍼즐 맞춰볼까?', emoji: '🧩' },
-  color: { text: '이제 색칠하러 가자!', emoji: '🎨' },
+  traceword: { text: '같이 따라 써 보자!', emoji: '✏️' },
 };
 
 // Toss-style center popup with a spring pop-in. Self-animates on mount.
@@ -1553,6 +3013,9 @@ function EvolvePopup({ onPick }) {
   );
 }
 
+// Speech bubble with the buddy leaning in from the left, per the mockup.
+const POPUP_BUDDY = require('./assets/characters/dino.png');
+
 function CenterPopup({ text, emoji = '✨' }) {
   const a = useRef(new Animated.Value(0)).current;
   const win = useWindowDimensions();
@@ -1564,16 +3027,19 @@ function CenterPopup({ text, emoji = '✨' }) {
       <View style={{ width: win.width, height: win.height, alignItems: 'center', justifyContent: 'center' }} pointerEvents="none">
         <View style={styles.praiseScrim} />
         <Animated.View
-          style={[styles.praiseCard, { opacity: a, transform: [{ scale: a.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) }] }]}
+          style={[styles.praiseRow, { opacity: a, transform: [{ scale: a.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) }] }]}
         >
-          <Text style={styles.praiseText}>{text}</Text>
+          <Image source={POPUP_BUDDY} style={styles.praiseBuddy} resizeMode="contain" />
+          <View style={styles.praiseCard}>
+            <Text style={styles.praiseText}>{text}</Text>
+          </View>
         </Animated.View>
       </View>
     </Modal>
   );
 }
 
-function WatchScreen({ source, quizDone, onQuizCorrect, onQuizSkip, onFinish, onBack, onHome, onReport }) {
+function WatchScreen({ source, plan = [], picks = [0, 1, 2], seekTo, onResult, onWatched, quizDone, onQuizAsk, onQuizCorrect, onQuizSkip, onFinish, onBack, onHome, onReport }) {
   const player = useVideoPlayer(source, (instance) => {
     instance.loop = false;
     instance.play();
@@ -1581,7 +3047,27 @@ function WatchScreen({ source, quizDone, onQuizCorrect, onQuizSkip, onFinish, on
   const [selected, setSelected] = useState(null);
   const [answered, setAnswered] = useState(quizDone);
   const [countdown, setCountdown] = useState(null);
-  const [active, setActive] = useState(null); // current activity type: 'quiz' | 'trace' | 'puzzle' | null
+  const [active, setActive] = useState(null); // current activity type: 'quiz' | 'puzzle' | null
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [serverQuiz, setServerQuiz] = useState(null);
+  const [tries, setTries] = useState(0);
+  const [puzzleImage, setPuzzleImage] = useState(null);
+  const quiz = serverQuiz || QUIZ_POOL[quizIndex];
+  const activityId = useRef(null);
+  const followUp = useRef(null);
+  // Server plan wins; the built-in schedule is the demo fallback.
+  const schedule = useMemo(() => {
+    if (!plan.length) return ACTIVITY_SLOTS.map((a) => ({ ...a, quiz: picks[a.pick] ?? 0 }));
+    return plan.map((a) => {
+      let payload = {};
+      try {
+        payload = typeof a.payload === 'string' ? JSON.parse(a.payload) : a.payload || {};
+      } catch (e) {
+        payload = {};
+      }
+      return { at: a.at_sec ?? a.at, type: a.type, activityId: a.id, payload };
+    });
+  }, [plan, picks]);
   const [announce, setAnnounce] = useState(null); // activity type being announced before it opens
   const [celebrate, setCelebrate] = useState(false); // "잘했어요" popup between an activity and resuming the video
   const firedRef = useRef(new Set());
@@ -1621,42 +3107,80 @@ function WatchScreen({ source, quizDone, onQuizCorrect, onQuizSkip, onFinish, on
     const id = setInterval(() => {
       const t = player.currentTime || 0;
       let cd = null;
-      for (const a of ACTIVITIES) {
+      for (const a of schedule) {
         if (!firedRef.current.has(a.at) && t >= a.at - 3 && t < a.at) { cd = Math.ceil(a.at - t); break; }
       }
       setCountdown((prev) => (prev === cd ? prev : cd));
-      for (const a of ACTIVITIES) {
+      for (const a of schedule) {
         if (!firedRef.current.has(a.at) && t >= a.at && t < a.at + 10) {
           firedRef.current.add(a.at);
           player.pause();
-          if (a.type === 'quiz') setSelected(null);
+          if (a.type === 'quiz') {
+            setSelected(null);
+            // A pipeline question arrives whole in the payload; the demo pool is the fallback.
+            const authored = a.payload && Array.isArray(a.payload.options) ? { ...a.payload, kind: a.payload.activity_template } : null;
+            setServerQuiz(authored);
+            setQuizIndex(a.quiz || 0);
+            if (onQuizAsk) onQuizAsk(a.quiz || 0, authored);
+          }
+          followUp.current = a.then || null;
+          setPuzzleImage(a.payload?.image ? PUZZLE_IMAGES[a.payload.image] : null);
+          activityId.current = a.activityId || null;
           setAnnounce(a.type);
           break;
         }
       }
     }, 350);
     return () => clearInterval(id);
-  }, [player]);
+  }, [player, schedule]);
+
+  // Debug jump: start just before the question we want to look at.
+  useEffect(() => {
+    if (seekTo == null) return;
+    const id = setTimeout(() => {
+      try {
+        player.currentTime = seekTo;
+        player.play();
+      } catch (e) {
+        // player not ready yet; the schedule still runs from the start
+      }
+    }, 600);
+    return () => clearTimeout(id);
+  }, [seekTo, player]);
 
   // When the video finishes, move to the final activities page.
   useEffect(() => {
-    const sub = player.addListener('playToEnd', () => onFinish());
+    const sub = player.addListener('playToEnd', () => {
+      if (onWatched) onWatched(Math.round(player.currentTime || 0));
+      onFinish();
+    });
     return () => sub.remove();
   }, [player]);
 
+  // Some slots chain: the question is answered first, then its answer word is traced.
   const resume = () => {
+    if (followUp.current) {
+      const next = followUp.current;
+      followUp.current = null;
+      setActive(next);
+      return;
+    }
     setActive(null);
     player.play();
   };
   const resumeTrace = resume;
   // Puzzle finished → show "잘했어요" popup, then the effect resumes the video.
-  const resumePuzzle = () => {
+  // Only a finished puzzle earns the praise popup; skipping goes straight back to the video.
+  const resumePuzzle = (solved = true) => {
     setActive(null);
-    setCelebrate(true);
+    if (solved) setCelebrate(true);
+    else player.play();
   };
   const handleAnswer = (label) => {
     setSelected(label);
-    if (label === quiz.answer) {
+    const right = label === quiz.answer;
+    if (onResult) onResult(activityId.current, right ? 'correct' : 'wrong', quiz.kind);
+    if (right) {
       setAnswered(true);
       playSound('success');
       speak('correct');
@@ -1688,6 +3212,7 @@ function WatchScreen({ source, quizDone, onQuizCorrect, onQuizSkip, onFinish, on
   return (
     <View style={styles.watchScreen}>
       <View style={styles.videoCard}>
+        <GradientRim radius={34} width={7} />
         {active !== 'puzzle' ? (
           <VideoView style={styles.video} player={player} nativeControls={active !== 'quiz'} contentFit="contain" surfaceType="textureView" />
         ) : null}
@@ -1709,6 +3234,8 @@ function WatchScreen({ source, quizDone, onQuizCorrect, onQuizSkip, onFinish, on
         {active === 'quiz' ? (
           <QuizOverlay
             selected={selected}
+            quiz={quiz}
+            tries={tries}
             onAnswer={handleAnswer}
             onRetry={() => setSelected(null)}
             onResume={resume}
@@ -1719,11 +3246,14 @@ function WatchScreen({ source, quizDone, onQuizCorrect, onQuizSkip, onFinish, on
           />
         ) : null}
       </View>
+      {active === 'traceword' ? (
+        <TraceWordOverlay word={quiz.answer} onDone={resume} />
+      ) : null}
       {active === 'puzzle' ? (
         <Modal transparent visible animationType="fade" presentationStyle="overFullScreen" supportedOrientations={['landscape', 'landscape-left', 'landscape-right']} onRequestClose={resumePuzzle}>
           <View style={styles.puzzleModal}>
             <TabletHeader rightLabel="보호자 설정" onHome={onHome} onReport={onReport} />
-            <PuzzleScreen onDone={resumePuzzle} />
+            <PuzzleScreen image={puzzleImage} onDone={(solved) => resumePuzzle(solved !== false)} />
           </View>
         </Modal>
       ) : null}
@@ -2201,12 +3731,24 @@ function ActivitiesScreen({ characterImage, onDrawing, onFinish }) {
   );
 }
 
-function QuizOverlay({ selected, onAnswer, onRetry, onResume, onSkip }) {
+const QUIZ_BUDDY = require('./assets/characters/bunny.png');
+
+function QuizOverlay({ quiz, selected, tries = 0, onAnswer, onRetry, onResume, onSkip }) {
+  // The pipeline lists the answer first; shuffled once per question so it moves around.
+  const options = useMemo(() => {
+    const list = [...quiz.options];
+    for (let i = list.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [list[i], list[j]] = [list[j], list[i]];
+    }
+    return list;
+  }, [quiz]);
   const win = useWindowDimensions();
   const correct = selected === quiz.answer;
   const shakeX = useRef(new Animated.Value(0)).current;
   const popScale = useRef(new Animated.Value(0)).current;
   const enter = useRef(new Animated.Value(0)).current;
+  const [cardBox, setCardBox] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     // Question audio is authored with the question, so playback is a single URL away.
@@ -2241,15 +3783,45 @@ function QuizOverlay({ selected, onAnswer, onRetry, onResume, onSkip }) {
       <View style={[styles.quizOverlay, { width: win.width, height: win.height }]}>
         <BlurView intensity={28} tint="dark" style={StyleSheet.absoluteFill} pointerEvents="none" />
         {/* 정답 시 캐릭터 등장 자리 (popScale 애니메이션 재사용) */}
-        <Animated.View style={[styles.quizCard, { opacity: enter, transform: [{ translateX: shakeX }, { scale: enterScale }] }]}>
+        <Animated.View
+          onLayout={(e) => setCardBox(e.nativeEvent.layout)}
+          style={[styles.quizCard, { opacity: enter, transform: [{ translateX: shakeX }, { scale: enterScale }] }]}
+        >
+          {/* Inset by half the stroke so the rim sits inside the card without clipping — clipping
+              would cut off the bubble and the buddy that hang above the card. */}
+          {cardBox.width ? (
+            <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+              <Defs>
+                <LinearGradient id="cardRim" x1="0" y1="0" x2="1" y2="0">
+                  <Stop offset="0" stopColor="#609EF5" />
+                  <Stop offset="1" stopColor="#1b3a7a" />
+                </LinearGradient>
+              </Defs>
+              <Rect x={2.5} y={2.5} width={cardBox.width - 5} height={cardBox.height - 5} rx={31.5} fill="none" stroke="url(#cardRim)" strokeWidth={5} />
+            </Svg>
+          ) : null}
+        {/* Buddy leans on the question bubble, and the options sit on the card below it. */}
         <View style={styles.quizPromptRow}>
-          <View style={styles.miniStar}>
-            <Text style={styles.miniStarText}>✦</Text>
-          </View>
+          <Image source={QUIZ_BUDDY} style={styles.quizBuddy} resizeMode="contain" />
           <View style={styles.questionBox}>
-            <Text style={styles.quoteMark}>“</Text>
-            <Text style={styles.questionText}>{selected && correct ? '맞아 정답이야! 잘했어 :)' : selected ? '앗 다시 생각해보자~!' : quiz.title}</Text>
-            <Text style={styles.quoteMark}>”</Text>
+            <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+              <Defs>
+                <LinearGradient id="qRim" x1="0" y1="0" x2="1" y2="0">
+                  <Stop offset="0" stopColor="#609EF5" />
+                  <Stop offset="1" stopColor="#1b3a7a" />
+                </LinearGradient>
+              </Defs>
+              <Rect x="0" y="0" width="100%" height="100%" rx={42} ry={42} fill="none" stroke="url(#qRim)" strokeWidth={7} />
+            </Svg>
+            <Text style={styles.questionText}>
+              {selected && correct
+                ? '맞아 정답이야! 잘했어 :)'
+                : selected && tries >= 2
+                ? `정답은 '${quiz.answer}' 였어!`
+                : selected
+                ? '앗 다시 생각해보자~!'
+                : quiz.title}
+            </Text>
           </View>
         </View>
         {selected && correct ? (
@@ -2259,14 +3831,10 @@ function QuizOverlay({ selected, onAnswer, onRetry, onResume, onSkip }) {
           </View>
         ) : (
           <View style={styles.quizOptions}>
-            {quiz.options.map((option) => (
+            {options.map((option) => (
               <TouchableOpacity
                 key={option.label}
-                style={[
-                  styles.quizOption,
-                  { borderColor: option.color, backgroundColor: option.bg },
-                  selected === option.label && styles.quizOptionDimmed,
-                ]}
+                style={[styles.quizOption, { borderColor: option.color, backgroundColor: option.bg }, selected === option.label && styles.quizOptionDimmed]}
                 onPress={() => onAnswer(option.label)}
               >
                 <Text style={[styles.quizOptionText, { color: option.color }]}>{option.label}</Text>
@@ -2275,10 +3843,15 @@ function QuizOverlay({ selected, onAnswer, onRetry, onResume, onSkip }) {
           </View>
         )}
         <View style={styles.bottomActions}>
-          {selected && !correct ? (
+          {/* Right answer needs no skip; a second wrong answer ends the question. */}
+          {selected && correct ? null : selected && tries < 2 ? (
             <TouchableOpacity style={styles.lightButton} onPress={onRetry}>
               <Text style={styles.lightButtonText}>다시 고르기</Text>
             </TouchableOpacity>
+          ) : selected ? (
+            <TapScale style={styles.darkButton} onPress={onSkip}>
+              <Text style={styles.darkButtonText}>영상 이어보기</Text>
+            </TapScale>
           ) : (
             <TouchableOpacity style={styles.lightButton} onPress={onSkip}>
               <Text style={styles.lightButtonText}>건너뛰기</Text>
@@ -2298,7 +3871,7 @@ function QuizOverlay({ selected, onAnswer, onRetry, onResume, onSkip }) {
 
 const DRAW_COLORS = ['#111111', '#e5484d', '#00CFE9', '#f5c518'];
 
-function DrawingScreen({ strokes, status, error, characterImage, onChangeStrokes, onCanvasSize, onConvert, onSave, onDone, onSkip }) {
+function DrawingScreen({ topic = '오늘의 그림', strokes, status, error, characterImage, onChangeStrokes, onCanvasSize, onConvert, onSave, onDone, onSkip }) {
   const [choosing, setChoosing] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 620, height: 380 });
   const converting = status === 'loading' || (status === 'done' && !!characterImage) || status === 'error';
@@ -2319,7 +3892,7 @@ function DrawingScreen({ strokes, status, error, characterImage, onChangeStrokes
           strokes={strokes}
           onChange={onChangeStrokes}
           onCanvasSize={(size) => { setCanvasSize(size); onCanvasSize(size); }}
-          placeholder="여기에 바다를 그려보세요"
+          placeholder={`여기에 ${topic}을 그려보세요`}
           inkColor={inkColor}
           thickness={thickness}
           straightLine={tool === 'ruler'}
@@ -2327,7 +3900,7 @@ function DrawingScreen({ strokes, status, error, characterImage, onChangeStrokes
           onEraseStroke={(i) => onChangeStrokes((prev) => prev.filter((_, k) => k !== i))}
         />
         <View style={styles.drawingTopic}>
-          <Text style={styles.drawingTopicText}>주제 : 바다</Text>
+          <Text style={styles.drawingTopicText}>주제 : {topic}</Text>
         </View>
       </View>
       </View>
@@ -2396,11 +3969,19 @@ function DrawingScreen({ strokes, status, error, characterImage, onChangeStrokes
             ) : null}
             {status === 'done' && characterImage ? (
               <>
-                <GeneratedCharacter uri={characterImage} size={280} />
                 <Text style={styles.convertTitle}>완성! 멋진 그림이 됐어요</Text>
-                <TapScale style={styles.darkButton} onPress={() => { playSound('pop'); onDone(); }}>
-                  <Text style={styles.darkButtonText}>마무리하기</Text>
-                </TapScale>
+                {/* Shown at canvas size: the child should see the picture, not a thumbnail. */}
+                <View style={styles.convertFrame}>
+                  <GeneratedCharacter uri={characterImage} size={Math.min(canvasSize.width, 560)} />
+                </View>
+                <View style={styles.creatorActions}>
+                  <TouchableOpacity style={styles.lightButton} onPress={() => { playSound('pop'); onSave(); }}>
+                    <Text style={styles.lightButtonText}>그림 저장</Text>
+                  </TouchableOpacity>
+                  <TapScale style={styles.darkButton} onPress={() => { playSound('pop'); onDone(); }}>
+                    <Text style={styles.darkButtonText}>마무리하기</Text>
+                  </TapScale>
+                </View>
               </>
             ) : null}
             {status === 'error' ? (
@@ -3168,6 +4749,47 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
   },
+  traceWordScrim: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 26,
+    // Same as the quiz: the video stays visible behind the activity.
+    backgroundColor: 'rgba(20,28,48,0.28)',
+  },
+  traceWord: {
+    width: '82%',
+    height: '88%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 14,
+    padding: 24,
+    borderRadius: 34,
+    backgroundColor: '#ffffff',
+  },
+  traceWordTitle: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: '#171d31',
+  },
+  traceWordPad: {
+    width: '86%',
+    flex: 1,
+    borderRadius: 24,
+    backgroundColor: '#f8faff',
+    borderWidth: 2,
+    borderColor: '#e3e9f7',
+  },
+  traceWordActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  traceWordSkip: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#8a97b1',
+  },
   watchScreen: {
     flex: 1,
     padding: 36,
@@ -3177,9 +4799,8 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 34,
     overflow: 'hidden',
+    padding: 7,
     backgroundColor: '#f4f7fe',
-    borderWidth: 2,
-    borderColor: '#e3e9f7',
     shadowColor: '#91a2c0',
     shadowOpacity: 0.12,
     shadowRadius: 24,
@@ -3187,6 +4808,8 @@ const styles = StyleSheet.create({
   },
   video: {
     flex: 1,
+    borderRadius: 27,
+    overflow: 'hidden',
     backgroundColor: '#000',
   },
   activitiesScreen: {
@@ -3320,24 +4943,40 @@ const styles = StyleSheet.create({
   },
   praiseScrim: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(20,28,48,0.28)',
+    backgroundColor: 'rgba(20,28,48,0.18)',
+  },
+  praiseRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  praiseBuddy: {
+    width: 190,
+    height: 190,
+    // Leans over the bubble's left edge instead of sitting beside it.
+    marginRight: -84,
+    zIndex: 2,
   },
   praiseCard: {
     alignItems: 'center',
-    gap: 18,
-    paddingVertical: 40,
-    paddingHorizontal: 64,
-    borderRadius: 28,
-    backgroundColor: '#f4f7fe',
+    justifyContent: 'center',
+    minWidth: 520,
+    paddingVertical: 30,
+    paddingLeft: 120,
+    paddingRight: 56,
+    borderRadius: 999,
+    backgroundColor: '#dbeafe',
+    borderWidth: 4,
+    borderColor: '#609EF5',
     shadowColor: '#1b2a4a',
-    shadowOpacity: 0.22,
-    shadowRadius: 30,
-    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 12 },
   },
   praiseText: {
-    color: '#1b2a4a',
+    color: '#171d31',
     fontSize: 34,
     fontWeight: '900',
+    textAlign: 'center',
   },
   quizOverlay: {
     position: 'absolute',
@@ -3382,17 +5021,26 @@ const styles = StyleSheet.create({
     color: '#5b6b8c',
   },
   convertOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    // Fills the screen the way the review page does; absolute fill left it half-height.
+    flex: 1,
+    alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 40,
     backgroundColor: '#f1f5ff',
     zIndex: 10,
   },
+  convertFrame: {
+    padding: 14,
+    borderRadius: 10,
+    backgroundColor: '#ffffff',
+    borderWidth: 10,
+    borderColor: '#d9b382',
+  },
   convertCard: {
     minWidth: 420,
-    maxWidth: 560,
-    padding: 34,
+    maxWidth: '92%',
+    padding: 28,
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
@@ -3417,19 +5065,35 @@ const styles = StyleSheet.create({
   },
   quizCard: {
     maxWidth: '90%',
-    padding: 30,
-    borderRadius: 26,
-    backgroundColor: '#f4f7fe',
+    // Bubble overlaps the card's top edge, so the card starts below it.
+    marginTop: 66,
+    paddingTop: 58,
+    paddingBottom: 30,
+    paddingHorizontal: 34,
+    borderRadius: 34,
+    backgroundColor: '#ffffff',
     shadowColor: '#000',
     shadowOpacity: 0.18,
     shadowRadius: 24,
     shadowOffset: { width: 0, height: 14 },
   },
   quizPromptRow: {
+    position: 'absolute',
+    top: -74,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 22,
+    zIndex: 3,
+  },
+  quizBuddy: {
+    width: 130,
+    height: 130,
+    // Leans in over the bubble's left edge, tucked a little further in.
+    marginRight: -66,
+    marginBottom: 34,
+    zIndex: 4,
   },
   miniStar: {
     width: 60,
@@ -3445,31 +5109,39 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
   questionBox: {
-    minWidth: 570,
-    minHeight: 76,
-    borderRadius: 14,
-    borderWidth: 2,
-    borderColor: COLORS.blue,
-    flexDirection: 'row',
+    minWidth: 460,
+    minHeight: 84,
+    paddingLeft: 74,
+    paddingRight: 44,
+    borderRadius: 999,
+    overflow: 'hidden',
+    backgroundColor: '#dbeafe',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  questionKind: {
+    marginBottom: 6,
+    fontSize: 13,
+    fontWeight: '900',
+    color: '#609EF5',
+  },
   questionText: {
+    textAlign: 'center',
     color: TEXT_ON_DARK,
     fontSize: 27,
     fontWeight: '900',
   },
   quizOptions: {
-    marginTop: 34,
+    marginTop: 16,
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 38,
   },
   quizOption: {
-    minWidth: 144,
-    height: 58,
-    borderRadius: 999,
-    borderWidth: 1.5,
+    minWidth: 150,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 3,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#94a3b8',
@@ -3699,22 +5371,73 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#5b6b8c',
   },
-  debugList: {
+  debugBackdrop: {
+    position: 'absolute',
+    top: -40,
+    left: -40,
+    width: 3000,
+    height: 3000,
+  },
+  debugPanel: {
     marginTop: 6,
-    borderRadius: 14,
-    paddingVertical: 4,
+    width: 430,
+    gap: 8,
+    padding: 14,
+    borderRadius: 18,
     backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: '#e3e9f7',
+    shadowColor: '#0b1c4a',
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 10,
   },
-  debugItem: {
-    paddingHorizontal: 14,
+  debugStatus: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingBottom: 4,
+  },
+  debugDot: {
+    width: 9,
+    height: 9,
+    borderRadius: 5,
+  },
+  debugStatusText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#5b6b8c',
+  },
+  debugGroup: {
+    fontSize: 11,
+    fontWeight: '900',
+    color: '#8a97b1',
+  },
+  debugChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  debugChip: {
+    paddingHorizontal: 12,
     paddingVertical: 8,
+    borderRadius: 12,
+    backgroundColor: '#f1f5ff',
   },
-  debugItemText: {
+  debugChipText: {
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: '800',
     color: '#171d31',
+  },
+  debugDanger: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#ffecec',
+  },
+  debugDangerText: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#e5484d',
   },
   mainWho: {
     position: 'absolute',
@@ -3765,14 +5488,14 @@ const styles = StyleSheet.create({
   buddyBubble: {
     // Hangs off the star's right side; the anchor keeps it glued there.
     position: 'absolute',
-    left: 136,
-    top: 6,
+    left: 198,
+    top: 24,
     zIndex: 40,
     minWidth: 230,
     paddingHorizontal: 18,
     paddingVertical: 14,
     borderRadius: 20,
-    backgroundColor: '#00CFE9',
+    backgroundColor: '#609EF5',
   },
   buddyText: {
     fontSize: 15,
@@ -3786,7 +5509,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 4,
-    backgroundColor: '#00CFE9',
+    backgroundColor: '#609EF5',
     transform: [{ rotate: '45deg' }],
   },
   buddyAnchor: {
@@ -3807,7 +5530,7 @@ const styles = StyleSheet.create({
   },
   buddyMenuIcon: {
     fontSize: 16,
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   buddyMenuText: {
     fontSize: 15,
@@ -3904,10 +5627,10 @@ const styles = StyleSheet.create({
   },
   cardArt: {
     position: 'absolute',
-    left: 12,
-    right: 12,
-    bottom: 18,
-    height: 260,
+    left: 4,
+    right: 4,
+    bottom: 14,
+    height: 320,
   },
   backButton: {
     position: 'absolute',
@@ -4079,7 +5802,7 @@ const styles = StyleSheet.create({
   seriesScreen: {
     flex: 1,
     padding: 24,
-    backgroundColor: '#f5f8ff',
+    backgroundColor: '#ffffff',
   },
   seriesHeader: {
     flexDirection: 'row',
@@ -4099,7 +5822,7 @@ const styles = StyleSheet.create({
   seriesTitle: {
     fontSize: 26,
     fontWeight: '900',
-    color: BG,
+    color: '#171d31',
   },
   seriesCount: {
     fontSize: 14,
@@ -4199,6 +5922,694 @@ const styles = StyleSheet.create({
   },
   tabActive: {
     color: '#00CFE9',
+  },
+  charScreen: {
+    flex: 1,
+  },
+  charDock: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 18,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 16,
+    zIndex: 4,
+  },
+  charDockBtn: {
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.88)',
+    borderWidth: 2,
+    borderColor: '#ffffff',
+  },
+  charDockArt: {
+    width: 38,
+    height: 38,
+  },
+  charDockBadge: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
+    minWidth: 24,
+    height: 24,
+    paddingHorizontal: 6,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#609EF5',
+  },
+  strokeHeart: {
+    position: 'absolute',
+    fontSize: 26,
+    color: '#ff8fb1',
+  },
+  sleepZ: {
+    position: 'absolute',
+    top: 10,
+    right: 18,
+    fontSize: 24,
+    fontWeight: '900',
+    color: '#ffffff',
+    opacity: 0.85,
+  },
+  charDockBadgeText: {
+    fontSize: 13,
+    fontWeight: '900',
+    color: '#ffffff',
+  },
+  charPanelBtn: {
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.88)',
+    borderWidth: 2,
+    borderColor: '#ffffff',
+    zIndex: 5,
+  },
+  charPanelBtnText: {
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#609EF5',
+  },
+  charPanel: {
+    position: 'absolute',
+    left: '50%',
+    marginLeft: -165,
+    bottom: 96,
+    width: 330,
+    gap: 10,
+    padding: 16,
+    borderRadius: 20,
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e3e9f7',
+    zIndex: 5,
+  },
+  charPanelLine: {
+    height: 1,
+    backgroundColor: '#e6ecfa',
+    marginVertical: 2,
+  },
+  starWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  spark: {
+    position: 'absolute',
+    width: 9,
+    height: 9,
+    borderRadius: 5,
+    backgroundColor: '#ffffff',
+    shadowColor: '#bcd8ff',
+    shadowOpacity: 0.9,
+    shadowRadius: 6,
+  },
+  starGlow: {
+    position: 'absolute',
+    width: 360,
+    height: 360,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  starRing: {
+    position: 'absolute',
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    borderWidth: 3,
+    borderColor: '#ffffff',
+  },
+  starArt: {
+    width: 260,
+    height: 260,
+  },
+  evolveWrap: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 18,
+    backgroundColor: 'rgba(10,18,45,0.55)',
+    zIndex: 6,
+  },
+  evolveTitle: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#ffffff',
+  },
+  evolveRow: {
+    flexDirection: 'row',
+    gap: 18,
+  },
+  evolveCard: {
+    width: 170,
+    alignItems: 'center',
+    gap: 8,
+    padding: 16,
+    borderRadius: 22,
+    backgroundColor: '#ffffff',
+    borderWidth: 3,
+    borderColor: '#609EF5',
+  },
+  evolveArt: {
+    width: 110,
+    height: 110,
+  },
+  evolveLabel: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: '#171d31',
+  },
+  starLayer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  charPops: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 5,
+  },
+  charPopText: {
+    // Pinned inside the star's own top-right corner so it travels with the drag. Android clips
+    // children that stick out, so it sits just inside the box rather than beyond it.
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    zIndex: 10,
+    elevation: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 999,
+    overflow: 'hidden',
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#ffffff',
+    backgroundColor: '#609EF5',
+  },
+  charItemOff: {
+    opacity: 0.4,
+  },
+  charStage: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 28,
+    overflow: 'hidden',
+    borderWidth: 3,
+    borderColor: '#b7e3c8',
+  },
+  charCardTitle: {
+    fontSize: 14,
+    fontWeight: '900',
+    color: '#5b6b8c',
+  },
+  sceneImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: undefined,
+    height: undefined,
+  },
+  sceneStrip: {
+    gap: 10,
+    paddingVertical: 2,
+  },
+  sceneCell: {
+    alignItems: 'center',
+    gap: 6,
+  },
+  sceneThumb: {
+    width: 74,
+    height: 50,
+    borderRadius: 12,
+    borderWidth: 3,
+    borderColor: 'transparent',
+  },
+  sceneThumbOn: {
+    borderColor: '#609EF5',
+  },
+  sceneLabel: {
+    textAlign: 'center',
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#8a97b1',
+  },
+  sceneLabelOn: {
+    color: '#171d31',
+  },
+  charBarTrack: {
+    height: 16,
+    justifyContent: 'center',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e3e9f7',
+    shadowColor: '#ffffff',
+    shadowOpacity: 1,
+    shadowRadius: 8,
+  },
+  charBarFill: {
+    position: 'absolute',
+    left: 0,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#609EF5',
+  },
+  charGrowthValue: {
+    fontSize: 17,
+    fontWeight: '900',
+    color: TEXT_ON_DARK,
+  },
+
+  charCheck: {
+    position: 'absolute',
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#ffffff',
+    borderWidth: 2,
+    borderColor: '#b6c8e8',
+  },
+  charCheckOn: {
+    borderColor: '#609EF5',
+    backgroundColor: '#609EF5',
+  },
+  parentScroll: {
+    paddingBottom: 20,
+  },
+  parentBody: {
+    flexDirection: 'row',
+    // Columns stretch to the tallest one, so the dividers run the full height.
+    alignItems: 'stretch',
+    gap: 16,
+    padding: 22,
+    borderRadius: 28,
+    backgroundColor: '#D7EAFF',
+  },
+  parentSectionGap: {
+    height: 44,
+  },
+  parentDivider: {
+    width: 1,
+    alignSelf: 'stretch',
+    backgroundColor: '#a9c8f2',
+  },
+  parentCol: {
+    width: 300,
+    gap: 10,
+  },
+  parentColWide: {
+    flex: 1,
+    gap: 8,
+  },
+  parentTitle: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: TEXT_ON_DARK,
+  },
+  parentSub: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#8a97b1',
+  },
+  parentMonthWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+  },
+  parentMonthNav: {
+    paddingHorizontal: 2,
+  },
+  parentMonthRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 2,
+  },
+  parentMonthArrow: {
+    paddingHorizontal: 6,
+    fontSize: 26,
+    fontWeight: '900',
+    color: '#5b6b8c',
+  },
+  parentMonthArrowOff: {
+    color: '#d3dcee',
+  },
+  parentMonth: {
+    width: 84,
+    height: 100,
+    borderRadius: 42,
+    overflow: 'hidden',
+    opacity: 0.92,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  parentMonthOff: {
+    backgroundColor: '#eef3fd',
+  },
+  parentMonthYearOff: {
+    color: '#a9b6cf',
+  },
+  parentMonthNumOff: {
+    color: '#8a97b1',
+  },
+  parentMonthYear: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#dbeafe',
+  },
+  parentMonthNum: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: '#ffffff',
+  },
+  parentWeek: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 26,
+    overflow: 'hidden',
+    // Solid base under the gradient: without it a dropped fill leaves an invisible button.
+    backgroundColor: '#eef3fd',
+  },
+  parentWeekOn: {
+    backgroundColor: '#ffffff',
+    borderWidth: 2,
+    borderColor: '#609EF5',
+  },
+  parentWeekText: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#8a97b1',
+    textAlign: 'center',
+  },
+  parentWeekTextOn: {
+    color: '#171d31',
+  },
+  parentTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: 'rgba(96,158,245,0.4)',
+  },
+  parentTagStar: {
+    fontSize: 15,
+    color: '#3f7fe0',
+  },
+  parentTagText: {
+    fontSize: 14,
+    fontWeight: '900',
+    color: '#192853',
+  },
+  parentHint: {
+    marginTop: 4,
+    marginBottom: 14,
+    fontSize: 11,
+    lineHeight: 15,
+    fontWeight: '700',
+    color: '#8a97b1',
+  },
+  parentLogRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  parentClock: {
+    width: 132,
+    height: 132,
+    borderRadius: 66,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#dbeafe',
+  },
+  parentClockFace: {
+    fontSize: 64,
+  },
+  parentLogLeader: {
+    marginHorizontal: -2,
+  },
+  parentLogList: {
+    flex: 1,
+    gap: 10,
+  },
+  parentLogItem: {
+    gap: 4,
+  },
+  parentLogCard: {
+    gap: 2,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+    backgroundColor: '#1b3a7a',
+  },
+  parentLogHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  parentLogDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: '#609EF5',
+  },
+  parentLogLen: {
+    marginLeft: 'auto',
+    fontSize: 11,
+    fontWeight: '900',
+    color: '#609EF5',
+  },
+  parentLogTime: {
+    fontSize: 11,
+    fontWeight: '900',
+    color: '#1b3a7a',
+  },
+  parentLogTitle: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: '#ffffff',
+  },
+  parentLogWord: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#c9dcff',
+  },
+  parentStatGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    rowGap: 2,
+    columnGap: 4,
+  },
+  parentStat: {
+    width: '48%',
+    paddingVertical: 4,
+  },
+  parentStatHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  parentStatArt: {
+    width: 44,
+    height: 44,
+  },
+  parentStatValue: {
+    fontSize: 30,
+    fontWeight: '900',
+    color: '#609EF5',
+  },
+  parentStatUnit: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#609EF5',
+    marginBottom: 4,
+  },
+  parentStatLabel: {
+    marginLeft: 52,
+    fontSize: 12,
+    fontWeight: '800',
+    color: TEXT_ON_DARK,
+  },
+  parentStatDelta: {
+    marginLeft: 52,
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  deltaUp: {
+    color: '#2f8f5b',
+  },
+  deltaDown: {
+    color: '#d9534f',
+  },
+  parentAvgLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 1,
+    borderTopWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: '#8fb4e8',
+  },
+  parentBaseline: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 26,
+    height: 1,
+    backgroundColor: '#8fb4e8',
+  },
+  parentBarLabelOn: {
+    color: '#3f7fe0',
+  },
+  parentChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    rowGap: 16,
+    columnGap: 16,
+    paddingTop: 6,
+    paddingBottom: 6,
+  },
+  parentChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 22,
+    paddingVertical: 14,
+    borderRadius: 999,
+    backgroundColor: '#ffffff',
+  },
+  parentChipArt: {
+    width: 30,
+    height: 30,
+  },
+  parentChipText: {
+    fontSize: 17,
+    fontWeight: '900',
+    color: '#171d31',
+  },
+  parentAvgWrap: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    marginBottom: -28,
+  },
+  parentAvgStem: {
+    width: 1,
+    height: 18,
+    backgroundColor: '#1b3a7a',
+  },
+  parentAvgDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginTop: -4,
+    backgroundColor: '#1b3a7a',
+  },
+  parentAvg: {
+    alignSelf: 'flex-end',
+    paddingHorizontal: 9,
+    paddingVertical: 3,
+    borderRadius: 999,
+    overflow: 'hidden',
+    fontSize: 10,
+    fontWeight: '900',
+    color: '#ffffff',
+    backgroundColor: '#1b3a7a',
+  },
+  parentChart: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    height: CHART_H,
+    paddingTop: 8,
+  },
+  parentBarCell: {
+    alignItems: 'center',
+    gap: 6,
+  },
+  parentBar: {
+    width: 26,
+    borderTopLeftRadius: 13,
+    borderTopRightRadius: 13,
+  },
+  parentBarLabel: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#8a97b1',
+  },
+  qdBody: {
+    gap: 8,
+    paddingBottom: 24,
+  },
+  qdGroup: {
+    gap: 6,
+  },
+  qdVideo: {
+    paddingTop: 8,
+    fontSize: 13,
+    fontWeight: '900',
+    color: '#5b6b8c',
+  },
+  qdRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 14,
+    backgroundColor: '#f4f7fe',
+    borderWidth: 1,
+    borderColor: '#e3e9f7',
+  },
+  qdAt: {
+    width: 46,
+    fontSize: 12,
+    fontWeight: '900',
+    color: '#609EF5',
+  },
+  qdText: {
+    flex: 1,
+  },
+  qdKind: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#8a97b1',
+  },
+  qdTitle: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: TEXT_ON_DARK,
+  },
+  qdAnswer: {
+    fontSize: 13,
+    fontWeight: '900',
+    color: '#2f8f5b',
   },
   wordGrid: {
     flexDirection: 'row',
