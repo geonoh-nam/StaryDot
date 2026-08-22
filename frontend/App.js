@@ -1366,7 +1366,6 @@ function RingCard({ video, index, offset, step, total, centerX, focused, onPress
   );
 }
 
-const SERIES_FILTERS = ['전체', '인기순', '최신순'];
 const SERIES_HERO_W = 330;
 
 // What the child sees after picking an episode: a big still, one start button, and what waits inside.
@@ -1446,7 +1445,6 @@ function BouncyCharacter({ source, size = 200 }) {
 
 // Series screen: the character sits on the left inviting the child, episodes fill the grid.
 function SeriesScreen({ series, onBack, onStart }) {
-  const [filter, setFilter] = useState('전체');
   // Percentage basis was letting a fourth item squeeze in, so the width is measured.
   const win = useWindowDimensions();
   // 3 per row: screen padding, the hero column, the body gap and the two grid gaps come off first.
@@ -1473,21 +1471,6 @@ function SeriesScreen({ series, onBack, onStart }) {
         </View>
 
         <View style={styles.seriesRight}>
-          <View style={styles.seriesFilters}>
-            {SERIES_FILTERS.map((f) => (
-              <TouchableOpacity
-                key={f}
-                style={[
-                  styles.seriesFilter,
-                  filter === f && { backgroundColor: series.accent || '#00CFE9', borderColor: series.accent || '#00CFE9' },
-                ]}
-                onPress={() => setFilter(f)}
-              >
-                <Text style={[styles.seriesFilterText, filter === f && { color: '#ffffff' }]}>{f}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
           <ScrollView contentContainerStyle={styles.seriesGrid} showsVerticalScrollIndicator={false}>
             {episodes.map((v, i) => (
               <TapScale key={v.id} style={[styles.episode, { width: episodeW }]} onPress={() => { playSound('pop'); onStart(v); }}>
@@ -2110,52 +2093,7 @@ const MOCK_REPORT = [
     ],
   },
 ];
-const WEEK_DAYS = ['월', '화', '수', '목', '금', '토', '일'];
 // Bars rise from this offset; the average line and its badge hang off the same base.
-const AVG_BASE = 30;
-const CHART_H = 190;
-
-const CLOCK_ART = require('./assets/scenes/clock.png');
-
-function SessionClock({ sessions }) {
-  // Measured off the art: the face centre sits at (102, 94) in its 205x179 frame and the dial
-  // runs to about 66px, so the wedges are anchored to those numbers, not to the bounding box.
-  const W = 168;
-  const H = Math.round((W * 179) / 205);
-  const cx = W * (102 / 205);
-  const cy = H * (94 / 179);
-  const R = W * (66 / 205);
-
-  const wedge = (from, to) => {
-    const a0 = ((from % 12) / 12) * Math.PI * 2 - Math.PI / 2;
-    const a1 = ((to % 12) / 12) * Math.PI * 2 - Math.PI / 2;
-    const large = a1 - a0 > Math.PI ? 1 : 0;
-    return [
-      `M ${cx} ${cy}`,
-      `L ${cx + Math.cos(a0) * R} ${cy + Math.sin(a0) * R}`,
-      `A ${R} ${R} 0 ${large} 1 ${cx + Math.cos(a1) * R} ${cy + Math.sin(a1) * R}`,
-      'Z',
-    ].join(' ');
-  };
-
-  return (
-    <View style={{ width: W, height: H }}>
-      <Image source={CLOCK_ART} style={{ width: W, height: H }} resizeMode="contain" />
-      <Svg width={W} height={H} style={StyleSheet.absoluteFill}>
-        <Defs>
-          <LinearGradient id="wedge" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0" stopColor="#8fc0ff" stopOpacity="0.95" />
-            <Stop offset="1" stopColor="#ffffff" stopOpacity="0.15" />
-          </LinearGradient>
-        </Defs>
-        {sessions.map((sn) => (
-          <Path key={sn.span} d={wedge(sn.from, sn.to)} fill="url(#wedge)" />
-        ))}
-        <Circle cx={cx} cy={cy} r={4} fill="#f5d63d" />
-      </Svg>
-    </View>
-  );
-}
 
 // The rim is a gradient, so it has to be drawn — and a drawn rim needs the chip's real size.
 function InterestChip({ label }) {
@@ -2236,13 +2174,9 @@ function ParentReportScreen({ profile, report, words }) {
   const today = new Date();
   const [month, setMonth] = useState(today.getMonth() + 1);
   const monthRef = useRef(null);
-  const [chartW, setChartW] = useState(0);
   // Minutes per day. Real numbers land here once sessions are recorded server-side; the week
   // selector shifts them so the screen behaves like the finished thing.
   const data = MOCK_REPORT[week];
-  const minutes = data.minutes;
-  const average = Math.round(minutes.reduce((a, b) => a + b, 0) / minutes.length);
-  const peak = Math.max(...minutes);
   const newWords = words.slice(0, 4);
 
   const stats = [
@@ -2252,7 +2186,6 @@ function ParentReportScreen({ profile, report, words }) {
     { art: STAT_ART.paint, value: data.stats.drawing, unit: '개', label: '완료한 그림', delta: data.deltas.drawing },
   ];
 
-  const sessions = data.sessions;
 
   return (
     <ScrollView contentContainerStyle={styles.parentScroll} showsVerticalScrollIndicator={false}>
@@ -2311,28 +2244,6 @@ function ParentReportScreen({ profile, report, words }) {
       <View style={styles.parentDivider} />
 
       <View style={styles.parentColWide}>
-        <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>데일리 로그</Text></View>
-        <View style={styles.parentLogRow}>
-          <SessionClock sessions={sessions} />
-          <Svg width={26} height={120} style={styles.parentLogLeader} pointerEvents="none">
-            <Path d="M0 34 L24 34" stroke="#1b3a7a" strokeWidth={1.5} strokeDasharray="3 4" />
-            <Path d="M0 92 L24 92" stroke="#1b3a7a" strokeWidth={1.5} strokeDasharray="3 4" />
-          </Svg>
-          <View style={styles.parentLogList}>
-            {sessions.map((sn) => (
-              <View key={sn.span} style={styles.parentLogItem}>
-                <Text style={styles.parentLogTime}>{sn.span}</Text>
-                <View style={styles.parentLogCard}>
-                  <Text style={styles.parentLogTitle}>{sn.title}</Text>
-                  {sn.words.map((w) => (
-                    <Text key={w} style={styles.parentLogWord}>새 단어 : {w}</Text>
-                  ))}
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
-
         <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>이번 주 활동 요약</Text></View>
         <View style={styles.parentStatGrid}>
           {stats.map((st) => (
@@ -2362,39 +2273,6 @@ function ParentReportScreen({ profile, report, words }) {
           ))}
         </View>
 
-        <View style={styles.parentSectionGap} />
-        <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>이번주 활동</Text></View>
-        <View style={styles.parentAvgRow}>
-          <Text style={styles.parentAvg}>일평균 {average}분</Text>
-        </View>
-        <View style={styles.parentChart} onLayout={(e) => setChartW(e.nativeEvent.layout.width)}>
-          <View style={[styles.parentAvgLine, { bottom: AVG_BASE + (average / peak) * 100 }]} pointerEvents="none" />
-          {chartW ? (
-            <Svg width={chartW} height={CHART_H} style={StyleSheet.absoluteFill} pointerEvents="none">
-              <Path
-                d={`M ${chartW * 0.62} 2 L ${chartW * 0.62} ${CHART_H - (AVG_BASE + (average / peak) * 100) - 12}`}
-                stroke="#1b3a7a"
-                strokeWidth={1.5}
-                strokeDasharray="4 4"
-              />
-              <Path
-                d={`M ${chartW * 0.62} ${CHART_H - (AVG_BASE + (average / peak) * 100) - 5} L ${chartW * 0.62 - 4.5} ${CHART_H - (AVG_BASE + (average / peak) * 100) - 13} L ${chartW * 0.62 + 4.5} ${CHART_H - (AVG_BASE + (average / peak) * 100) - 13} Z`}
-                fill="#1b3a7a"
-              />
-              <Circle cx={chartW * 0.62} cy={CHART_H - (AVG_BASE + (average / peak) * 100)} r={4.5} fill="#1b3a7a" />
-            </Svg>
-          ) : null}
-          {minutes.map((m, i) => {
-            const isToday = i === minutes.length - 1;
-            return (
-              <View key={WEEK_DAYS[i]} style={styles.parentBarCell}>
-                <View style={[styles.parentBar, { height: 24 + (m / peak) * 100, backgroundColor: isToday ? '#609EF5' : '#bcd6fb' }]} />
-                <Text style={[styles.parentBarLabel, isToday && styles.parentBarLabelOn]}>{WEEK_DAYS[i]}</Text>
-              </View>
-            );
-          })}
-          <View style={styles.parentBaseline} pointerEvents="none" />
-        </View>
       </View>
       </View>
     </ScrollView>
@@ -5900,23 +5778,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 14,
   },
-  seriesFilters: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  seriesFilter: {
-    paddingHorizontal: 18,
-    paddingVertical: 9,
-    borderRadius: 16,
-    backgroundColor: '#ffffff',
-    borderWidth: 1.5,
-    borderColor: '#dbe3f5',
-  },
-  seriesFilterText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: BG,
-  },
   seriesGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -6268,9 +6129,6 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     backgroundColor: '#D7EAFF',
   },
-  parentSectionGap: {
-    height: 44,
-  },
   parentDivider: {
     width: 1,
     alignSelf: 'stretch',
@@ -6390,15 +6248,10 @@ const styles = StyleSheet.create({
   parentHint: {
     marginTop: 4,
     marginBottom: 14,
-    fontSize: 11,
-    lineHeight: 15,
+    fontSize: 15,
+    lineHeight: 21,
     fontWeight: '700',
     color: '#8a97b1',
-  },
-  parentLogRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
   },
   parentClock: {
     width: 132,
@@ -6411,64 +6264,15 @@ const styles = StyleSheet.create({
   parentClockFace: {
     fontSize: 64,
   },
-  parentLogLeader: {
-    marginHorizontal: -2,
-  },
-  parentLogList: {
-    flex: 1,
-    gap: 10,
-  },
-  parentLogItem: {
-    gap: 4,
-  },
-  parentLogCard: {
-    gap: 2,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 12,
-    backgroundColor: '#1b3a7a',
-  },
-  parentLogHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  parentLogDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: '#609EF5',
-  },
-  parentLogLen: {
-    marginLeft: 'auto',
-    fontSize: 11,
-    fontWeight: '900',
-    color: '#609EF5',
-  },
-  parentLogTime: {
-    fontSize: 11,
-    fontWeight: '900',
-    color: '#1b3a7a',
-  },
-  parentLogTitle: {
-    fontSize: 15,
-    fontWeight: '900',
-    color: '#ffffff',
-  },
-  parentLogWord: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#c9dcff',
-  },
   parentStatGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    rowGap: 2,
-    columnGap: 4,
+    rowGap: 18,
+    columnGap: 18,
   },
   parentStat: {
     width: '48%',
-    paddingVertical: 4,
+    paddingVertical: 14,
   },
   parentStatHead: {
     flexDirection: 'row',
@@ -6476,29 +6280,29 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   parentStatArt: {
-    width: 44,
-    height: 44,
+    width: 74,
+    height: 74,
   },
   parentStatValue: {
-    fontSize: 30,
+    fontSize: 48,
     fontWeight: '900',
     color: '#609EF5',
   },
   parentStatUnit: {
-    fontSize: 13,
+    fontSize: 19,
     fontWeight: '800',
     color: '#609EF5',
     marginBottom: 4,
   },
   parentStatLabel: {
-    marginLeft: 52,
-    fontSize: 12,
+    marginLeft: 86,
+    fontSize: 18,
     fontWeight: '800',
     color: TEXT_ON_DARK,
   },
   parentStatDelta: {
-    marginLeft: 52,
-    fontSize: 11,
+    marginLeft: 86,
+    fontSize: 14,
     fontWeight: '800',
   },
   deltaUp: {
@@ -6507,30 +6311,10 @@ const styles = StyleSheet.create({
   deltaDown: {
     color: '#d9534f',
   },
-  parentAvgLine: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 1,
-    borderTopWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#8fb4e8',
-  },
-  parentBaseline: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 26,
-    height: 1,
-    backgroundColor: '#8fb4e8',
-  },
-  parentBarLabelOn: {
-    color: '#3f7fe0',
-  },
   parentChips: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     flexWrap: 'wrap',
-    rowGap: 16,
+    rowGap: 18,
     columnGap: 16,
     paddingTop: 6,
     paddingBottom: 6,
@@ -6539,70 +6323,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    paddingHorizontal: 22,
-    paddingVertical: 14,
+    paddingHorizontal: 30,
+    paddingVertical: 20,
     borderRadius: 999,
     backgroundColor: '#ffffff',
   },
   parentChipArt: {
-    width: 30,
-    height: 30,
+    width: 44,
+    height: 44,
   },
   parentChipText: {
-    fontSize: 17,
+    fontSize: 23,
     fontWeight: '900',
     color: '#171d31',
-  },
-  parentAvgWrap: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    marginBottom: -28,
-  },
-  parentAvgStem: {
-    width: 1,
-    height: 18,
-    backgroundColor: '#1b3a7a',
-  },
-  parentAvgDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginTop: -4,
-    backgroundColor: '#1b3a7a',
-  },
-  parentAvg: {
-    alignSelf: 'flex-end',
-    paddingHorizontal: 9,
-    paddingVertical: 3,
-    borderRadius: 999,
-    overflow: 'hidden',
-    fontSize: 10,
-    fontWeight: '900',
-    color: '#ffffff',
-    backgroundColor: '#1b3a7a',
-  },
-  parentChart: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    height: CHART_H,
-    paddingTop: 8,
-  },
-  parentBarCell: {
-    alignItems: 'center',
-    gap: 6,
-  },
-  parentBar: {
-    width: 26,
-    borderTopLeftRadius: 13,
-    borderTopRightRadius: 13,
-  },
-  parentBarLabel: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: '#8a97b1',
   },
   qdBody: {
     gap: 8,

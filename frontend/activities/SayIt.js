@@ -18,6 +18,20 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt, solveRef }) 
   const denyTimer = useRef(null);
   const wordTimer = useRef(null);
   const [level, setLevel] = useState(0);
+  const recording = useRef(false);
+
+  // Stopping is best-effort: the promise rejects when the recorder never started or the native
+  // object is already released, and an unhandled rejection surfaces as a red screen.
+  const stopRecorder = () => {
+    if (!recording.current) return;
+    recording.current = false;
+    try {
+      const done = recorder.stop();
+      if (done && typeof done.catch === 'function') done.catch(() => {});
+    } catch (e) {
+      // already released
+    }
+  };
 
   useEffect(() => {
     setHintAt({ x: 0.5, y: 0.42 });
@@ -50,11 +64,12 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt, solveRef }) 
       // Unmount can land here (back button, hint ladder force-solve) while we were awaiting
       // prepareToRecordAsync — the cleanup below already ran and found nothing to stop.
       if (!alive) {
-        try { recorder.stop(); } catch (e) { /* already stopped */ }
+        stopRecorder();
         return;
       }
       startedAt.current = Date.now();
       recorder.record();
+      recording.current = true;
       // The retry window is driven by a real clock, not by metering ticks: a quiet room's
       // noise floor can quantize to the same dB reading across polls, which would otherwise
       // stall the "ask again" check indefinitely.
@@ -72,7 +87,7 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt, solveRef }) 
       if (wordTimer.current) clearTimeout(wordTimer.current);
       if (windowTimer.current) clearInterval(windowTimer.current);
       if (denyTimer.current) clearTimeout(denyTimer.current);
-      try { recorder.stop(); } catch (e) { /* already stopped */ }
+      stopRecorder();
     };
   }, []);
 
@@ -84,7 +99,7 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt, solveRef }) 
       if (done.current) return;
       done.current = true;
       if (windowTimer.current) clearInterval(windowTimer.current);
-      try { recorder.stop(); } catch (e) { /* already stopped */ }
+      stopRecorder();
       setLevel(1);
     };
   }, []);
@@ -98,7 +113,7 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt, solveRef }) 
     if (speechPassed(samples.current, { floor: FLOOR, holdMs: 400 })) {
       done.current = true;
       if (windowTimer.current) clearInterval(windowTimer.current);
-      try { recorder.stop(); } catch (e) { /* already stopped */ }
+      stopRecorder();
       buddy?.say('answer.right');
       buddy?.react('right');
       onSolve();
