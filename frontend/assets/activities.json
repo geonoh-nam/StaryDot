@@ -17,31 +17,10 @@
   {
    "id": 5,
    "at": 55,
-   "type": "quiz",
+   "type": "drag",
    "payload": {
-    "activity_template": "감정_추론",
-    "title": "빛줄기를 쏘며 하늘을 나는 친구의 마음은 어떨까요?",
-    "options": [
-     {
-      "label": "신나요",
-      "color": "#f0ae03",
-      "bg": "#fffaf0"
-     },
-     {
-      "label": "무서워요",
-      "color": "#9b5de5",
-      "bg": "#f6f0ff"
-     },
-     {
-      "label": "슬퍼요",
-      "color": "#00CFE9",
-      "bg": "#f1fdff"
-     }
-    ],
-    "answer": "신나요",
-    "audioUrl": null,
-    "scene_description": "0011.jpg: 별이 반짝이는 보랏빛 밤하늘 위, 롤러스케이트를 신은 하늘색 캐릭터가 지팡이 같은 도구를 들고 웃으며 날아가는 모습. 0012.jpg: 같은 캐릭터가 지팡이를 든 손에서 넓은 노란 빛줄기를 쏘아 내며 진지하게 웃는 얼굴 클로즈업.",
-    "why_here": "이 시점도 첫 대사(01:02) 이전 구간이라 대사를 끊지 않고, 마법을 처음 쓰는 장면의 표정과 동작만으로 마음을 짐작해 볼 수 있다."
+    "item": "candy",
+    "slot": "box"
    }
   },
   {
