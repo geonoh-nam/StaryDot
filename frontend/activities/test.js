@@ -19,6 +19,10 @@ test('pickLine handles an empty pool', () => {
   assert.equal(pickLine([], null), null);
 });
 
+test('pickLine returns the line when every entry equals last', () => {
+  assert.equal(pickLine(['x', 'x', 'x'], 'x'), 'x');
+});
+
 let failed = 0;
 for (const [name, fn] of tests) {
   try { fn(); console.log(`ok  ${name}`); }
