@@ -43,6 +43,7 @@ import { Gesture, GestureDetector, GestureHandlerRootView, PointerType } from 'r
 import getStroke from 'perfect-freehand';
 import PuzzleScreen from './Puzzle';
 import { playSound, speak, speakUrl, stopSpeaking } from './sound';
+import ActivityStage from './activities/ActivityStage';
 import IntroScreen from './Intro';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -243,6 +244,8 @@ const LIBRARY = [
     ],
   },
 ];
+
+const STAGE_KINDS = new Set(['findit', 'drag', 'count', 'say']);
 
 // Question kinds the content pipeline can author. The screen only needs `type` to label them;
 // everything else is the same four-option shape.
@@ -3045,6 +3048,8 @@ function WatchScreen({ source, plan = [], picks = [0, 1, 2], seekTo, onResult, o
     instance.play();
   });
   const [selected, setSelected] = useState(null);
+  // The four participation activities live in their own stage; quiz and puzzle keep their old path.
+  const [stageActivity, setStageActivity] = useState(null);
   const [answered, setAnswered] = useState(quizDone);
   const [countdown, setCountdown] = useState(null);
   const [active, setActive] = useState(null); // current activity type: 'quiz' | 'puzzle' | null
@@ -3123,6 +3128,7 @@ function WatchScreen({ source, plan = [], picks = [0, 1, 2], seekTo, onResult, o
             setQuizIndex(a.quiz || 0);
             if (onQuizAsk) onQuizAsk(a.quiz || 0, authored);
           }
+          if (STAGE_KINDS.has(a.type)) setStageActivity({ type: a.type, payload: a.payload || {} });
           followUp.current = a.then || null;
           setPuzzleImage(a.payload?.image ? PUZZLE_IMAGES[a.payload.image] : null);
           activityId.current = a.activityId || null;
@@ -3246,6 +3252,15 @@ function WatchScreen({ source, plan = [], picks = [0, 1, 2], seekTo, onResult, o
           />
         ) : null}
       </View>
+      {stageActivity ? (
+        <ActivityStage
+          activity={stageActivity}
+          onDone={() => {
+            setStageActivity(null);
+            resume();
+          }}
+        />
+      ) : null}
       {active === 'traceword' ? (
         <TraceWordOverlay word={quiz.answer} onDone={resume} />
       ) : null}
