@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Animated, Easing, Image, StyleSheet, Text, View } from 'react-native';
 import { sayCount, sayLine } from './voice';
 
@@ -28,10 +28,24 @@ const Buddy = forwardRef(function Buddy({ character, stage }, ref) {
 
   // Home is the middle of the bottom edge — the B frame from the spec.
   const HOME = { x: 0.5, y: 0.9 };
+  const placedRef = useRef(false);
+
+  // The parent's onLayout calls home() synchronously in the same handler that sets stage
+  // state, so that home() call still races the prop update (see stageRef above). Once the
+  // stage becomes measurable, place the buddy at HOME ourselves — but only the first time;
+  // a later resize (rotation, keyboard) must not yank the buddy back while it's standing
+  // wherever an activity sent it. No spring here — a visible slide from the top-left corner
+  // on every activity open would be worse than just appearing in place.
+  useEffect(() => {
+    if (placedRef.current || !stage.w || !stage.h) return;
+    placedRef.current = true;
+    pos.setValue({ x: HOME.x * stage.w - SIZE / 2, y: HOME.y * stage.h - SIZE / 2 });
+  }, [stage.w, stage.h]);
 
   const goTo = (point) => {
     const s = stageRef.current;
     if (!s.w || !s.h) return; // nothing meaningful to move to on a zero-sized stage
+    placedRef.current = true;
     Animated.spring(pos, {
       toValue: { x: point.x * s.w - SIZE / 2, y: point.y * s.h - SIZE / 2 },
       friction: 7,
