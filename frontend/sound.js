@@ -26,7 +26,6 @@ const voices = {
 let urlPlayer = null;
 
 export function speak(name) {
-  return; // voice lines disabled
   const p = voices[name];
   if (!p) return;
   try {
@@ -39,11 +38,23 @@ export function speak(name) {
 
 // One line of question audio, streamed straight from wherever the DB says it lives.
 export function speakUrl(uri) {
-  return; // voice lines disabled
   if (!uri) return;
   try {
     if (urlPlayer) urlPlayer.remove();
     urlPlayer = createAudioPlayer({ uri });
+    urlPlayer.play();
+  } catch (e) {
+    // ignore playback races
+  }
+}
+
+// A voice line that arrives as a bundled module rather than a fixed name. Players are made
+// on demand and thrown away — only one line plays at a time.
+export function playVoice(mod) {
+  if (!mod) return;
+  try {
+    if (urlPlayer) urlPlayer.remove();
+    urlPlayer = createAudioPlayer(mod);
     urlPlayer.play();
   } catch (e) {
     // ignore playback races
