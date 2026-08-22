@@ -2707,6 +2707,10 @@ const ACT_MSG = {
   quiz: { text: '같이 퀴즈 풀어보자!', emoji: '🧠' },
   puzzle: { text: '퍼즐 맞춰볼까?', emoji: '🧩' },
   traceword: { text: '같이 따라 써 보자!', emoji: '✏️' },
+  findit: { text: '숨은 그림을 찾아보자!', emoji: '🔍' },
+  drag: { text: '제자리로 옮겨볼까?', emoji: '📦' },
+  count: { text: '몇 개인지 세어보자!', emoji: '🔢' },
+  say: { text: '소리 내어 말해볼까?', emoji: '🗣️' },
 };
 
 // Toss-style center popup with a spring pop-in. Self-animates on mount.
@@ -3252,7 +3256,7 @@ function WatchScreen({ source, plan = [], picks = [0, 1, 2], seekTo, onResult, o
           />
         ) : null}
       </View>
-      {stageActivity ? (
+      {stageActivity && active === stageActivity.type ? (
         <ActivityStage
           activity={stageActivity}
           onDone={() => {
