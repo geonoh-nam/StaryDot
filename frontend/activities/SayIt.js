@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { speechPassed } from './rules';
 
 const FLOOR = -35;
+const WINDOW_TICK_MS = 250; // real clock, independent of whether metering reports a new value
 
 // Did the child speak? Not what they said. See the spec — scoring a three-year-old's
 // pronunciation marks normal speech wrong.
@@ -13,6 +14,8 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt }) {
   const samples = useRef([]);
   const startedAt = useRef(0);
   const done = useRef(false);
+  const windowTimer = useRef(null);
+  const denyTimer = useRef(null);
   const [level, setLevel] = useState(0);
 
   useEffect(() => {
@@ -24,15 +27,34 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt }) {
       buddy?.say('speak.listen');
       // No microphone, no problem: the buddy says the word and the turn passes anyway.
       if (!granted.granted) {
-        setTimeout(() => onSolve(), 2500);
+        denyTimer.current = setTimeout(() => onSolve(), 2500);
+        return;
+      }
+      await recorder.prepareToRecordAsync();
+      // Unmount can land here (back button, hint ladder force-solve) while we were awaiting
+      // prepareToRecordAsync — the cleanup below already ran and found nothing to stop.
+      if (!alive) {
+        try { recorder.stop(); } catch (e) { /* already stopped */ }
         return;
       }
       startedAt.current = Date.now();
-      await recorder.prepareToRecordAsync();
       recorder.record();
+      // The retry window is driven by a real clock, not by metering ticks: a quiet room's
+      // noise floor can quantize to the same dB reading across polls, which would otherwise
+      // stall the "ask again" check indefinitely.
+      windowTimer.current = setInterval(() => {
+        if (done.current) return;
+        if (Date.now() - startedAt.current > (payload.listenMs || 5000)) {
+          samples.current = [];
+          startedAt.current = Date.now();
+          buddy?.say('speak.quiet');
+        }
+      }, WINDOW_TICK_MS);
     })();
     return () => {
       alive = false;
+      if (windowTimer.current) clearInterval(windowTimer.current);
+      if (denyTimer.current) clearTimeout(denyTimer.current);
       try { recorder.stop(); } catch (e) { /* already stopped */ }
     };
   }, []);
@@ -45,16 +67,11 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt }) {
 
     if (speechPassed(samples.current, { floor: FLOOR, holdMs: 400 })) {
       done.current = true;
+      if (windowTimer.current) clearInterval(windowTimer.current);
       try { recorder.stop(); } catch (e) { /* already stopped */ }
       buddy?.say('answer.right');
       buddy?.react('right');
       onSolve();
-      return;
-    }
-    if (Date.now() - startedAt.current > (payload.listenMs || 5000)) {
-      samples.current = [];
-      startedAt.current = Date.now();
-      buddy?.say('speak.quiet');
     }
   }, [state.metering, state.isRecording]);
 
