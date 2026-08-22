@@ -18,8 +18,11 @@ export default function ActivityStage({ activity, onDone }) {
   const buddyRef = useRef(null);
   const hintAt = useRef(null);
   const settled = useRef(false);
+  const solved = useRef(false);
+  const pendingFinish = useRef(null);
   const [stage, setStage] = useState({ w: 0, h: 0 });
   const [level, setLevel] = useState(0);
+  const [hintAtTick, setHintAtTick] = useState(0);
 
   // Picked once and kept for the whole activity: a voice that changes mid-sentence confuses
   // a three-year-old.
@@ -30,10 +33,22 @@ export default function ActivityStage({ activity, onDone }) {
 
   const Body = KINDS[activity.type];
 
+  const unmounted = useRef(false);
+  useEffect(() => () => {
+    unmounted.current = true;
+  }, []);
+
   const finish = (ok) => {
-    if (settled.current) return;
+    if (settled.current || unmounted.current) return;
     settled.current = true;
     onDone(ok);
+  };
+
+  const scheduleFinish = (ok, delay) => {
+    pendingFinish.current = setTimeout(() => {
+      pendingFinish.current = null;
+      finish(ok);
+    }, delay);
   };
 
   useEffect(() => {
@@ -42,24 +57,29 @@ export default function ActivityStage({ activity, onDone }) {
       if (settled.current) return;
       const next = hintLevel(Date.now() - startedAt);
       setLevel((prev) => (prev === next ? prev : next));
-      if (next >= 3) {
+      if (next >= 3 && !solved.current) {
+        solved.current = true;
         // The buddy solves it and celebrates with the child rather than leaving them stuck.
         if (hintAt.current) buddyRef.current?.moveTo(hintAt.current);
         buddyRef.current?.say('hint.solved');
         buddyRef.current?.react('right');
-        setTimeout(() => finish(true), 1800);
+        scheduleFinish(true, 1800);
       }
     }, 500);
-    return () => clearInterval(id);
+    return () => {
+      clearInterval(id);
+      if (pendingFinish.current) clearTimeout(pendingFinish.current);
+    };
   }, [activity]);
 
   // Level 2 hops next to the answer. Level 1 is the buddy simply looking that way, which the
-  // art cannot express yet, so it is left silent on purpose.
+  // art cannot express yet, so it is left silent on purpose. Depends on hintAtTick too, so a
+  // setHintAt that arrives after level has already settled at 2 still triggers the hop.
   useEffect(() => {
     if (!hintAt.current || level !== 2) return;
     buddyRef.current?.moveTo({ x: hintAt.current.x, y: Math.max(0.12, hintAt.current.y - 0.18) });
     buddyRef.current?.react('right');
-  }, [level]);
+  }, [level, hintAtTick]);
 
   if (!Body) return null;
 
@@ -83,9 +103,10 @@ export default function ActivityStage({ activity, onDone }) {
             payload={activity.payload}
             buddy={buddyRef.current}
             stage={stage}
-            onSolve={() => setTimeout(() => finish(true), 1400)}
+            onSolve={() => scheduleFinish(true, 1400)}
             setHintAt={(point) => {
               hintAt.current = point;
+              setHintAtTick((n) => n + 1);
             }}
           />
         ) : null}
