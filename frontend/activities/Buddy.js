@@ -8,6 +8,10 @@ const ART = {
 };
 
 const SIZE = 130;
+// The bubble sits ~129px above the buddy's centre (its own height plus the gap to the art).
+// Any caller asking the buddy to stand near the top edge would otherwise push the bubble off
+// screen — clamp here, once, since only Buddy knows its own size and its bubble's height.
+const BUBBLE_CLEARANCE = 129;
 
 // The buddy knows how to move, bounce and speak. It knows nothing about any activity — an
 // activity tells it where to go, never how to draw itself.
@@ -46,8 +50,11 @@ const Buddy = forwardRef(function Buddy({ character, stage }, ref) {
     const s = stageRef.current;
     if (!s.w || !s.h) return; // nothing meaningful to move to on a zero-sized stage
     placedRef.current = true;
+    // Never let the centre get so close to the top edge that the bubble above it clips off screen.
+    const minY = (SIZE / 2 + BUBBLE_CLEARANCE) / s.h;
+    const y = Math.max(point.y, minY);
     Animated.spring(pos, {
-      toValue: { x: point.x * s.w - SIZE / 2, y: point.y * s.h - SIZE / 2 },
+      toValue: { x: point.x * s.w - SIZE / 2, y: y * s.h - SIZE / 2 },
       friction: 7,
       tension: 60,
       useNativeDriver: true,

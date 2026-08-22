@@ -11,13 +11,6 @@ export function hintLevel(elapsedMs) {
   return 0;
 }
 
-// Everything is a 0..1 fraction of the stage, so a different screen size changes nothing.
-export function isHit(point, target) {
-  const dx = point.x - target.x;
-  const dy = point.y - target.y;
-  return Math.hypot(dx, dy) <= target.r;
-}
-
 // Did the child speak? Not what they said — see the spec. A toddler saying "아과" for "사과"
 // is normal, and scoring it would mark healthy speech wrong. Real speech dips below the floor
 // for a sample or two at plosives and breaths, so a short dip (<= gapMs) doesn't reset the run.

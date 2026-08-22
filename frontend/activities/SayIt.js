@@ -8,7 +8,7 @@ const WINDOW_TICK_MS = 250; // real clock, independent of whether metering repor
 
 // Did the child speak? Not what they said. See the spec — scoring a three-year-old's
 // pronunciation marks normal speech wrong.
-export default function SayIt({ payload, buddy, onSolve, setHintAt }) {
+export default function SayIt({ payload, buddy, onSolve, setHintAt, solveRef }) {
   const recorder = useAudioRecorder({ ...RecordingPresets.HIGH_QUALITY, isMeteringEnabled: true });
   const state = useAudioRecorderState(recorder, 100);
   const samples = useRef([]);
@@ -16,16 +16,26 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt }) {
   const done = useRef(false);
   const windowTimer = useRef(null);
   const denyTimer = useRef(null);
+  const wordTimer = useRef(null);
   const [level, setLevel] = useState(0);
 
   useEffect(() => {
     setHintAt({ x: 0.5, y: 0.42 });
+    // Stand beside the microphone circle instead of at home, same B-frame idea as the other
+    // activities: the buddy is who's asking, so it belongs next to the thing it's asking about.
+    buddy?.moveTo({ x: 0.72, y: 0.42 });
     let alive = true;
+    // Say the word itself first — there's no recording yet, so the bubble text IS the word.
+    // Then the invitation, held back so it doesn't overwrite the word before the child reads it.
+    buddy?.say(payload.word);
+    wordTimer.current = setTimeout(() => {
+      if (!alive) return;
+      buddy?.say('speak.listen');
+    }, 1400);
     (async () => {
       const granted = await AudioModule.requestRecordingPermissionsAsync();
       if (!alive) return;
-      buddy?.say('speak.listen');
-      // No microphone, no problem: the buddy says the word and the turn passes anyway.
+      // No microphone, no problem: the buddy already said the word and the turn passes anyway.
       if (!granted.granted) {
         denyTimer.current = setTimeout(() => onSolve(), 2500);
         return;
@@ -53,9 +63,23 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt }) {
     })();
     return () => {
       alive = false;
+      if (wordTimer.current) clearTimeout(wordTimer.current);
       if (windowTimer.current) clearInterval(windowTimer.current);
       if (denyTimer.current) clearTimeout(denyTimer.current);
       try { recorder.stop(); } catch (e) { /* already stopped */ }
+    };
+  }, []);
+
+  // The stage calls this when it takes the activity over at hint level 3 — fill the meter so
+  // the board matches the buddy's line. A child who already spoke is left alone.
+  useEffect(() => {
+    if (!solveRef) return;
+    solveRef.current = () => {
+      if (done.current) return;
+      done.current = true;
+      if (windowTimer.current) clearInterval(windowTimer.current);
+      try { recorder.stop(); } catch (e) { /* already stopped */ }
+      setLevel(1);
     };
   }, []);
 

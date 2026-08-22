@@ -29,7 +29,7 @@ function imageBox(stage) {
 
 // Tap the picture to find something in it. A miss does nothing at all — no buzzer, no shake.
 // The child keeps looking instead of learning they got it wrong.
-export default function FindIt({ payload, buddy, stage, onSolve, setHintAt }) {
+export default function FindIt({ payload, buddy, stage, onSolve, setHintAt, solveRef }) {
   const [found, setFound] = useState(false);
 
   useEffect(() => {
@@ -37,7 +37,18 @@ export default function FindIt({ payload, buddy, stage, onSolve, setHintAt }) {
     buddy?.say(payload.ask || 'quiz.ask');
   }, []);
 
+  // The stage calls this when it takes the activity over at hint level 3 — draw the ring so
+  // the board matches the "found it" line the buddy just said. A child who already tapped it
+  // is left alone.
+  useEffect(() => {
+    if (!solveRef) return;
+    solveRef.current = () => setFound(true);
+  }, []);
+
   const box = imageBox(stage);
+  // The authored image may be missing from the map (asset not shipped yet) — fall back to
+  // whichever frame we do have rather than showing a blank board for 24 seconds.
+  const imageKey = FIND_IMAGES[payload.image] ? payload.image : Object.keys(FIND_IMAGES)[0];
 
   const ring = payload.target.r * box.w;
 
@@ -50,7 +61,7 @@ export default function FindIt({ payload, buddy, stage, onSolve, setHintAt }) {
     const dy = e.nativeEvent.locationY - (box.y + payload.target.y * box.h);
     if (Math.hypot(dx, dy) > ring) return;
     setFound(true);
-    buddy?.moveTo({ x: payload.target.x, y: Math.max(0.12, payload.target.y - 0.2) });
+    buddy?.moveTo({ x: payload.target.x, y: payload.target.y - 0.2 });
     buddy?.say('answer.right');
     buddy?.react('right');
     onSolve();
@@ -58,9 +69,9 @@ export default function FindIt({ payload, buddy, stage, onSolve, setHintAt }) {
 
   return (
     <Pressable style={styles.board} onPress={onTap}>
-      {FIND_IMAGES[payload.image] ? (
+      {FIND_IMAGES[imageKey] ? (
         <Image
-          source={FIND_IMAGES[payload.image]}
+          source={FIND_IMAGES[imageKey]}
           style={[styles.art, { left: box.x, top: box.y, width: box.w, height: box.h }]}
           resizeMode="contain"
         />

@@ -11,13 +11,14 @@ const DONE_DELAY_MS = 900; // let the spoken number land before the finishing li
 
 // Counting is the activity — there is no number to pick. Each tap moves the buddy onto the
 // thing just counted and it says the number out loud.
-export default function CountIt({ payload, buddy, stage, onSolve, setHintAt }) {
+export default function CountIt({ payload, buddy, stage, onSolve, setHintAt, solveRef }) {
+  const n = payload.n > 0 ? payload.n : 3; // no count given — a blank board is worse than a made-up one
   const [counted, setCounted] = useState(0);
-  const slots = Array.from({ length: payload.n }, (_, i) => (i + 1) / (payload.n + 1));
+  const slots = Array.from({ length: n }, (_, i) => (i + 1) / (n + 1));
   const doneTimer = useRef(null);
 
   // cells shrink once the row is crowded, so neighbours always keep a real gap
-  const spacingPx = stage.w / (payload.n + 1);
+  const spacingPx = stage.w / (n + 1);
   const cellSize = Math.min(120, spacingPx * 0.85);
   const artSize = cellSize * (96 / 120);
 
@@ -29,13 +30,21 @@ export default function CountIt({ payload, buddy, stage, onSolve, setHintAt }) {
     };
   }, []);
 
+  // The stage calls this when it takes the activity over at hint level 3. Mark every item
+  // counted so the board matches the "solved" line the buddy just said; a child who already
+  // finished counting is left alone.
+  useEffect(() => {
+    if (!solveRef) return;
+    solveRef.current = () => setCounted((c) => (c >= n ? c : n));
+  }, [n]);
+
   const tap = (index) => {
     if (index !== counted) return; // out-of-order taps are ignored, not punished
     const next = counted + 1;
     setCounted(next);
-    buddy?.moveTo({ x: slots[index], y: Math.max(0.12, ROW_Y - 0.16) });
+    buddy?.moveTo({ x: slots[index], y: ROW_Y - 0.16 });
     buddy?.say(`count.n:${next}`);
-    if (next >= payload.n) {
+    if (next >= n) {
       doneTimer.current = setTimeout(() => {
         buddy?.say('count.done');
         buddy?.react('right');

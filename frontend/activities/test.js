@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { pickLine } from './lines.js';
-import { hintLevel, isHit, speechPassed, HINT_SOLVE } from './rules.js';
+import { hintLevel, speechPassed, HINT_SOLVE } from './rules.js';
 
 const tests = [];
 function test(name, fn) { tests.push([name, fn]); }
@@ -32,16 +32,6 @@ test('hintLevel climbs at 8, 16 and 24 seconds', () => {
   assert.equal(hintLevel(16000), 2);
   assert.equal(hintLevel(HINT_SOLVE), 3);
   assert.equal(hintLevel(99000), 3);
-});
-
-test('isHit accepts a touch inside the target circle', () => {
-  const target = { x: 0.5, y: 0.5, r: 0.1 };
-  assert.equal(isHit({ x: 0.5, y: 0.5 }, target), true);
-  assert.equal(isHit({ x: 0.58, y: 0.5 }, target), true);
-  assert.equal(isHit({ x: 0.7, y: 0.5 }, target), false);
-  assert.equal(isHit({ x: 0.5, y: 0.58 }, target), true);
-  assert.equal(isHit({ x: 0.5, y: 0.7 }, target), false);
-  assert.equal(isHit({ x: 0.58, y: 0.58 }, target), false);
 });
 
 test('speechPassed needs the level held above the floor long enough', () => {

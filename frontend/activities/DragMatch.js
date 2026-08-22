@@ -13,7 +13,7 @@ const SNAP_PX = 130;
 
 // Carry the thing to where it belongs. Dropped short, it springs back — that reads as "not
 // yet", where a buzzer would read as "you failed".
-export default function DragMatch({ payload, buddy, stage, onSolve, setHintAt }) {
+export default function DragMatch({ payload, buddy, stage, onSolve, setHintAt, solveRef }) {
   const pos = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const placed = useRef(false);
   const [filled, setFilled] = useState(false);
@@ -24,6 +24,22 @@ export default function DragMatch({ payload, buddy, stage, onSolve, setHintAt })
     // The buddy waits on the far side of the slot so it never sits under the child's finger.
     buddy?.moveTo({ x: Math.min(0.92, SLOT_AT.x + 0.18), y: SLOT_AT.y });
   }, []);
+
+  // The stage calls this when it takes the activity over at hint level 3 — snap the item into
+  // the slot so the board matches the buddy's line. A child who already placed it is left alone.
+  useEffect(() => {
+    if (!solveRef) return;
+    solveRef.current = () => {
+      if (placed.current) return;
+      placed.current = true;
+      setFilled(true);
+      Animated.spring(pos, {
+        toValue: { x: (SLOT_AT.x - ITEM_AT.x) * stage.w, y: (SLOT_AT.y - ITEM_AT.y) * stage.h },
+        friction: 7,
+        useNativeDriver: true,
+      }).start();
+    };
+  }, [stage.w, stage.h]);
 
   const drag = useMemo(
     () =>

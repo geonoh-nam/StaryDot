@@ -3259,7 +3259,11 @@ function WatchScreen({ source, plan = [], picks = [0, 1, 2], seekTo, onResult, o
       {stageActivity && active === stageActivity.type ? (
         <ActivityStage
           activity={stageActivity}
-          onDone={() => {
+          onDone={(ok) => {
+            // These activities have no failure state — the buddy solves it rather than letting
+            // the child fail, so a finish is always "correct"; only closing early (back button)
+            // is a skip. Same shape as handleAnswer's onResult call for the quiz path.
+            if (onResult) onResult(activityId.current, ok ? 'correct' : 'skip', stageActivity.type);
             setStageActivity(null);
             resume();
           }}
