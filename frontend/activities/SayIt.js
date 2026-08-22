@@ -27,11 +27,17 @@ export default function SayIt({ payload, buddy, onSolve, setHintAt, solveRef }) 
     let alive = true;
     // Say the word itself first — there's no recording yet, so the bubble text IS the word.
     // Then the invitation, held back so it doesn't overwrite the word before the child reads it.
-    buddy?.say(payload.word);
-    wordTimer.current = setTimeout(() => {
-      if (!alive) return;
+    // No word (bad payload) — skip straight to the invitation instead of crashing or leaving
+    // the child with no prompt at all.
+    if (payload.word) {
+      buddy?.say(payload.word);
+      wordTimer.current = setTimeout(() => {
+        if (!alive) return;
+        buddy?.say('speak.listen');
+      }, 1400);
+    } else {
       buddy?.say('speak.listen');
-    }, 1400);
+    }
     (async () => {
       const granted = await AudioModule.requestRecordingPermissionsAsync();
       if (!alive) return;
