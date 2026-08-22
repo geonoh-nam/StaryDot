@@ -13,6 +13,10 @@ const APP = path.join(ROOT, 'frontend/App.js');
 const PLANS = path.join(ROOT, 'frontend/assets/activities.json');
 const OUT_DIR = path.join(ROOT, 'frontend/assets/puzzles');
 const VIDEO_DIR = path.join(ROOT, 'backend/server/media/video');
+const FIND_DIR = path.join(ROOT, 'frontend/assets/finds');
+const FINDIT = path.join(ROOT, 'frontend/activities/FindIt.js');
+fs.mkdirSync(FIND_DIR, { recursive: true });
+const findKeys = [];
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const plans = JSON.parse(fs.readFileSync(PLANS, 'utf8'));
@@ -20,10 +24,11 @@ const keys = [];
 
 for (const [videoId, activities] of Object.entries(plans)) {
   for (const a of activities) {
-    if (a.type !== 'puzzle') continue;
+    if (a.type !== 'puzzle' && a.type !== 'findit') continue;
+    const dir = a.type === 'puzzle' ? OUT_DIR : FIND_DIR;
     const at = a.at_sec ?? a.at;
     const name = `${videoId}-${at}`;
-    const file = path.join(OUT_DIR, `${name}.png`);
+    const file = path.join(dir, `${name}.png`);
     const source = path.join(VIDEO_DIR, `${videoId}.mp4`);
     if (!fs.existsSync(source)) {
       console.error(`no video for ${videoId}, skipped`);
@@ -34,7 +39,8 @@ for (const [videoId, activities] of Object.entries(plans)) {
       '-frames:v', '1', '-vf', 'scale=940:-1,crop=940:529', file,
     ]);
     a.payload = { ...(a.payload || {}), image: name };
-    keys.push(name);
+    if (a.type === 'puzzle') keys.push(name);
+    else findKeys.push(name);
     console.log(`${videoId} ${at}s -> ${name}.png`);
   }
 }
@@ -47,3 +53,13 @@ const map = `const PUZZLE_IMAGES = {\n${keys
 const app = fs.readFileSync(APP, 'utf8').replace(/const PUZZLE_IMAGES = \{[\s\S]*?\n\};/, map);
 fs.writeFileSync(APP, app);
 console.log(`PUZZLE_IMAGES: ${keys.length}개`);
+
+// The find-it map lives in its own component, between the marker comments.
+const findMap = `// FIND_IMAGES_START\nconst FIND_IMAGES = {\n${findKeys
+  .map((k) => `  '${k}': require('../assets/finds/${k}.png'),`)
+  .join('\n')}\n};\n// FIND_IMAGES_END`;
+const findSrc = fs.readFileSync(FINDIT, 'utf8');
+fs.writeFileSync(
+  FINDIT,
+  findSrc.replace(/\/\/ FIND_IMAGES_START[\s\S]*?\/\/ FIND_IMAGES_END/, findMap)
+);
