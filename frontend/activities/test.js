@@ -39,6 +39,9 @@ test('isHit accepts a touch inside the target circle', () => {
   assert.equal(isHit({ x: 0.5, y: 0.5 }, target), true);
   assert.equal(isHit({ x: 0.58, y: 0.5 }, target), true);
   assert.equal(isHit({ x: 0.7, y: 0.5 }, target), false);
+  assert.equal(isHit({ x: 0.5, y: 0.58 }, target), true);
+  assert.equal(isHit({ x: 0.5, y: 0.7 }, target), false);
+  assert.equal(isHit({ x: 0.58, y: 0.58 }, target), false);
 });
 
 test('speechPassed needs the level held above the floor long enough', () => {
@@ -61,6 +64,27 @@ test('speechPassed needs the level held above the floor long enough', () => {
 test('speechPassed ignores a silent room', () => {
   const quiet = [{ db: -60, atMs: 0 }, { db: -58, atMs: 500 }, { db: -61, atMs: 1000 }];
   assert.equal(speechPassed(quiet), false);
+});
+
+test('speechPassed tolerates a short dip at a plosive', () => {
+  const shortDip = [
+    { db: -10, atMs: 0 },
+    { db: -50, atMs: 100 },
+    { db: -10, atMs: 200 },
+    { db: -10, atMs: 450 },
+  ];
+  assert.equal(speechPassed(shortDip), true);
+});
+
+test('speechPassed resets on a silence longer than gapMs', () => {
+  const longSilence = [
+    { db: -10, atMs: 0 },
+    { db: -50, atMs: 100 },
+    { db: -50, atMs: 300 },
+    { db: -10, atMs: 400 },
+    { db: -10, atMs: 600 },
+  ];
+  assert.equal(speechPassed(longSilence), false);
 });
 
 let failed = 0;
