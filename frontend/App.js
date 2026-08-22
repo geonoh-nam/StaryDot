@@ -1152,8 +1152,16 @@ const DEBUG_TABS = [
   ['settings', '설정'],
 ];
 
+const DEBUG_ACTIVITIES = [
+  ['찾아 짚기', { type: 'findit', payload: { image: 'teenieping-01-27', target: { x: 0.62, y: 0.53, r: 0.15 }, ask: '하츄핑 어디 있지?' } }],
+  ['끌어다 놓기', { type: 'drag', payload: { item: 'candy', slot: 'box' } }],
+  ['세어보기', { type: 'count', payload: { item: 'apple', n: 4 } }],
+  ['따라 말하기', { type: 'say', payload: { word: '사과', listenMs: 5000 } }],
+];
+
 function DebugJump({ onJump, onTab, onReset, contentUp }) {
   const [open, setOpen] = useState(false);
+  const [preview, setPreview] = useState(null);
   if (!__DEV__) return null;
   return (
     <View style={styles.debugWrap}>
@@ -1188,6 +1196,15 @@ function DebugJump({ onJump, onTab, onReset, contentUp }) {
               ))}
             </View>
 
+            <Text style={styles.debugGroup}>활동</Text>
+            <View style={styles.debugChips}>
+              {DEBUG_ACTIVITIES.map(([label, activity]) => (
+                <TouchableOpacity key={activity.type} style={styles.debugChip} onPress={() => { setOpen(false); setPreview(activity); }}>
+                  <Text style={styles.debugChipText}>{label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
             <Text style={styles.debugGroup}>데이터</Text>
             <TouchableOpacity style={[styles.debugChip, styles.debugDanger]} onPress={() => { setOpen(false); onReset(); }}>
               <Text style={styles.debugDangerText}>저장 데이터 지우고 온보딩부터</Text>
@@ -1195,6 +1212,7 @@ function DebugJump({ onJump, onTab, onReset, contentUp }) {
           </View>
         </>
       ) : null}
+      {preview ? <ActivityStage activity={preview} onDone={() => setPreview(null)} /> : null}
     </View>
   );
 }
