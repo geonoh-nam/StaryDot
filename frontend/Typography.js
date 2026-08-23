@@ -17,8 +17,11 @@ export const AGGRO_FONTS = {
 };
 
 export function useAggroFonts() {
-  const [loaded] = useFonts(AGGRO_FONTS);
-  return loaded;
+  const [loaded, error] = useFonts(AGGRO_FONTS);
+  // A font that fails to load must not hold the app hostage: the gate opens either way, and the
+  // system face stands in. A child staring at a white screen is worse than the wrong typeface.
+  if (error) console.warn('font load failed, continuing with system fonts:', error);
+  return loaded || !!error;
 }
 
 // Two families, picked per string: Korean text gets Pretendard, Latin-only text gets Poppins.

@@ -156,15 +156,13 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    borderWidth: 2,
-    borderColor: '#e3e9f7',
+    backgroundColor: 'rgba(23,29,49,0.55)',
     zIndex: 20,
   },
   ffText: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#171d31',
+    color: '#ffffff',
   },
   stage: {
     flex: 1,

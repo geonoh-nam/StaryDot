@@ -7,7 +7,7 @@ const ART = {
   dino: require('../assets/characters/dino.png'),
 };
 
-const SIZE = 130;
+const SIZE = 190;
 // The bubble sits ~129px above the buddy's centre (its own height plus the gap to the art).
 // Any caller asking the buddy to stand near the top edge would otherwise push the bubble off
 // screen — clamp here, once, since only Buddy knows its own size and its bubble's height.
@@ -131,6 +131,8 @@ const styles = StyleSheet.create({
     width: SIZE,
     height: SIZE,
     alignItems: 'center',
+    // The bubble is wider than the sprite and must not be clipped to it.
+    overflow: 'visible',
   },
   art: {
     width: SIZE,
@@ -141,9 +143,10 @@ const styles = StyleSheet.create({
     bottom: '100%',
     alignSelf: 'center',
     marginBottom: 12,
-    minWidth: 180,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    minWidth: 260,
+    maxWidth: 520,
+    paddingHorizontal: 26,
+    paddingVertical: 14,
     borderRadius: 26,
     backgroundColor: '#ffffff',
     borderWidth: 3,
