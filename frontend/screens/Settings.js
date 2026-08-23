@@ -2,6 +2,8 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
+import { ageLabel } from '../age';
+import { DailyLimitPicker } from './Onboarding';
 
 // The grown-ups' screen: what the child is allowed to do, and for how long.
 export function SettingsScreen({ profile, settings, onChange, onEditProfile }) {

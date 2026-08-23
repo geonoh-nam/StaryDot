@@ -2,11 +2,28 @@
 import * as ImagePicker from 'expo-image-picker';
 import React, { useMemo, useRef, useState } from 'react';
 import {
-  Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,
+  Alert, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,
 } from 'react-native';
 import { playSound } from '../sound';
 import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
 import { buttons } from '../ui/buttons';
+import { PattiCharacter } from '../ui/artwork';
+import { ageInMonths, ageLabel } from '../age';
+import { TapScale } from '../ui/motion';
+
+const range = (from, to) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
+
+const THIS_YEAR = new Date().getFullYear();
+
+const HOUR_VALUES = [0, 1, 2, 3, 4, 5, 6];
+
+const MINUTE_VALUES = [0, 10, 20, 30, 40, 50];
+
+// First run, step 2: the grown-up rules for the session.
+// Each card is a vertical wheel: the number under the middle of the card is the selection.
+const WHEEL_ITEM_H = 62;
+
+const LIMIT_TRACK_W = 440;
 
 // Toss-style opener: one promise, one button, nothing to decide yet.
 export function OnboardIntroScreen({ onNext }) {

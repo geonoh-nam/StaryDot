@@ -1,8 +1,13 @@
 // The end-of-session round-up: what the child did, the words they met, and the picture they made.
 import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { DEMO_VIDEO } from '../data/library';
+import { playSound } from '../sound';
 import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
 import { buttons } from '../ui/buttons';
+import { COLORS } from '../theme';
+import { GeneratedCharacter, PattiCharacter, StrokeArt } from '../ui/artwork';
+import { TapScale } from '../ui/motion';
 
 export function ReportStat({ label, value, tone }) {
   return (
@@ -16,7 +21,7 @@ export function ReportStat({ label, value, tone }) {
 export function ReportScreen({ report, characterImage, savedDrawing, onReplay, onOtherVideos, onCharacter }) {
   const today = new Date();
   const dateLine = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
-  const watched = report.watched || video.title;
+  const watched = report.watched || DEMO_VIDEO.title;
   const completed = report.quiz + report.drawing;
   const interests = report.interests || [];
   return (

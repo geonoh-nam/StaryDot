@@ -43,10 +43,11 @@ import { Gesture, GestureDetector, GestureHandlerRootView, PointerType } from 'r
 import getStroke from 'perfect-freehand';
 import PuzzleScreen from './Puzzle';
 import { playSound, speak, speakUrl, stopSpeaking } from './sound';
-import { BG, COLORS, TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from './theme';
-import { LIBRARY, SERIES_ART, THUMBS } from './data/library';
+import { ageInMonths } from './age';
+import { BG, COLORS, TEXT_MUTED_ON_DARK, TEXT_ON_DARK, hexToRgb, rgbToHex } from './theme';
+import { DEMO_VIDEO, LIBRARY, SERIES_ART, THUMBS } from './data/library';
 import { QUIZ_KINDS, QUIZ_POOL } from './data/quiz-pool';
-import { CANDY_ICON, CLOSET_ICON, COSTUMES, EVOLUTIONS, FULL_BAR, GROWTH_CHECKPOINTS, GROWTH_PER_CANDY, SCENES, STAGE1_ART, STAR_FIELD } from './data/character';
+import { CANDY_ICON, CHARACTER_IMAGES, CLOSET_ICON, COSTUMES, EVOLUTIONS, FULL_BAR, GROWTH_CHECKPOINTS, GROWTH_PER_CANDY, SCENES, STAGE1_ART, STAR_FIELD } from './data/character';
 import { INTEREST_ART, MOCK_REPORT, PARENT_WEEKS, STAT_ART } from './data/report';
 import { CenterPopup } from './ui/CenterPopup';
 import { TabletHeader } from './ui/Header';
@@ -56,13 +57,17 @@ import { CharacterScreen, EvolvePopup, SPARKS, StarStage } from './screens/Chara
 import { ParentReportScreen } from './screens/ParentReport';
 import { ChildProfileScreen, GuardianSetupScreen, OnboardIntroScreen } from './screens/Onboarding';
 import { buttons } from './ui/buttons';
-import { CardSheen, MainScreen, SeriesScreen, VideoDetailScreen } from './screens/Browse';
+import { CARD_GAP, CARD_H, CARD_RADIUS, CARD_W, CardSheen, MainScreen, SeriesScreen, VideoDetailScreen } from './screens/Browse';
+import { TABS } from './ui/Header';
+import { OFFLINE_ACTIVITIES } from './data/activities';
 import { QuizDebugScreen } from './screens/QuizDebug';
 import { ReportScreen } from './screens/Report';
 import { SettingsScreen } from './screens/Settings';
 import ActivityStage from './activities/ActivityStage';
 import IntroScreen from './Intro';
 import * as ImagePicker from 'expo-image-picker';
+import { DebugJump } from './ui/DebugJump';
+import { GeneratedCharacter, PattiCharacter, StrokeArt } from './ui/artwork';
 
 
 // The content server runs beside the dev server, so its host is the one we are bundling from.
@@ -70,8 +75,6 @@ const CONTENT_PORT = 5056;
 // Videos pushed to the app's own folder play without any storage permission, and without a server.
 const LOCAL_VIDEO_DIR = 'file:///sdcard/Android/data/com.flyai.patti/files/video/';
 const OFFLINE_LIBRARY = require('./assets/library.json');
-// Activity plans ship with the app too, so a tablet with no server still asks real questions.
-const OFFLINE_ACTIVITIES = require('./assets/activities.json');
 // Frames grabbed at each puzzle's own timestamp, keyed by the name the activity payload carries.
 const PUZZLE_IMAGES = {
   'teenieping-01-90': require('./assets/puzzles/teenieping-01-90.png'),
@@ -126,16 +129,6 @@ const TRACE_LINEART = require('./assets/trace_lineart_v2.png');
 
 
 
-const video = {
-  title: '전설의 고래와 용기 이야기',
-  duration: '1:30',
-  captions: [
-    '로미 곁엔 내가 있어 츄!',
-    '너무 위험해',
-    '한바탕해 볼까',
-    '그 마음은 잃지 않았으면 좋겠어',
-  ],
-};
 
 
 const STAGE_KINDS = new Set(['findit', 'drag', 'count', 'say']);
@@ -417,7 +410,7 @@ export default function App() {
       quiz: log.quiz,
       drawing: log.drawing,
       skip: log.skip,
-      watched: selectedVideo?.title || video.title,
+      watched: selectedVideo?.title || DEMO_VIDEO.title,
       interests: ['고래', '용기', '친구', '색깔'],
     }),
     [log, selectedVideo]
@@ -630,120 +623,6 @@ export default function App() {
 
 
 
-const ringFacet = () => {
-  const rad = (deg) => (deg * Math.PI) / 180;
-  return {
-    translateY: RING_SAMPLES.map((d) => RING_RADIUS * (1 - Math.cos(rad(d * RING_ANGLE)))),
-    scale: RING_SAMPLES.map((d) => Math.max(0.6, Math.cos(rad(d * RING_ANGLE)) ** 3 * 1.06)),
-    opacity: RING_SAMPLES.map((d) => (Math.abs(d) > 2.5 ? 0 : 1)),
-  };
-};
-
-
-const VideoCard = React.memo(function VideoCard({ video, onPress }) {
-  return (
-    <TapScale style={[styles.card, { backgroundColor: video.color }]} onPress={() => { playSound('pop'); onPress(video); }}>
-      <CardSheen color={video.color} />
-      <Text style={styles.cardTitle} numberOfLines={2}>{video.title}</Text>
-      <Text style={styles.cardSub} numberOfLines={1}>{video.duration}</Text>
-      <View style={styles.cardBadge}><Text style={styles.cardBadgeText}>!</Text></View>
-      {/* Some art fills its PNG edge to edge; artScale pulls those back in line with the rest. */}
-      <Image source={video.thumb} style={[styles.cardArt, video.artScale ? { height: 260 * video.artScale } : null]} resizeMode="contain" />
-    </TapScale>
-  );
-});
-
-
-
-
-// Landing screen, per the mockup: wordmark, a greeting with the child's name highlighted,
-// and the video cards fanned out underneath.
-// Dev-only shortcut: every screen is one tap away while the flow is being built.
-const DEBUG_SCREENS = [
-  ['intro', '인트로'],
-  ['welcome', '온보딩 안내'],
-  ['profile', '아이 프로필'],
-  ['guardian', '보호자 설정'],
-  ['main', '메인'],
-  ['home', '영상 목록'],
-  ['detail', '영상 상세'],
-  ['watch', '영상 재생'],
-  ['activities', '활동 선택'],
-  ['drawing', '그림 그리기'],
-  ['report', '활동 리포트'],
-];
-
-const DEBUG_TABS = [
-  ['quizdebug', '문제 목록'],
-  ['character', '캐릭터'],
-  ['words', '단어장'],
-  ['settings', '설정'],
-];
-
-const DEBUG_ACTIVITIES = [
-  ['찾아 짚기', { type: 'findit', payload: { image: 'teenieping-01-27', target: { x: 0.62, y: 0.53, r: 0.15 }, ask: '하츄핑 어디 있지?' } }],
-  ['끌어다 놓기', { type: 'drag', payload: { item: 'candy', slot: 'box' } }],
-  ['세어보기', { type: 'count', payload: { item: 'apple', n: 4 } }],
-  ['따라 말하기', { type: 'say', payload: { word: '사과', listenMs: 5000 } }],
-];
-
-function DebugJump({ onJump, onTab, onReset, contentUp }) {
-  const [open, setOpen] = useState(false);
-  const [preview, setPreview] = useState(null);
-  if (!__DEV__) return null;
-  return (
-    <View style={styles.debugWrap}>
-      <TouchableOpacity style={styles.debugBtn} onPress={() => setOpen((v) => !v)}>
-        <Text style={styles.debugBtnText}>{open ? '✕' : '⚙'}</Text>
-      </TouchableOpacity>
-      {open ? (
-        <>
-          <Pressable style={styles.debugBackdrop} onPress={() => setOpen(false)} />
-          <View style={styles.debugPanel}>
-            {/* Whether the content server answered tells us at a glance why the library is empty. */}
-            <View style={styles.debugStatus}>
-              <View style={[styles.debugDot, { backgroundColor: contentUp ? '#2fa96b' : '#e5484d' }]} />
-              <Text style={styles.debugStatusText}>콘텐츠 서버 {contentUp ? '연결됨' : '끊김'}</Text>
-            </View>
-
-            <Text style={styles.debugGroup}>화면</Text>
-            <View style={styles.debugChips}>
-              {DEBUG_SCREENS.map(([key, label]) => (
-                <TouchableOpacity key={key} style={styles.debugChip} onPress={() => { setOpen(false); onJump(key); }}>
-                  <Text style={styles.debugChipText}>{label}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <Text style={styles.debugGroup}>탭</Text>
-            <View style={styles.debugChips}>
-              {DEBUG_TABS.map(([key, label]) => (
-                <TouchableOpacity key={key} style={styles.debugChip} onPress={() => { setOpen(false); onTab(key); }}>
-                  <Text style={styles.debugChipText}>{label}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <Text style={styles.debugGroup}>활동</Text>
-            <View style={styles.debugChips}>
-              {DEBUG_ACTIVITIES.map(([label, activity]) => (
-                <TouchableOpacity key={activity.type} style={styles.debugChip} onPress={() => { setOpen(false); setPreview(activity); }}>
-                  <Text style={styles.debugChipText}>{label}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <Text style={styles.debugGroup}>데이터</Text>
-            <TouchableOpacity style={[styles.debugChip, styles.debugDanger]} onPress={() => { setOpen(false); onReset(); }}>
-              <Text style={styles.debugDangerText}>저장 데이터 지우고 온보딩부터</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      ) : null}
-      {preview ? <ActivityStage activity={preview} onDone={() => setPreview(null)} /> : null}
-    </View>
-  );
-}
 
 
 
@@ -759,7 +638,15 @@ function DebugJump({ onJump, onTab, onReset, contentUp }) {
 
 
 
-let idleStarted = false;
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1046,37 +933,14 @@ const ACT_MSG = {
 };
 
 // Toss-style center popup with a spring pop-in. Self-animates on mount.
-// Development differs month to month at this age, so the profile takes a birth date, not a year.
-function ageInMonths(birth) {
-  if (!birth || !birth.y || !birth.m || !birth.d) return null;
-  const now = new Date();
-  const months = (now.getFullYear() - birth.y) * 12 + (now.getMonth() + 1 - birth.m);
-  return now.getDate() < birth.d ? months - 1 : months;
-}
-
-
-const range = (from, to) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
-const THIS_YEAR = new Date().getFullYear();
-
-function ageLabel(birth) {
-  const months = ageInMonths(birth);
-  if (months == null || months < 0 || months > 300) return '';
-  return `만 ${Math.floor(months / 12)}세 ${months % 12}개월`;
-}
 // 10 to 180 minutes. Too many values for a chip row, hence the scrolling picker below.
 const LIMIT_ITEM_W = 88;
-const LIMIT_TRACK_W = 440;
 
 
 
 
-// First run, step 2: the grown-up rules for the session.
-// Each card is a vertical wheel: the number under the middle of the card is the selection.
-const WHEEL_ITEM_H = 62;
 
 
-const HOUR_VALUES = [0, 1, 2, 3, 4, 5, 6];
-const MINUTE_VALUES = [0, 10, 20, 30, 40, 50];
 
 
 
@@ -1337,7 +1201,6 @@ function useRecentColors() {
   return [RECENT_COLORS.list, add];
 }
 
-const rgbToHex = (rgb) => `#${rgb.map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('')}`;
 
 // One RGB channel, dragged like the pen-size rail.
 function ChannelSlider({ label, value, tint, onChange }) {
@@ -2071,36 +1934,6 @@ function DrawingScreen({ topic = '오늘의 그림', strokes, status, error, cha
   );
 }
 
-// Replays the child's own strokes, so a saved drawing needs no image capture.
-function StrokeArt({ drawing, size = 230 }) {
-  const strokes = drawing.strokes || [];
-  const pts = strokes.flatMap((st) => st.points || st);
-  const pad = 24;
-  const box = pts.length
-    ? {
-        x: Math.min(...pts.map((p) => p.x)) - pad,
-        y: Math.min(...pts.map((p) => p.y)) - pad,
-        w: Math.max(...pts.map((p) => p.x)) - Math.min(...pts.map((p) => p.x)) + pad * 2,
-        h: Math.max(...pts.map((p) => p.y)) - Math.min(...pts.map((p) => p.y)) + pad * 2,
-      }
-    : { x: 0, y: 0, w: drawing.size?.width || 620, h: drawing.size?.height || 380 };
-  const scale = size / Math.max(box.w, box.h);
-  return (
-    <Svg width={box.w * scale} height={box.h * scale} viewBox={`${box.x} ${box.y} ${box.w} ${box.h}`}>
-      {strokes.map((stroke, i) => (
-        <Path
-          key={i}
-          d={(stroke.points || stroke).map((p, k) => `${k ? 'L' : 'M'}${p.x} ${p.y}`).join(' ')}
-          stroke={stroke.color || '#171d31'}
-          strokeWidth={stroke.thickness || 8}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-      ))}
-    </Svg>
-  );
-}
 
 
 
@@ -2210,11 +2043,6 @@ function floodFill(walls, out, w, h, startX, startY, rgb, owner, ownerId) {
     ring = next;
   }
   return true;
-}
-
-function hexToRgb(hex) {
-  const n = parseInt(hex.replace('#', ''), 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
 // Keeps the zoomed canvas covering its frame: no blank gap, no drifting away at 1x.
@@ -2543,77 +2371,6 @@ function SketchPad({ strokes, onChange, onCanvasSize, placeholder, inkColor, tra
   );
 }
 
-function GeneratedCharacter({ uri, size }) {
-  return (
-    <View style={[styles.generatedWrap, { width: size, height: size }]}>
-      <Image source={{ uri }} style={styles.generatedImage} resizeMode="contain" />
-    </View>
-  );
-}
-
-// Growth stages: everyone starts as the star, then becomes the species the child picked.
-const CHARACTER_IMAGES = {
-  star: require('./assets/characters/star.png'),
-  rabbit: require('./assets/characters/rabbit2.png'),
-  dino: require('./assets/characters/dino2.png'),
-};
-const CHARACTER_BASE = 150;
-
-function characterImageFor(species, level) {
-  if (level < 2) return CHARACTER_IMAGES.star;
-  return CHARACTER_IMAGES[species] || CHARACTER_IMAGES.star;
-}
-
-// The mascot: breathes on its own, squashes when tapped, jumps when something good happens.
-// ponytail: RN Animated stand-in until the Rive file lands — same props, so the swap is local.
-function PattiCharacter({ tone = 'blue', size = 1, onPress, celebrate = 0, species = 'star', level = 1 }) {
-  const breathe = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(1)).current;
-  const hop = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(breathe, { toValue: 1, duration: 1400, useNativeDriver: true }),
-        Animated.timing(breathe, { toValue: 0, duration: 1400, useNativeDriver: true }),
-      ])
-    );
-    loop.start();
-    return () => loop.stop();
-  }, []);
-
-  useEffect(() => {
-    if (!celebrate) return;
-    Animated.sequence([
-      Animated.spring(hop, { toValue: 1, useNativeDriver: true, speed: 20, bounciness: 14 }),
-      Animated.spring(hop, { toValue: 0, useNativeDriver: true, speed: 12, bounciness: 10 }),
-    ]).start();
-  }, [celebrate]);
-
-  const tap = () => {
-    Animated.sequence([
-      Animated.timing(scale, { toValue: 0.9, duration: 90, useNativeDriver: true }),
-      Animated.spring(scale, { toValue: 1, useNativeDriver: true, speed: 14, bounciness: 16 }),
-    ]).start();
-    if (onPress) onPress();
-  };
-
-  const px = CHARACTER_BASE * size;
-  const translateY = Animated.add(
-    breathe.interpolate({ inputRange: [0, 1], outputRange: [0, -6] }),
-    hop.interpolate({ inputRange: [0, 1], outputRange: [0, -px * 0.18] })
-  );
-
-  return (
-    <Pressable onPress={tap} hitSlop={12}>
-      <Animated.Image
-        source={characterImageFor(species, level)}
-        resizeMode="contain"
-        style={{ width: px, height: px, transform: [{ translateY }, { scale }] }}
-      />
-    </Pressable>
-  );
-}
 
 const CIRCLE_STYLE = {
   width: 120,
@@ -3701,13 +3458,5 @@ const styles = StyleSheet.create({
     color: COLORS.blueDark,
     fontSize: 20,
     fontWeight: '900',
-  },
-  generatedWrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  generatedImage: {
-    width: '100%',
-    height: '100%',
   },
 });

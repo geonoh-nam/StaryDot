@@ -5,13 +5,16 @@ import {
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { makeMutable } from 'react-native-reanimated';
-import Svg, { Circle, Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Circle, Defs, LinearGradient, RadialGradient, Rect, Stop } from 'react-native-svg';
 import {
   CANDY_ICON, CLOSET_ICON, COSTUMES, EVOLUTIONS, FULL_BAR, GROWTH_CHECKPOINTS, GROWTH_PER_CANDY,
   SCENES, STAGE1_ART, STAR_FIELD,
 } from '../data/character';
 import { playSound } from '../sound';
-import { TEXT_ON_DARK } from '../theme';
+import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
+import { CHARACTER_IMAGES } from '../data/character';
+import Rea, { useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from 'react-native-reanimated';
+import { Spark } from './Browse';
 
 // How much speed a thrown star keeps off a wall, and how fast it coasts to a stop.
 export const WALL_BOUNCE = 0.5;
@@ -28,6 +31,8 @@ export const FEED_REACH = 150;
 // Idle float lives outside React: nothing that happens in a render can restart it, so the star
 // keeps drifting on its own clock however often the panel re-renders.
 export const IDLE = makeMutable(0);
+// One breath loop for every star on screen, started once.
+let idleStarted = false;
 
 export const SPARKS = Array.from({ length: 10 }, (_, i) => ({
   angle: (i / 10) * Math.PI * 2,

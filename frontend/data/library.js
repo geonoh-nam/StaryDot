@@ -91,3 +91,15 @@ export const LIBRARY = [
     ],
   },
 ];
+
+// The stand-in video the demo falls back to when nothing has been picked.
+export const DEMO_VIDEO = {
+  title: '전설의 고래와 용기 이야기',
+  duration: '1:30',
+  captions: [
+    '로미 곁엔 내가 있어 츄!',
+    '너무 위험해',
+    '한바탕해 볼까',
+    '그 마음은 잃지 않았으면 좋겠어',
+  ],
+};

@@ -4,6 +4,7 @@ import React, { useRef, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { INTEREST_ART, MOCK_REPORT, PARENT_WEEKS, STAT_ART } from '../data/report';
+import { playSound } from '../sound';
 import { TEXT_ON_DARK } from '../theme';
 
 // The rim is a gradient, so it has to be drawn — and a drawn rim needs the chip's real size.

@@ -3,6 +3,8 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { QUIZ_KINDS } from '../data/quiz-pool';
 import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
+import { QUIZ_POOL } from '../data/quiz-pool';
+import { OFFLINE_ACTIVITIES } from '../data/activities';
 
 // Content check without watching a video to the right second: every authored question, openable.
 export function QuizDebugScreen({ onPlay }) {

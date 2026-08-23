@@ -5,8 +5,15 @@ import { Animated, Easing, Image, Pressable, ScrollView, StyleSheet, Text, Touch
 import Svg, { Circle, Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { SERIES_ART, THUMBS } from '../data/library';
 import { playSound } from '../sound';
-import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
+import { BG, TEXT_MUTED_ON_DARK, TEXT_ON_DARK, hexToRgb, rgbToHex } from '../theme';
 import { TapScale } from '../ui/motion';
+import { SETTINGS_ICON } from '../ui/Header';
+import Rea, { Extrapolation, interpolate, useAnimatedStyle, useSharedValue, withDecay } from 'react-native-reanimated';
+import { DebugJump } from '../ui/DebugJump';
+import { GradientRim } from '../ui/motion';
+import { StaryLogo } from '../ui/Logo';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { runOnJS, withSpring } from 'react-native-reanimated';
 
 export const CARD_W = 300;
 
@@ -79,6 +86,16 @@ export function CardSheen({ color }) {
   );
 }
 
+
+// Where each card sits on the ring: how far it drops, how small it gets, when it fades out.
+const ringFacet = () => {
+  const rad = (deg) => (deg * Math.PI) / 180;
+  return {
+    translateY: RING_SAMPLES.map((d) => RING_RADIUS * (1 - Math.cos(rad(d * RING_ANGLE)))),
+    scale: RING_SAMPLES.map((d) => Math.max(0.6, Math.cos(rad(d * RING_ANGLE)) ** 3 * 1.06)),
+    opacity: RING_SAMPLES.map((d) => (Math.abs(d) > 2.5 ? 0 : 1)),
+  };
+};
 export function RingCard({ video, index, offset, step, total, centerX, focused, onPress }) {
   const facet = ringFacet();
   const style = useAnimatedStyle(() => {
@@ -411,6 +428,19 @@ export function VideoDetailScreen({ video, series, onClose, onStart }) {
     </View>
   );
 }
+
+const VideoCard = React.memo(function VideoCard({ video, onPress }) {
+  return (
+    <TapScale style={[styles.card, { backgroundColor: video.color }]} onPress={() => { playSound('pop'); onPress(video); }}>
+      <CardSheen color={video.color} />
+      <Text style={styles.cardTitle} numberOfLines={2}>{video.title}</Text>
+      <Text style={styles.cardSub} numberOfLines={1}>{video.duration}</Text>
+      <View style={styles.cardBadge}><Text style={styles.cardBadgeText}>!</Text></View>
+      {/* Some art fills its PNG edge to edge; artScale pulls those back in line with the rest. */}
+      <Image source={video.thumb} style={[styles.cardArt, video.artScale ? { height: 260 * video.artScale } : null]} resizeMode="contain" />
+    </TapScale>
+  );
+});
 
 const styles = StyleSheet.create({
   buddyAnchor: {

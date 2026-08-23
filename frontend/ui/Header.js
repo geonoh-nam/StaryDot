@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { playSound } from '../sound';
 import { StaryLogo } from './Logo';
+import { COLORS, TEXT_ON_DARK } from '../theme';
 
 const SETTINGS_ICON = require('../assets/scenes/settings.png');
 

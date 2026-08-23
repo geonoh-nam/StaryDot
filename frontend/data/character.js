@@ -46,3 +46,11 @@ export const EVOLUTIONS = [
 
 // Two full bars: the first picks a path, the second grows that path up.
 export const FULL_BAR = 100;
+
+// The three faces the drawing screen and the growth chooser both draw.
+// Growth stages: everyone starts as the star, then becomes the species the child picked.
+export const CHARACTER_IMAGES = {
+  star: require('../assets/characters/star.png'),
+  rabbit: require('../assets/characters/rabbit2.png'),
+  dino: require('../assets/characters/dino2.png'),
+};

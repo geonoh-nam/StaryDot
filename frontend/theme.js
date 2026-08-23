@@ -20,3 +20,11 @@ export const COLORS = {
   stage: '#ffffff',
   dark: '#101828',
 };
+
+// Hex is what the palette speaks; maths needs channels.
+export function hexToRgb(hex) {
+  const n = parseInt(hex.replace('#', ''), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+export const rgbToHex = (rgb) => `#${rgb.map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('')}`;
