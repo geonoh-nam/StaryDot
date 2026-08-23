@@ -1504,11 +1504,11 @@ const SCENES = [
 // Fixed sprinkle, so the sky does not reshuffle on every render.
 // What the closet holds: the outfit on its hanger, and who the star becomes wearing it.
 const COSTUMES = [
-  { id: 1, icon: require('./assets/costumes/costume1.png'), art: require('./assets/costumes/newdino1.png') },
-  { id: 2, icon: require('./assets/costumes/costume2.png'), art: require('./assets/costumes/newdino2.png') },
-  { id: 3, icon: require('./assets/costumes/costume3.png'), art: require('./assets/costumes/newdino3.png') },
-  { id: 4, icon: require('./assets/costumes/costume4.png'), art: require('./assets/costumes/newdino4.png') },
-  { id: 5, icon: require('./assets/costumes/costume5.png'), art: require('./assets/costumes/newdino5.png') },
+  { id: 1, icon: require('./assets/costumes/costume1.png'), dino: require('./assets/costumes/newdino1.png'), bunny: require('./assets/costumes/newbunny1.png') },
+  { id: 2, icon: require('./assets/costumes/costume2.png'), dino: require('./assets/costumes/newdino2.png'), bunny: require('./assets/costumes/newbunny2.png') },
+  { id: 3, icon: require('./assets/costumes/costume3.png'), dino: require('./assets/costumes/newdino3.png'), bunny: require('./assets/costumes/newbunny3.png') },
+  { id: 4, icon: require('./assets/costumes/costume4.png'), dino: require('./assets/costumes/newdino4.png'), bunny: require('./assets/costumes/newbunny4.png') },
+  { id: 5, icon: require('./assets/costumes/costume5.png'), dino: require('./assets/costumes/newdino5.png'), bunny: require('./assets/costumes/newbunny5.png') },
 ];
 
 const CANDY_ICON = require('./assets/scenes/candy.png');
@@ -1909,9 +1909,9 @@ function CharacterScreen({ profile, food, fed, onFeed }) {
             taps; the pan still wins once the finger actually moves. */}
         <Pressable onPress={() => { wake(); playSound('pop'); setTapTick((n) => n + 1); }}>
           <StarStage
-            art={costume ? costume.art : chosen ? (grownUp ? chosen.grown : chosen.art) : STAGE1_ART}
+            art={costume ? costume[chosen?.id || 'dino'] : chosen ? (grownUp ? chosen.grown : chosen.art) : STAGE1_ART}
             ready={full && !chosen}
-            evolved={costume ? `costume-${costume.id}` : chosen ? `${chosen.id}-${grownUp ? 3 : 2}` : null}
+            evolved={costume ? `${chosen?.id || 'dino'}-costume-${costume.id}` : chosen ? `${chosen.id}-${grownUp ? 3 : 2}` : null}
             feedTick={feedTick}
             tapTick={tapTick}
           />
