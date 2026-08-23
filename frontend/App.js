@@ -56,6 +56,9 @@ import { CharacterScreen, SPARKS, StarStage } from './screens/Character';
 import { ParentReportScreen } from './screens/ParentReport';
 import { ChildProfileScreen, GuardianSetupScreen, OnboardIntroScreen } from './screens/Onboarding';
 import { buttons } from './ui/buttons';
+import { QuizDebugScreen } from './screens/QuizDebug';
+import { ReportScreen } from './screens/Report';
+import { SettingsScreen } from './screens/Settings';
 import ActivityStage from './activities/ActivityStage';
 import IntroScreen from './Intro';
 import * as ImagePicker from 'expo-image-picker';
@@ -1152,47 +1155,6 @@ function Spark({ spark, burst }) {
 // Bars rise from this offset; the average line and its badge hang off the same base.
 
 
-// Content check without watching a video to the right second: every authored question, openable.
-function QuizDebugScreen({ onPlay }) {
-  return (
-    <ScrollView contentContainerStyle={styles.qdBody} showsVerticalScrollIndicator={false}>
-      {Object.entries(OFFLINE_ACTIVITIES).map(([videoId, activities]) => (
-        <View key={videoId} style={styles.qdGroup}>
-          <Text style={styles.qdVideo}>{videoId} · {activities.length}개</Text>
-          {activities.map((a) => {
-            const payload = typeof a.payload === 'string' ? JSON.parse(a.payload) : a.payload || {};
-            return (
-              <TouchableOpacity
-                key={a.id}
-                style={styles.qdRow}
-                onPress={() => onPlay({ ...payload, kind: payload.activity_template }, videoId, a.at ?? a.at_sec)}
-              >
-                <Text style={styles.qdAt}>{a.at ?? a.at_sec}s</Text>
-                <View style={styles.qdText}>
-                  <Text style={styles.qdKind}>{payload.activity_template || a.type}</Text>
-                  <Text style={styles.qdTitle} numberOfLines={1}>{payload.title || '(퍼즐)'}</Text>
-                </View>
-                <Text style={styles.qdAnswer}>{payload.answer || ''}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      ))}
-
-      <Text style={styles.qdVideo}>데모 문제 · {QUIZ_POOL.length}개</Text>
-      {QUIZ_POOL.map((q, i) => (
-        <TouchableOpacity key={q.kind + i} style={styles.qdRow} onPress={() => onPlay(q)}>
-          <Text style={styles.qdAt}>데모</Text>
-          <View style={styles.qdText}>
-            <Text style={styles.qdKind}>{QUIZ_KINDS[q.kind] || q.kind}</Text>
-            <Text style={styles.qdTitle} numberOfLines={1}>{q.title}</Text>
-          </View>
-          <Text style={styles.qdAnswer}>{q.answer}</Text>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
-  );
-}
 
 
 // Every word the child met in a quiz, kept with its meaning and a sentence to say it in.
@@ -1221,66 +1183,6 @@ function WordsScreen({ words }) {
   );
 }
 
-// The grown-ups' screen: what the child is allowed to do, and for how long.
-function SettingsScreen({ profile, settings, onChange, onEditProfile }) {
-  const set = (patch) => onChange({ ...settings, ...patch });
-  const act = (key) => set({ activities: { ...settings.activities, [key]: !settings.activities[key] } });
-  return (
-    <ScrollView contentContainerStyle={styles.settingsBody} showsVerticalScrollIndicator={false}>
-      <View style={styles.settingsCard}>
-        <Text style={styles.settingsCardTitle}>아이 정보</Text>
-        <View style={styles.settingsRow}>
-          <Text style={styles.settingsLabel}>이름</Text>
-          <Text style={styles.settingsValue}>{profile.name || '친구'}</Text>
-        </View>
-        <View style={styles.settingsRow}>
-          <Text style={styles.settingsLabel}>나이</Text>
-          <Text style={styles.settingsValue}>{ageLabel(profile.birth) || '-'}</Text>
-        </View>
-        <TouchableOpacity style={styles.settingsEdit} onPress={onEditProfile}>
-          <Text style={styles.settingsEditText}>프로필 수정</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.settingsCard}>
-        <Text style={styles.settingsCardTitle}>하루 사용 시간</Text>
-        <DailyLimitPicker value={settings.dailyLimit} onSelect={(dailyLimit) => set({ dailyLimit })} />
-      </View>
-
-      <View style={styles.settingsCard}>
-        <Text style={styles.settingsCardTitle}>활동</Text>
-        {[
-          ['quiz', '퀴즈', '영상 중간에 질문을 물어봐요'],
-          ['trace', '그림', '영상이 끝나면 그림을 그려요'],
-          ['puzzle', '퍼즐', '영상 중간에 퍼즐을 맞춰요'],
-        ].map(([key, label, hint]) => (
-          <TouchableOpacity key={key} style={styles.settingsRow} onPress={() => act(key)}>
-            <View style={styles.settingsRowText}>
-              <Text style={styles.settingsLabel}>{label}</Text>
-              <Text style={styles.settingsHint}>{hint}</Text>
-            </View>
-            <View style={[styles.toggle, settings.activities[key] && styles.toggleOn]}>
-              <View style={[styles.toggleKnob, settings.activities[key] && styles.toggleKnobOn]} />
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <View style={styles.settingsCard}>
-        <Text style={styles.settingsCardTitle}>소리</Text>
-        <TouchableOpacity style={styles.settingsRow} onPress={() => set({ sound: !settings.sound })}>
-          <View style={styles.settingsRowText}>
-            <Text style={styles.settingsLabel}>효과음</Text>
-            <Text style={styles.settingsHint}>버튼과 정답 소리를 켜요</Text>
-          </View>
-          <View style={[styles.toggle, settings.sound && styles.toggleOn]}>
-            <View style={[styles.toggleKnob, settings.sound && styles.toggleKnobOn]} />
-          </View>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  );
-}
 
 function HomeScreen({ characterImage, onStart, profile, tab = 'library', onTab, onBack, series, settings, onSettings, onEditProfile, words = [], feed = 0, fed = 0, onFeed, report = {}, onJumpMoment }) {
   const [focus, setFocus] = useState(0);
@@ -2603,74 +2505,7 @@ function StrokeArt({ drawing, size = 230 }) {
   );
 }
 
-function ReportScreen({ report, characterImage, savedDrawing, onReplay, onOtherVideos, onCharacter }) {
-  const today = new Date();
-  const dateLine = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
-  const watched = report.watched || video.title;
-  const completed = report.quiz + report.drawing;
-  const interests = report.interests || [];
-  return (
-    <View style={styles.reportScreen}>
-      <View style={styles.reportCardWide}>
-        <View style={styles.reportHead}>
-          <Text style={styles.reportTitle}>활동 리포트</Text>
-          <Text style={styles.reportDate}>{dateLine} · {watched}</Text>
-        </View>
-        <View style={styles.reportBody}>
-          <View style={styles.reportArtCol}>
-            <Text style={styles.reportColLabel}>오늘의 작품</Text>
-            <View style={styles.reportArtBox}>
-              {characterImage ? (
-                <GeneratedCharacter uri={characterImage} size={230} />
-              ) : savedDrawing ? (
-                <StrokeArt drawing={savedDrawing} size={230} />
-              ) : (
-                <>
-                  <PattiCharacter tone="blue" size={1.1} />
-                  <Text style={styles.reportArtCaption}>그림을 건너뛰었어요</Text>
-                </>
-              )}
-            </View>
-          </View>
-          <View style={styles.reportSumCol}>
-            <View style={styles.reportStatsRow}>
-              <ReportStat label="퀴즈 정답" value={report.quiz} tone="#3d5afe" />
-              <ReportStat label="그림 완성" value={report.drawing} tone="#7bd88f" />
-              <ReportStat label="건너뜀" value={report.skip} tone="#ffb020" />
-            </View>
-            {interests.length ? (
-              <View style={styles.reportChips}>
-                {interests.map((t) => (
-                  <View key={t} style={styles.reportChip}><Text style={styles.reportChipText}>#{t}</Text></View>
-                ))}
-              </View>
-            ) : null}
-          </View>
-        </View>
-        <View style={styles.reportActions}>
-          <TouchableOpacity style={buttons.lightButton} onPress={() => { playSound('pop'); onReplay(); }}>
-            <Text style={buttons.lightButtonText}>영상 다시보기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={buttons.lightButton} onPress={() => { playSound('pop'); onOtherVideos(); }}>
-            <Text style={buttons.lightButtonText}>다른 영상 보기</Text>
-          </TouchableOpacity>
-          <TapScale style={buttons.darkButton} onPress={() => { playSound('pop'); onCharacter(); }}>
-            <Text style={buttons.darkButtonText}>캐릭터 보러가기</Text>
-          </TapScale>
-        </View>
-      </View>
-    </View>
-  );
-}
 
-function ReportStat({ label, value, tone }) {
-  return (
-    <View style={styles.reportStat}>
-      <Text style={[styles.reportStatValue, { color: tone }]}>{value}</Text>
-      <Text style={styles.reportStatLabel}>{label}</Text>
-    </View>
-  );
-}
 
 
 
@@ -4312,54 +4147,6 @@ const styles = StyleSheet.create({
 
   // Sits behind the words, faded, so the card reads as a sentence with a picture rather than
   // an icon with a caption.
-  qdBody: {
-    gap: 8,
-    paddingBottom: 24,
-  },
-  qdGroup: {
-    gap: 6,
-  },
-  qdVideo: {
-    paddingTop: 8,
-    fontSize: 13,
-    fontWeight: '900',
-    color: '#5b6b8c',
-  },
-  qdRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 14,
-    backgroundColor: '#f4f7fe',
-    borderWidth: 1,
-    borderColor: '#e3e9f7',
-  },
-  qdAt: {
-    width: 46,
-    fontSize: 12,
-    fontWeight: '900',
-    color: '#609EF5',
-  },
-  qdText: {
-    flex: 1,
-  },
-  qdKind: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: '#8a97b1',
-  },
-  qdTitle: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: TEXT_ON_DARK,
-  },
-  qdAnswer: {
-    fontSize: 13,
-    fontWeight: '900',
-    color: '#2f8f5b',
-  },
   wordGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -4424,79 +4211,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: '900',
     color: TEXT_ON_DARK,
-  },
-  settingsBody: {
-    gap: 14,
-    paddingBottom: 24,
-  },
-  settingsCard: {
-    gap: 12,
-    padding: 20,
-    borderRadius: 20,
-    backgroundColor: '#f4f7fe',
-    borderWidth: 1,
-    borderColor: '#e3e9f7',
-  },
-  settingsCardTitle: {
-    fontSize: 15,
-    fontWeight: '900',
-    color: '#5b6b8c',
-  },
-  settingsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 16,
-  },
-  settingsRowText: {
-    flex: 1,
-    gap: 2,
-  },
-  settingsLabel: {
-    fontSize: 17,
-    fontWeight: '800',
-    color: TEXT_ON_DARK,
-  },
-  settingsHint: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#8a97b1',
-  },
-  settingsValue: {
-    fontSize: 17,
-    fontWeight: '900',
-    color: '#609EF5',
-  },
-  settingsEdit: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 14,
-    backgroundColor: '#ffffff',
-  },
-  settingsEditText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#609EF5',
-  },
-  toggle: {
-    width: 56,
-    height: 32,
-    borderRadius: 16,
-    padding: 3,
-    backgroundColor: '#dde5f5',
-  },
-  toggleOn: {
-    backgroundColor: '#609EF5',
-  },
-  toggleKnob: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: '#ffffff',
-  },
-  toggleKnobOn: {
-    marginLeft: 24,
   },
   tabPlaceholder: {
     flex: 1,
@@ -4765,136 +4479,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.blueSoft,
     color: COLORS.blueDark,
     fontSize: 20,
-    fontWeight: '900',
-  },
-  reportScreen: {
-    flex: 1,
-    padding: 64,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ffffff',
-  },
-  reportActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  reportCardWide: {
-    width: '92%',
-    maxWidth: 1040,
-    padding: 34,
-    borderRadius: 28,
-    alignItems: 'center',
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: '#e3e9f7',
-    shadowColor: '#7ba3ff',
-    shadowOpacity: 0.18,
-    shadowRadius: 22,
-    shadowOffset: { width: 0, height: 12 },
-  },
-  reportHead: {
-    alignItems: 'center',
-    marginBottom: 22,
-  },
-  reportTitle: {
-    color: TEXT_ON_DARK,
-    fontSize: 30,
-    fontWeight: '900',
-  },
-  reportDate: {
-    marginTop: 7,
-    color: TEXT_MUTED_ON_DARK,
-    fontSize: 15,
-    fontWeight: '800',
-  },
-  reportBody: {
-    width: '100%',
-    flexDirection: 'row',
-    gap: 26,
-    marginBottom: 24,
-  },
-  reportArtCol: {
-    alignItems: 'center',
-  },
-  reportColLabel: {
-    color: TEXT_ON_DARK,
-    fontSize: 16,
-    fontWeight: '900',
-    marginBottom: 12,
-  },
-  reportArtBox: {
-    width: 300,
-    minHeight: 288,
-    padding: 18,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ffffff',
-    // Picture frame: thick warm mount, thin dark rim, and a soft drop shadow.
-    borderWidth: 10,
-    borderColor: '#d9b382',
-    shadowColor: '#171d31',
-    shadowOpacity: 0.18,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
-  reportArtCaption: {
-    marginTop: 12,
-    color: TEXT_MUTED_ON_DARK,
-    fontSize: 14,
-    fontWeight: '800',
-  },
-  reportSumCol: {
-    flex: 1,
-    justifyContent: 'center',
-    // Frame and summary sit on the same baseline height.
-    minHeight: 308,
-  },
-  reportStatsRow: {
-    flexDirection: 'row',
-    gap: 14,
-  },
-  reportStat: {
-    flex: 1,
-    paddingVertical: 20,
-    borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: '#e3e9f7',
-    shadowColor: '#64748b',
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
-  },
-  reportStatValue: {
-    fontSize: 42,
-    fontWeight: '900',
-  },
-  reportStatLabel: {
-    marginTop: 4,
-    color: TEXT_ON_DARK,
-    fontSize: 14,
-    fontWeight: '900',
-  },
-  reportChips: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 18,
-  },
-  reportChip: {
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 16,
-    backgroundColor: COLORS.blueSoft,
-  },
-  reportChipText: {
-    color: COLORS.blueDark,
-    fontSize: 14,
     fontWeight: '900',
   },
   generatedWrap: {
