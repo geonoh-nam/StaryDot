@@ -443,6 +443,50 @@ const VideoCard = React.memo(function VideoCard({ video, onPress }) {
 });
 
 const styles = StyleSheet.create({
+  card: {
+    width: CARD_W,
+    // Fills down to the character card's baseline instead of stopping short.
+    height: CARD_H + 80,
+    borderRadius: CARD_RADIUS,
+    paddingTop: 26,
+    paddingHorizontal: 22,
+    overflow: 'hidden',
+  },
+  cardTitle: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: '#ffffff',
+  },
+  cardSub: {
+    marginTop: 6,
+    fontSize: 15,
+    fontWeight: '700',
+    color: 'rgba(255,255,255,0.85)',
+  },
+  cardBadge: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.9)',
+  },
+  cardBadgeText: {
+    fontSize: 13,
+    fontWeight: '900',
+    color: '#ffffff',
+  },
+  cardArt: {
+    position: 'absolute',
+    left: 4,
+    right: 4,
+    bottom: 14,
+    height: 320,
+  },
   buddyAnchor: {
     position: 'relative',
   },

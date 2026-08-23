@@ -94,5 +94,91 @@ export function DebugJump({ onJump, onTab, onReset, contentUp }) {
 }
 
 const styles = StyleSheet.create({
+  debugWrap: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    zIndex: 90,
+  },
+  debugBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#e3e9f7',
+  },
+  debugBtnText: {
+    fontSize: 15,
+    color: '#5b6b8c',
+  },
+  debugBackdrop: {
+    position: 'absolute',
+    top: -40,
+    left: -40,
+    width: 3000,
+    height: 3000,
+  },
+  debugPanel: {
+    marginTop: 6,
+    width: 430,
+    gap: 8,
+    padding: 14,
+    borderRadius: 18,
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e3e9f7',
+    shadowColor: '#0b1c4a',
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 10,
+  },
+  debugStatus: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingBottom: 4,
+  },
+  debugDot: {
+    width: 9,
+    height: 9,
+    borderRadius: 5,
+  },
+  debugStatusText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#5b6b8c',
+  },
+  debugGroup: {
+    fontSize: 11,
+    fontWeight: '900',
+    color: '#8a97b1',
+  },
+  debugChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  debugChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 12,
+    backgroundColor: '#f1f5ff',
+  },
+  debugChipText: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#171d31',
+  },
+  debugDanger: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#ffecec',
+  },
+  debugDangerText: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#e5484d',
+  },
 
 });
