@@ -71,7 +71,7 @@ function GradientRim({ radius = 34, width = 6 }) {
       <Defs>
         <LinearGradient id="rimTheme" x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor="#609EF5" />
-          <Stop offset="0.55" stopColor="#00CFE9" />
+          <Stop offset="0.55" stopColor="#609EF5" />
           <Stop offset="1" stopColor="#ffffff" />
         </LinearGradient>
       </Defs>
@@ -149,10 +149,10 @@ const TEXT_MUTED_ON_DARK = '#5b6b8c';
 const COLORS = {
   ink: '#171d31',
   muted: '#748198',
-  blue: '#00CFE9',
-  blueDark: '#00CFE9',
+  blue: '#609EF5',
+  blueDark: '#609EF5',
   blueSoft: '#edf4ff',
-  sky: '#00CFE9',
+  sky: '#609EF5',
   pink: '#ffe4ef',
   pinkHot: '#f45aa2',
   yellow: '#fff0b8',
@@ -206,7 +206,7 @@ const LIBRARY = [
     id: 'animal',
     label: '자연·동물',
     videos: [
-      { id: 'animal-baby-shark', title: '아기 상어와 바다 친구들', duration: '3:20', emoji: '🦈', color: '#00CFE9' },
+      { id: 'animal-baby-shark', title: '아기 상어와 바다 친구들', duration: '3:20', emoji: '🦈', color: '#609EF5' },
       { id: 'animal-zoo-trip', title: '동물원 나들이', duration: '4:00', emoji: '🦁', color: '#fff0b8' },
       { id: 'animal-forest-friends', title: '숲속 친구들의 하루', duration: '5:15', emoji: '🦊', color: '#dcfce7' },
       { id: 'animal-penguin-ice', title: '펭귄의 남극 모험', duration: '4:45', emoji: '🐧', color: '#e0f2fe' },
@@ -240,7 +240,7 @@ const LIBRARY = [
       { id: 'play-hide-seek', title: '숨바꼭질 놀이터', duration: '4:30', emoji: '🙈', color: '#fff0b8' },
       { id: 'play-block-castle', title: '블록으로 성 쌓기', duration: '5:20', emoji: '🧱', color: '#dbeafe' },
       { id: 'play-clay-friends', title: '점토로 친구 만들기', duration: '4:00', emoji: '🧸', color: '#ffe4ef' },
-      { id: 'play-water-splash', title: '물놀이 첨벙첨벙', duration: '3:50', emoji: '💦', color: '#00CFE9' },
+      { id: 'play-water-splash', title: '물놀이 첨벙첨벙', duration: '3:50', emoji: '💦', color: '#609EF5' },
     ],
   },
 ];
@@ -276,7 +276,7 @@ const opt = (label, color, bg, meaning, example) => ({ label, color, bg, meaning
 const C = {
   yellow: ['#f0ae03', '#fffaf0'],
   purple: ['#9b5de5', '#f6f0ff'],
-  sky: ['#00CFE9', '#f1fdff'],
+  sky: ['#609EF5', '#f1fdff'],
   pink: ['#e24e9e', '#fff4fa'],
   green: ['#2fa96b', '#eefaf2'],
   blue: ['#5b8def', '#f0f5ff'],
@@ -976,7 +976,11 @@ function TabletHeader({ rightLabel, onHome, onReport, onTab }) {
                 style={styles.headerSheetItem}
                 onPress={() => { setOpen(false); playSound('pop'); onTab(t.key); }}
               >
-                <Text style={styles.headerSheetIcon}>{t.icon}</Text>
+                {t.art ? (
+                  <Image source={t.art} style={styles.headerSheetArt} resizeMode="contain" />
+                ) : (
+                  <Text style={styles.headerSheetIcon}>{t.icon}</Text>
+                )}
                 <Text style={styles.headerSheetText}>{t.label}</Text>
               </TouchableOpacity>
             ))}
@@ -992,12 +996,14 @@ function TabletHeader({ rightLabel, onHome, onReport, onTab }) {
   );
 }
 
+const SETTINGS_ICON = require('./assets/scenes/settings.png');
+
 const TABS = [
   { key: 'library', label: '영상', icon: '▶' },
   { key: 'parent', label: '부모 리포트', icon: '▤' },
   { key: 'character', label: '캐릭터', icon: '★' },
   { key: 'words', label: '단어장', icon: '가' },
-  { key: 'settings', label: '설정', icon: '⚙' },
+  { key: 'settings', label: '설정', art: SETTINGS_ICON },
 ];
 
 
@@ -1081,7 +1087,7 @@ const BUDDY_MENU = [
   { key: 'character', label: '캐릭터', icon: '★' },
   { key: 'parent', label: '부모 리포트', icon: '▤' },
   { key: 'words', label: '단어장', icon: '가' },
-  { key: 'settings', label: '설정', icon: '⚙' },
+  { key: 'settings', label: '설정', art: SETTINGS_ICON },
 ];
 
 // The star drifts and twinkles; tapping it opens the menu bubble that the screen owns, so the
@@ -1308,7 +1314,11 @@ function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, content
                   style={styles.buddyMenuItem}
                   onPress={() => { toggleMenu(false); playSound('pop'); onMenu(m.key); }}
                 >
-                  <Text style={styles.buddyMenuIcon}>{m.icon}</Text>
+                  {m.art ? (
+                    <Image source={m.art} style={styles.buddyMenuArt} resizeMode="contain" />
+                  ) : (
+                    <Text style={styles.buddyMenuIcon}>{m.icon}</Text>
+                  )}
                   <Text style={styles.buddyMenuText}>{m.label}</Text>
                 </TouchableOpacity>
               ))}
@@ -1371,7 +1381,7 @@ const SERIES_HERO_W = 330;
 
 // What the child sees after picking an episode: a big still, one start button, and what waits inside.
 function VideoDetailScreen({ video, series, onClose, onStart }) {
-  const accent = (series && series.accent) || '#00CFE9';
+  const accent = (series && series.accent) || '#609EF5';
   return (
     <View style={[styles.detailScreen, { backgroundColor: (series && series.tint) || '#f5f8ff' }]}>
       <TouchableOpacity style={styles.detailClose} onPress={onClose}>
@@ -2367,7 +2377,7 @@ function WordsScreen({ words }) {
       {words.map((w) => (
         <View key={w.word} style={styles.wordCard}>
           <View style={styles.wordHead}>
-            <View style={[styles.wordDot, { backgroundColor: w.color || '#00CFE9' }]} />
+            <View style={[styles.wordDot, { backgroundColor: w.color || '#609EF5' }]} />
             <Text style={styles.wordText}>{w.word}</Text>
             {w.answer ? <Text style={styles.wordBadge}>정답</Text> : null}
           </View>
@@ -3385,7 +3395,7 @@ function ColorPickerModal({ visible, initial, onCancel, onDone }) {
             </TouchableOpacity>
             <View style={styles.toolDivider} />
             <TouchableOpacity style={styles.pickerFooterBtn} onPress={() => { addRecent(color); onDone(color); }}>
-              <Text style={[styles.pickerFooterText, { color: '#00CFE9' }]}>완료</Text>
+              <Text style={[styles.pickerFooterText, { color: '#609EF5' }]}>완료</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -3511,7 +3521,7 @@ function SizeSlider({ value, color, onChange }) {
       <GestureDetector gesture={pan}>
         <View style={styles.channelHitSm} onLayout={(e) => setTrackW(e.nativeEvent.layout.width)}>
           <View style={styles.channelTrack} />
-          <View style={[styles.channelFill, { width: `${ratio * 100}%`, backgroundColor: '#00CFE9' }]} />
+          <View style={[styles.channelFill, { width: `${ratio * 100}%`, backgroundColor: '#609EF5' }]} />
           <View style={[styles.channelThumb, { left: `${ratio * 100}%` }]} />
         </View>
       </GestureDetector>
@@ -5176,7 +5186,7 @@ const styles = StyleSheet.create({
     height: 58,
     borderRadius: 999,
     borderWidth: 1.5,
-    borderColor: '#00CFE9',
+    borderColor: '#609EF5',
     backgroundColor: '#f1fdff',
     flexDirection: 'row',
     alignItems: 'center',
@@ -5191,7 +5201,7 @@ const styles = StyleSheet.create({
   answerValue: {
     fontSize: 21,
     fontWeight: '900',
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   bottomActions: {
     marginTop: 30,
@@ -5228,7 +5238,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#00CFE9',
+    backgroundColor: '#609EF5',
   },
   checkText: {
     color: '#ffffff',
@@ -5541,6 +5551,10 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     backgroundColor: 'rgba(255,255,255,0.9)',
   },
+  buddyMenuArt: {
+    width: 18,
+    height: 18,
+  },
   buddyMenuIcon: {
     fontSize: 16,
     color: '#609EF5',
@@ -5706,9 +5720,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 12,
   },
+  headerSheetArt: {
+    width: 17,
+    height: 17,
+  },
   headerSheetIcon: {
     fontSize: 15,
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   headerSheetText: {
     fontSize: 15,
@@ -5917,7 +5935,7 @@ const styles = StyleSheet.create({
     color: TEXT_MUTED_ON_DARK,
   },
   tabActive: {
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   charScreen: {
     flex: 1,
@@ -6629,7 +6647,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 8,
     overflow: 'hidden',
-    backgroundColor: '#00CFE9',
+    backgroundColor: '#609EF5',
   },
   wordMeaning: {
     fontSize: 15,
@@ -6695,7 +6713,7 @@ const styles = StyleSheet.create({
   settingsValue: {
     fontSize: 17,
     fontWeight: '900',
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   settingsEdit: {
     alignSelf: 'flex-start',
@@ -6707,7 +6725,7 @@ const styles = StyleSheet.create({
   settingsEditText: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   toggle: {
     width: 56,
@@ -6717,7 +6735,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#dde5f5',
   },
   toggleOn: {
-    backgroundColor: '#00CFE9',
+    backgroundColor: '#609EF5',
   },
   toggleKnob: {
     width: 26,
@@ -6916,7 +6934,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dropdownOptionOn: {
-    backgroundColor: '#00CFE9',
+    backgroundColor: '#609EF5',
   },
   dropdownOptionText: {
     fontSize: 17,
@@ -7019,7 +7037,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   toolChipOn: {
-    backgroundColor: '#00CFE9',
+    backgroundColor: '#609EF5',
   },
   toolChipIcon: {
     fontSize: 16,
@@ -7076,7 +7094,7 @@ const styles = StyleSheet.create({
   swatchMore: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: '#00CFE9',
+    borderColor: '#609EF5',
     borderWidth: 2,
   },
   swatchMoreText: {
@@ -7110,7 +7128,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f5ff',
   },
   pickerTabOn: {
-    backgroundColor: '#00CFE9',
+    backgroundColor: '#609EF5',
   },
   pickerTabText: {
     fontSize: 14,
@@ -7227,7 +7245,7 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     backgroundColor: '#f4f7fe',
     borderWidth: 3,
-    borderColor: '#00CFE9',
+    borderColor: '#609EF5',
   },
   channelValue: {
     width: 30,
