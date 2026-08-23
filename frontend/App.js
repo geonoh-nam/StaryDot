@@ -2105,6 +2105,14 @@ const MOCK_REPORT = [
     stats: { stories: 10, quiz: 16, puzzle: 7, drawing: 4 },
     deltas: { stories: 2, quiz: 5, puzzle: 4, drawing: -2 },
     interests: ['공룡', '요리', '우주 · 행성'],
+    moments: [
+      { tag: '퍼즐 완주 횟수 증가', lead: '끈기 있게 끝까지', head: ' 도전했어요',
+        body: '포기하지 않고 퍼즐을 끝까지 완료한 비율이\n지난주보다 올랐어요', art: STAT_ART.puzzle },
+      { tag: '이야기 설명 비중 증가', lead: '이유를 설명하는 표현', head: '이 늘었어요',
+        body: "이번 주 이야기 속에서 '왜냐하면'처럼 이유를\n설명하는 말이 지난주보다 늘었어요", art: STAT_ART.book },
+      { tag: '그림 활동 창의성 및 탐구 증가', lead: '다양하게', head: ' 표현했어요',
+        body: '그림에 사용한 색이나 모양의 종류가\n지난주보다 훨씬 다양해졌어요', art: STAT_ART.paint },
+    ],
     sessions: [
       { from: 10.3, to: 11, span: '10:20 - 11:00', title: '사랑의 하츄핑', words: ['테올데굴', '따뜻하다'] },
       { from: 4.5, to: 5, span: '4:30 - 5:00', title: '아기상어', words: ['아푸어푸'] },
@@ -2115,6 +2123,7 @@ const MOCK_REPORT = [
     stats: { stories: 8, quiz: 21, puzzle: 5, drawing: 6 },
     deltas: { stories: -2, quiz: 5, puzzle: -2, drawing: 2 },
     interests: ['바다 생물', '공룡', '색깔'],
+    moments: null,
     sessions: [
       { from: 9.5, to: 10.2, span: '9:30 - 10:10', title: '꼬마버스 타요', words: ['부릉부릉', '신호등'] },
       { from: 7, to: 7.5, span: '7:00 - 7:30', title: '브레드이발소', words: ['말랑말랑'] },
@@ -2125,6 +2134,7 @@ const MOCK_REPORT = [
     stats: { stories: 12, quiz: 18, puzzle: 9, drawing: 3 },
     deltas: { stories: 4, quiz: -3, puzzle: 4, drawing: -3 },
     interests: ['숫자', '동물 친구', '노래'],
+    moments: null,
     sessions: [
       { from: 11, to: 11.5, span: '11:00 - 11:30', title: '핑크퐁 아기상어', words: ['뚜루루'] },
       { from: 5, to: 5.7, span: '5:00 - 5:40', title: '뽀롱뽀롱 뽀로로', words: ['미끄럼틀', '눈사람'] },
@@ -2135,6 +2145,7 @@ const MOCK_REPORT = [
     stats: { stories: 11, quiz: 24, puzzle: 6, drawing: 5 },
     deltas: { stories: -1, quiz: 6, puzzle: -3, drawing: 2 },
     interests: ['우주 · 행성', '요리', '탈것'],
+    moments: null,
     sessions: [
       { from: 10, to: 10.6, span: '10:00 - 10:35', title: '캐치 티니핑', words: ['반짝반짝', '모자'] },
       { from: 6.5, to: 7, span: '6:30 - 7:00', title: '꼬마버스 타요', words: ['출발'] },
@@ -2226,6 +2237,8 @@ function ParentReportScreen({ profile, report, words }) {
   // selector shifts them so the screen behaves like the finished thing.
   const data = MOCK_REPORT[week];
   const newWords = words.slice(0, 4);
+  const childName = profile?.name || '우리 아이';
+  const moments = data.moments || MOCK_REPORT[0].moments;
 
   const stats = [
     { art: STAT_ART.book, value: data.stats.stories, unit: '편', label: '완성한 이야기', delta: data.deltas.stories },
@@ -2292,6 +2305,31 @@ function ParentReportScreen({ profile, report, words }) {
       <View style={styles.parentDivider} />
 
       <View style={styles.parentColWide}>
+        <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>{childName}이가 자란 순간들</Text></View>
+        <Text style={styles.parentHint}>이번 주 {childName}이가 <Text style={styles.parentHintOn}>스스로 해낸 순간들</Text>을 모아봤어요</Text>
+        {moments.map((mo) => (
+          <View key={mo.tag} style={styles.momentCard}>
+            <Image source={mo.art} style={styles.momentArt} resizeMode="contain" />
+            <Text style={styles.momentTag}>{mo.tag}</Text>
+            <Text style={styles.momentHead}>
+              <Text style={styles.momentHeadOn}>{mo.lead}</Text>{mo.head}
+            </Text>
+            <Text style={styles.momentBody}>{mo.body}</Text>
+          </View>
+        ))}
+      </View>
+
+      <View style={styles.parentDivider} />
+
+      <View style={styles.parentColRight}>
+        <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>숨은 관심사</Text></View>
+        <Text style={styles.parentHint}>최근 2주 시청기록에서 반복적으로 등장한 주제 중심으로 3개 보여드려요</Text>
+        <View style={styles.parentChips}>
+          {data.interests.map((t) => (
+            <InterestChip key={t} label={t} />
+          ))}
+        </View>
+
         <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>이번 주 활동 요약</Text></View>
         <View style={styles.parentStatGrid}>
           {stats.map((st) => (
@@ -2308,19 +2346,6 @@ function ParentReportScreen({ profile, report, words }) {
             </View>
           ))}
         </View>
-      </View>
-
-      <View style={styles.parentDivider} />
-
-      <View style={styles.parentColRight}>
-        <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>숨은 관심사</Text></View>
-        <Text style={styles.parentHint}>최근 2주 시청기록에서 반복적으로 등장한 주제 중심으로 3개 보여드려요</Text>
-        <View style={styles.parentChips}>
-          {data.interests.map((t) => (
-            <InterestChip key={t} label={t} />
-          ))}
-        </View>
-
       </View>
       </View>
     </View>
@@ -6271,7 +6296,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   parentColWide: {
-    flex: 1,
+    flex: 1.15,
     gap: 8,
   },
   parentTitle: {
@@ -6412,11 +6437,11 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   parentStatArt: {
-    width: 52,
-    height: 52,
+    width: 40,
+    height: 40,
   },
   parentStatValue: {
-    fontSize: 34,
+    fontSize: 28,
     fontWeight: '900',
     color: '#609EF5',
   },
@@ -6427,13 +6452,13 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   parentStatLabel: {
-    marginLeft: 62,
-    fontSize: 15,
+    marginLeft: 48,
+    fontSize: 13,
     fontWeight: '800',
     color: TEXT_ON_DARK,
   },
   parentStatDelta: {
-    marginLeft: 62,
+    marginLeft: 48,
     fontSize: 12,
     fontWeight: '800',
   },
@@ -6443,11 +6468,54 @@ const styles = StyleSheet.create({
   deltaDown: {
     color: '#d9534f',
   },
+  parentHintOn: {
+    color: '#609EF5',
+    textDecorationLine: 'underline',
+  },
+  momentCard: {
+    marginBottom: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: 18,
+    backgroundColor: '#e4efff',
+    overflow: 'hidden',
+  },
+  // Sits behind the words, faded, so the card reads as a sentence with a picture rather than
+  // an icon with a caption.
+  momentArt: {
+    position: 'absolute',
+    right: 10,
+    bottom: 6,
+    width: 74,
+    height: 74,
+    opacity: 0.28,
+  },
+  momentTag: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#8a97b1',
+  },
+  momentHead: {
+    marginTop: 4,
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#171d31',
+  },
+  momentHeadOn: {
+    color: '#609EF5',
+  },
+  momentBody: {
+    marginTop: 10,
+    fontSize: 12,
+    lineHeight: 17,
+    fontWeight: '700',
+    color: '#5b6b8c',
+  },
   parentChips: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     flexWrap: 'wrap',
-    rowGap: 18,
-    columnGap: 16,
+    rowGap: 10,
+    columnGap: 10,
     paddingTop: 6,
     paddingBottom: 6,
   },
@@ -6455,17 +6523,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    paddingHorizontal: 30,
-    paddingVertical: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 13,
     borderRadius: 999,
     backgroundColor: '#ffffff',
   },
   parentChipArt: {
-    width: 44,
-    height: 44,
+    width: 32,
+    height: 32,
   },
   parentChipText: {
-    fontSize: 23,
+    fontSize: 18,
     fontWeight: '900',
     color: '#171d31',
   },
