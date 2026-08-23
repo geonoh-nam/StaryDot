@@ -1,7 +1,7 @@
 // The hint ladder. A child who cannot solve it loses interest fast, so the buddy takes over
 // at HINT_SOLVE rather than leaving them stuck.
-export const HINT_LOOK = 8000;
-export const HINT_HOP = 16000;
+const HINT_LOOK = 8000;
+const HINT_HOP = 16000;
 export const HINT_SOLVE = 24000;
 
 export function hintLevel(elapsedMs) {

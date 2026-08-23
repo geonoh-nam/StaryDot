@@ -6,7 +6,7 @@ import React from 'react';
 import { StyleSheet, Text as RNText, TextInput as RNTextInput } from 'react-native';
 import { useFonts } from 'expo-font';
 
-export const AGGRO_FONTS = {
+const AGGRO_FONTS = {
   BnviitLasik: require('./assets/fonts/BnviitLasik.ttf'),
   Poppins: require('@expo-google-fonts/poppins/400Regular/Poppins_400Regular.ttf'),
   PoppinsSemiBold: require('@expo-google-fonts/poppins/600SemiBold/Poppins_600SemiBold.ttf'),
@@ -49,7 +49,7 @@ function scriptOf(children) {
   return HANGUL.test(text) ? 'ko' : 'en';
 }
 
-export function aggroStyle(style, script = 'ko') {
+function aggroStyle(style, script = 'ko') {
   const flat = StyleSheet.flatten(style) || {};
   const { fontWeight, fontFamily, ...rest } = flat;
   // An explicit fontFamily wins — that is how the wordmark keeps its display face.

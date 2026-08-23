@@ -15,30 +15,30 @@ import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
 import { Spark } from './Browse';
 
 // How much speed a thrown star keeps off a wall, and how fast it coasts to a stop.
-export const WALL_BOUNCE = 0.5;
+const WALL_BOUNCE = 0.5;
 
-export const FLING_FRICTION = 0.94;
+const FLING_FRICTION = 0.94;
 
 // How long the star waits before dozing off, and how close a candy has to land to be eaten.
-export const SLEEP_AFTER_MS = 12000;
+const SLEEP_AFTER_MS = 12000;
 
-export const FEED_REACH = 150;
+const FEED_REACH = 150;
 
 // The star glows harder as it fills, flashes when a form is chosen, and the new character springs
 // out of the light. Everything runs on the UI thread so it stays smooth while the panel re-renders.
 // Idle float lives outside React: nothing that happens in a render can restart it, so the star
 // keeps drifting on its own clock however often the panel re-renders.
-export const IDLE = makeMutable(0);
+const IDLE = makeMutable(0);
 // One breath loop for every star on screen, started once.
 let idleStarted = false;
 
-export const SPARKS = Array.from({ length: 10 }, (_, i) => ({
+const SPARKS = Array.from({ length: 10 }, (_, i) => ({
   angle: (i / 10) * Math.PI * 2,
   delay: i * 45,
 }));
 
 // One heart from a stroke: floats up out of the star's fur and fades.
-export function Heart({ dx, dy }) {
+function Heart({ dx, dy }) {
   const rise = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.timing(rise, { toValue: 1, duration: 900, useNativeDriver: true }).start();
@@ -61,7 +61,7 @@ export function Heart({ dx, dy }) {
   );
 }
 
-export const StarStage = React.memo(function StarStage({ art, ready, evolved, feedTick = 0, tapTick = 0 }) {
+const StarStage = React.memo(function StarStage({ art, ready, evolved, feedTick = 0, tapTick = 0 }) {
   const pulse = useSharedValue(0);
   const flash = useSharedValue(0);
   const pop = useSharedValue(1);

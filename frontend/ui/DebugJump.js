@@ -7,7 +7,7 @@ import ActivityStage from '../activities/ActivityStage';
 // Landing screen, per the mockup: wordmark, a greeting with the child's name highlighted,
 // and the video cards fanned out underneath.
 // Dev-only shortcut: every screen is one tap away while the flow is being built.
-export const DEBUG_SCREENS = [
+const DEBUG_SCREENS = [
   ['intro', '인트로'],
   ['welcome', '온보딩 안내'],
   ['profile', '아이 프로필'],
@@ -21,14 +21,14 @@ export const DEBUG_SCREENS = [
   ['report', '활동 리포트'],
 ];
 
-export const DEBUG_TABS = [
+const DEBUG_TABS = [
   ['quizdebug', '문제 목록'],
   ['character', '캐릭터'],
   ['words', '단어장'],
   ['settings', '설정'],
 ];
 
-export const DEBUG_ACTIVITIES = [
+const DEBUG_ACTIVITIES = [
   ['찾아 짚기', { type: 'findit', payload: { image: 'teenieping-01-27', target: { x: 0.62, y: 0.53, r: 0.15 }, ask: '하츄핑 어디 있지?' } }],
   ['끌어다 놓기', { type: 'drag', payload: { item: 'candy', slot: 'box' } }],
   ['세어보기', { type: 'count', payload: { item: 'apple', n: 4 } }],

@@ -204,7 +204,7 @@ function ColorControls({ value, onChange, swatches }) {
 }
 
 // Strokes and bucket fills share one timeline so undo/redo walks them in the order they happened.
-export function useCanvasHistory() {
+function useCanvasHistory() {
   const [strokes, setStrokes] = useState([]);
   const [fills, setFills] = useState([]);
   const [order, setOrder] = useState([]);
@@ -297,7 +297,7 @@ function SizeSlider({ value, color, onChange }) {
 }
 
 // One toolbar strip above every canvas: tools, colours, thickness, undo/redo.
-export function CanvasToolbar({ tool, onTool, tools, color, onColor, swatches, size, onSize, onUndo, onRedo, canUndo, canRedo, onClear, right }) {
+function CanvasToolbar({ tool, onTool, tools, color, onColor, swatches, size, onSize, onUndo, onRedo, canUndo, canRedo, onClear, right }) {
   const [open, setOpen] = useState(true);
   if (!open) {
     return (

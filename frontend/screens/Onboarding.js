@@ -46,7 +46,7 @@ export function OnboardIntroScreen({ onNext }) {
 
 // First run, step 1: who is drawing today.
 // Tap the circle to shoot a profile photo; the character stands in until there is one.
-export function ProfilePhotoPicker({ photo, tone, onPick }) {
+function ProfilePhotoPicker({ photo, tone, onPick }) {
   const take = async () => {
     const perm = await ImagePicker.requestCameraPermissionsAsync();
     if (!perm.granted) {
@@ -82,7 +82,7 @@ export function ProfilePhotoPicker({ photo, tone, onPick }) {
 }
 
 // Tap a field, pick from a scrolling list — the pattern grown-ups expect from a date field.
-export function BirthDropdown({ values, value, unit, onSelect }) {
+function BirthDropdown({ values, value, unit, onSelect }) {
   const [open, setOpen] = useState(false);
   const listRef = useRef(null);
   const index = Math.max(0, values.indexOf(value));
@@ -178,7 +178,7 @@ export function ChildProfileScreen({ profile, onChange, onNext }) {
   );
 }
 
-export function StepperCard({ values, value, label, onChange }) {
+function StepperCard({ values, value, label, onChange }) {
   const ref = useRef(null);
   const index = Math.max(0, values.indexOf(value));
   return (

@@ -21,23 +21,23 @@ export const CARD_GAP = 18;
 
 export const CARD_RADIUS = 26;
 
-export const CARD_BORDER = 3.5;
+const CARD_BORDER = 3.5;
 
-export const CARD_OVERLAP = 58;
+const CARD_OVERLAP = 58;
 
 // The cards ride the rim of one big circle whose centre sits far below the screen: they keep
 // facing the viewer, the middle one rides highest and largest, the outer ones sink along the arc.
-export const RING_RADIUS = 1500;
+const RING_RADIUS = 1500;
 
-export const RING_ANGLE = 9; // degrees between neighbouring cards
+const RING_ANGLE = 9; // degrees between neighbouring cards
 
-export const RING_SAMPLES = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
+const RING_SAMPLES = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
 
-export const SERIES_HERO_W = 330;
+const SERIES_HERO_W = 330;
 
-export const STAR_BUDDY = require('../assets/characters/star-buddy.png');
+const STAR_BUDDY = require('../assets/characters/star-buddy.png');
 
-export const BUDDY_MENU = [
+const BUDDY_MENU = [
   { key: 'character', label: '캐릭터', icon: '★' },
   { key: 'parent', label: '부모 리포트', icon: '▤' },
   { key: 'words', label: '단어장', icon: '가' },
@@ -45,7 +45,7 @@ export const BUDDY_MENU = [
 ];
 
 // Cards wear a lighter ring of their own colour, like the mockup.
-export function lighten(hex, amount) {
+function lighten(hex, amount) {
   const rgb = hexToRgb(hex).map((c) => Math.round(c + (255 - c) * amount));
   return rgbToHex(rgb);
 }
@@ -94,7 +94,7 @@ const ringFacet = () => {
     opacity: RING_SAMPLES.map((d) => (Math.abs(d) > 2.5 ? 0 : 1)),
   };
 };
-export function RingCard({ video, index, offset, step, total, centerX, focused, onPress }) {
+function RingCard({ video, index, offset, step, total, centerX, focused, onPress }) {
   const facet = ringFacet();
   const style = useAnimatedStyle(() => {
     const half = total / 2;
@@ -122,7 +122,7 @@ export function RingCard({ video, index, offset, step, total, centerX, focused, 
 }
 
 // Any character image, breathing and squashing on tap — the same feel as the mascot.
-export function BouncyCharacter({ source, size = 200 }) {
+function BouncyCharacter({ source, size = 200 }) {
   const breathe = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(1)).current;
   useEffect(() => {
@@ -178,7 +178,7 @@ export function Spark({ spark, burst }) {
 
 // The star drifts and twinkles; tapping it opens the menu bubble that the screen owns, so the
 // bubble can live in the free space bottom-right instead of being clipped beside the greeting.
-export function StarBuddy({ onPress }) {
+function StarBuddy({ onPress }) {
   const float = useRef(new Animated.Value(0)).current;
   const press = useRef(new Animated.Value(1)).current;
 

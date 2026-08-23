@@ -8,7 +8,7 @@ import { buttons } from '../ui/buttons';
 import { GeneratedCharacter, PattiCharacter, StrokeArt } from '../ui/artwork';
 import { TapScale } from '../ui/motion';
 
-export function ReportStat({ label, value, tone }) {
+function ReportStat({ label, value, tone }) {
   return (
     <View style={styles.reportStat}>
       <Text style={[styles.reportStatValue, { color: tone }]}>{value}</Text>

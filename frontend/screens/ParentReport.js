@@ -8,7 +8,7 @@ import { playSound } from '../sound';
 import { TEXT_ON_DARK } from '../theme';
 
 // The rim is a gradient, so it has to be drawn — and a drawn rim needs the chip's real size.
-export function InterestChip({ label }) {
+function InterestChip({ label }) {
   const [box, setBox] = useState({ width: 0, height: 0 });
   return (
     <View style={styles.parentChip} onLayout={(e) => setBox(e.nativeEvent.layout)}>

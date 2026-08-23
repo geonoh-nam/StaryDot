@@ -16,7 +16,7 @@ import { LIBRARY, THUMBS } from '../data/library';
 import { PattiCharacter } from '../ui/artwork';
 
 // Every word the child met in a quiz, kept with its meaning and a sentence to say it in.
-export function WordsScreen({ words }) {
+function WordsScreen({ words }) {
   if (!words.length) {
     return (
       <View style={styles.tabPlaceholder}>

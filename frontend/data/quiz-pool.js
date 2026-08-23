@@ -25,7 +25,7 @@ export const QUIZ_KINDS = {
   수량_확인: '수량 확인',
 };
 
-export const C = {
+const C = {
   yellow: ['#f0ae03', '#fffaf0'],
   purple: ['#9b5de5', '#f6f0ff'],
   sky: ['#609EF5', '#f1fdff'],
