@@ -471,10 +471,6 @@ export function DrawingScreen({ topic = '오늘의 그림', strokes, status, err
 }
 
 
-
-
-
-
 function judgeTrace(glyph, points) {
   if (!glyph || points.length < 12) return null;
   const near = (x, y) => {

@@ -61,6 +61,7 @@ function Heart({ dx, dy }) {
   );
 }
 
+// Rebuilt only when the character itself changes — never when candy or scene state moves.
 const StarStage = React.memo(function StarStage({ art, ready, evolved, feedTick = 0, tapTick = 0 }) {
   const pulse = useSharedValue(0);
   const flash = useSharedValue(0);
@@ -318,12 +319,6 @@ export function CharacterScreen({ profile, food, fed, onFeed }) {
 
   const full = percent >= FULL_BAR;
   const chosen = EVOLUTIONS.find((e) => e.id === evolved);
-
-  // Rebuilt only when the character itself changes — never when candy or scene state moves.
-  // No memo here: re-creating this element remounts the star and restarts its float — that is the
-  // tick. The gesture object is already stable, so plain rendering is safe.
-
-
 
   // Every feed floats a "+1" above the star, then clears itself.
   // Tapping fast used to stack separate "+1" badges on top of each other. One badge that counts

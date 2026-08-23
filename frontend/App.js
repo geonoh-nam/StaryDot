@@ -87,12 +87,6 @@ function toSeries(cat, base) {
 }
 
 
-
-
-
-
-
-
 // Demo questions until the pipeline fills the activity table: one per template, so the variety
 // the pipeline will produce is visible today. Keys match oneshot/schemas.py.
 
@@ -128,7 +122,6 @@ function pickQuizzes(history, count) {
   }
   return picks;
 }
-
 
 
 const STORE_KEY = 'patti.profile.v1';
@@ -574,124 +567,10 @@ export default function App() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Bars rise from this offset; the average line and its badge hang off the same base.
-
-
-
-
-
-
-
-
-
-
-
-
-// Toss-style center popup with a spring pop-in. Self-animates on mount.
-// 10 to 180 minutes. Too many values for a chip row, hence the scrolling picker below.
-const LIMIT_ITEM_W = 88;
-
-
-
-
-
-
-
-
-
 const EVOLVE_AT = 3;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const CIRCLE_STYLE = {
-  width: 120,
-  height: 120,
-  borderRadius: 60,
-  borderWidth: 3,
-  borderColor: 'rgba(255,255,255,0.7)',
-  shadowColor: '#91a2c0',
-  shadowOpacity: 0.18,
-  shadowRadius: 12,
-  shadowOffset: { width: 0, height: 6 },
-};
-
 const styles = StyleSheet.create({
-  pattiCircle: CIRCLE_STYLE,
   safe: {
     flex: 1,
     backgroundColor: '#eef5ff',
@@ -706,8 +585,4 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: COLORS.card,
   },
-  // Balances the star so the greeting itself stays screen-centred.
-
-  // Sits behind the words, faded, so the card reads as a sentence with a picture rather than
-  // an icon with a caption.
 });
