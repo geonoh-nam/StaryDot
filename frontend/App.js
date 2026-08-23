@@ -1,37 +1,34 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, BackHandler, Image, Modal, Platform, ScrollView, StatusBar, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { BackHandler, Image, Platform, ScrollView, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from './Typography';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { VideoView, useVideoPlayer } from 'expo-video';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { BlurView } from 'expo-blur';
-import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
+import { Path } from 'react-native-svg';
 import { Skia } from '@shopify/react-native-skia';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { interpolate } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import getStroke from 'perfect-freehand';
 import PuzzleScreen from './Puzzle';
-import { playSound, speak, speakUrl, stopSpeaking } from './sound';
+import { playSound } from './sound';
 import { ageInMonths } from './age';
-import { Quote } from './ui/Quote';
-import { DrawingScreen, TraceOverlay, TraceWordOverlay } from './screens/Drawing';
+import { ActivitiesScreen, QuizOverlay, WatchScreen } from './screens/Watch';
+import { DrawingScreen } from './screens/Drawing';
 import { COLORS, TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from './theme';
 import { DEMO_VIDEO, LIBRARY, SERIES_ART, THUMBS } from './data/library';
 import { QUIZ_POOL } from './data/quiz-pool';
 import { CenterPopup } from './ui/CenterPopup';
 import { TabletHeader } from './ui/Header';
 import { StaryLogo } from './ui/Logo';
-import { GradientRim, ScreenFade, TapScale } from './ui/motion';
+import { ScreenFade, TapScale } from './ui/motion';
 import { CharacterScreen, EvolvePopup } from './screens/Character';
 import { ParentReportScreen } from './screens/ParentReport';
 import { ChildProfileScreen, GuardianSetupScreen, OnboardIntroScreen } from './screens/Onboarding';
 import { buttons } from './ui/buttons';
 import { CARD_GAP, CARD_H, CARD_RADIUS, CARD_W, CardSheen, MainScreen, SeriesScreen, VideoDetailScreen } from './screens/Browse';
 import { TABS } from './ui/Header';
-import { ACT_MSG, OFFLINE_ACTIVITIES } from './data/activities';
+import { OFFLINE_ACTIVITIES } from './data/activities';
 import { QuizDebugScreen } from './screens/QuizDebug';
 import { ReportScreen } from './screens/Report';
 import { SettingsScreen } from './screens/Settings';
@@ -39,7 +36,7 @@ import ActivityStage from './activities/ActivityStage';
 import IntroScreen from './Intro';
 import * as ImagePicker from 'expo-image-picker';
 import { DebugJump } from './ui/DebugJump';
-import { GeneratedCharacter, PattiCharacter } from './ui/artwork';
+import { PattiCharacter } from './ui/artwork';
 
 
 // The content server runs beside the dev server, so its host is the one we are bundling from.
@@ -47,10 +44,6 @@ const CONTENT_PORT = 5056;
 // Videos pushed to the app's own folder play without any storage permission, and without a server.
 const LOCAL_VIDEO_DIR = 'file:///sdcard/Android/data/com.flyai.patti/files/video/';
 const OFFLINE_LIBRARY = require('./assets/library.json');
-// Frames grabbed at each puzzle's own timestamp, keyed by the name the activity payload carries.
-const PUZZLE_IMAGES = {
-  'teenieping-01-90': require('./assets/puzzles/teenieping-01-90.png'),
-};
 function contentBase() {
   const hostUri = Constants.expoConfig?.hostUri || '';
   const host = Platform.OS === 'android' ? hostUri.split(':')[0] || 'localhost' : 'localhost';
@@ -102,7 +95,6 @@ function toSeries(cat, base) {
 
 
 
-const STAGE_KINDS = new Set(['findit', 'drag', 'count', 'say']);
 
 
 
@@ -752,14 +744,6 @@ function HomeScreen({ characterImage, onStart, profile, tab = 'library', onTab, 
   );
 }
 
-// Demo stand-in for the pre-generated content schedule. Later: load per video_id from the
-// analysis pipeline's activities.json — same shape { at: seconds, type }.
-const ACTIVITY_SLOTS = [
-  { at: 10, type: 'quiz', pick: 0 },
-  { at: 20, type: 'quiz', pick: 1, then: 'traceword' },
-  { at: 30, type: 'puzzle' },
-  { at: 40, type: 'quiz', pick: 2 },
-];
 
 
 
@@ -782,244 +766,6 @@ const EVOLVE_AT = 3;
 
 
 
-function WatchScreen({ source, plan = [], picks = [0, 1, 2], seekTo, onResult, onWatched, quizDone, onQuizAsk, onQuizCorrect, onQuizSkip, onFinish, onBack, onHome, onReport }) {
-  const player = useVideoPlayer(source, (instance) => {
-    instance.loop = false;
-    instance.play();
-  });
-  const [selected, setSelected] = useState(null);
-  // The four participation activities live in their own stage; quiz and puzzle keep their old path.
-  const [stageActivity, setStageActivity] = useState(null);
-  const [answered, setAnswered] = useState(quizDone);
-  const [countdown, setCountdown] = useState(null);
-  const [active, setActive] = useState(null); // current activity type: 'quiz' | 'puzzle' | null
-  const [quizIndex, setQuizIndex] = useState(0);
-  const [serverQuiz, setServerQuiz] = useState(null);
-  const [tries, setTries] = useState(0);
-  const [puzzleImage, setPuzzleImage] = useState(null);
-  const quiz = serverQuiz || QUIZ_POOL[quizIndex];
-  const activityId = useRef(null);
-  const followUp = useRef(null);
-  // Server plan wins; the built-in schedule is the demo fallback.
-  const schedule = useMemo(() => {
-    if (!plan.length) return ACTIVITY_SLOTS.map((a) => ({ ...a, quiz: picks[a.pick] ?? 0 }));
-    return plan.map((a) => {
-      let payload = {};
-      try {
-        payload = typeof a.payload === 'string' ? JSON.parse(a.payload) : a.payload || {};
-      } catch (e) {
-        payload = {};
-      }
-      return { at: a.at_sec ?? a.at, type: a.type, activityId: a.id, payload };
-    });
-  }, [plan, picks]);
-  const [announce, setAnnounce] = useState(null); // activity type being announced before it opens
-  const [celebrate, setCelebrate] = useState(false); // "잘했어요" popup between an activity and resuming the video
-  const firedRef = useRef(new Set());
-
-  // Brief "잘했어요" celebration, then resume the video.
-  useEffect(() => {
-    if (!celebrate) return undefined;
-    playSound('fanfare');
-    const id = setTimeout(() => {
-      setCelebrate(false);
-      player.play();
-    }, 1600);
-    return () => clearTimeout(id);
-  }, [celebrate]);
-  const cdAnim = useRef(new Animated.Value(1)).current;
-
-  // Show the "같이 ~ 해보자" popup for a moment, then open the activity.
-  useEffect(() => {
-    if (!announce) return undefined;
-    speak(announce);
-    const id = setTimeout(() => {
-      setActive(announce);
-      setAnnounce(null);
-    }, 1600);
-    return () => clearTimeout(id);
-  }, [announce]);
-
-  // Pop each countdown number so the 3-2-1 feels intentional, not a static flash.
-  useEffect(() => {
-    if (countdown == null) return;
-    cdAnim.setValue(0.5);
-    Animated.spring(cdAnim, { toValue: 1, friction: 5, tension: 120, useNativeDriver: true }).start();
-  }, [countdown]);
-
-  // Drive triggers off the ACTIVITIES schedule: 3s countdown, then pause + show the activity.
-  useEffect(() => {
-    const id = setInterval(() => {
-      const t = player.currentTime || 0;
-      let cd = null;
-      for (const a of schedule) {
-        if (!firedRef.current.has(a.at) && t >= a.at - 3 && t < a.at) { cd = Math.ceil(a.at - t); break; }
-      }
-      setCountdown((prev) => (prev === cd ? prev : cd));
-      for (const a of schedule) {
-        if (!firedRef.current.has(a.at) && t >= a.at && t < a.at + 10) {
-          firedRef.current.add(a.at);
-          player.pause();
-          if (a.type === 'quiz') {
-            setSelected(null);
-            // A pipeline question arrives whole in the payload; the demo pool is the fallback.
-            const authored = a.payload && Array.isArray(a.payload.options) ? { ...a.payload, kind: a.payload.activity_template } : null;
-            setServerQuiz(authored);
-            setQuizIndex(a.quiz || 0);
-            if (onQuizAsk) onQuizAsk(a.quiz || 0, authored);
-          }
-          if (STAGE_KINDS.has(a.type)) setStageActivity({ type: a.type, payload: a.payload || {} });
-          followUp.current = a.then || null;
-          setPuzzleImage(a.payload?.image ? PUZZLE_IMAGES[a.payload.image] : null);
-          activityId.current = a.activityId || null;
-          setAnnounce(a.type);
-          break;
-        }
-      }
-    }, 350);
-    return () => clearInterval(id);
-  }, [player, schedule]);
-
-  // Debug jump: start just before the question we want to look at.
-  useEffect(() => {
-    if (seekTo == null) return;
-    const id = setTimeout(() => {
-      try {
-        player.currentTime = seekTo;
-        player.play();
-      } catch (e) {
-        // player not ready yet; the schedule still runs from the start
-      }
-    }, 600);
-    return () => clearTimeout(id);
-  }, [seekTo, player]);
-
-  // When the video finishes, move to the final activities page.
-  useEffect(() => {
-    const sub = player.addListener('playToEnd', () => {
-      if (onWatched) onWatched(Math.round(player.currentTime || 0));
-      onFinish();
-    });
-    return () => sub.remove();
-  }, [player]);
-
-  // Some slots chain: the question is answered first, then its answer word is traced.
-  const resume = () => {
-    if (followUp.current) {
-      const next = followUp.current;
-      followUp.current = null;
-      setActive(next);
-      return;
-    }
-    setActive(null);
-    player.play();
-  };
-  const resumeTrace = resume;
-  // Puzzle finished → show "잘했어요" popup, then the effect resumes the video.
-  // Only a finished puzzle earns the praise popup; skipping goes straight back to the video.
-  const resumePuzzle = (solved = true) => {
-    setActive(null);
-    if (solved) setCelebrate(true);
-    else player.play();
-  };
-  const handleAnswer = (label) => {
-    setSelected(label);
-    const right = label === quiz.answer;
-    if (onResult) onResult(activityId.current, right ? 'correct' : 'wrong', quiz.kind);
-    if (right) {
-      setAnswered(true);
-      playSound('success');
-      speak('correct');
-      onQuizCorrect();
-    } else {
-      playSound('wrong');
-      speak('retry');
-    }
-  };
-
-  if (active === 'trace') {
-    return (
-      <View style={styles.watchScreen}>
-        {onBack ? (
-          <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Text style={styles.backButtonText}>‹ 뒤로</Text>
-          </TouchableOpacity>
-        ) : null}
-      {onBack ? (
-        <TouchableOpacity style={styles.backButton} onPress={onBack}>
-          <Text style={styles.backButtonText}>‹ 뒤로</Text>
-        </TouchableOpacity>
-      ) : null}
-        <TraceOverlay onDone={resumeTrace} />
-      </View>
-    );
-  }
-
-  return (
-    <View style={styles.watchScreen}>
-      <View style={styles.videoCard}>
-        <GradientRim radius={34} width={7} />
-        {active !== 'puzzle' ? (
-          <VideoView style={styles.video} player={player} nativeControls={active !== 'quiz'} contentFit="contain" surfaceType="textureView" />
-        ) : null}
-        {countdown != null && !active && !announce ? (
-          <Animated.View style={[styles.countdown, { transform: [{ scale: cdAnim }] }]} pointerEvents="none">
-            <Svg style={StyleSheet.absoluteFill}>
-              <Defs>
-                <LinearGradient id="cd" x1="0" y1="0" x2="0" y2="1">
-                  <Stop offset="0" stopColor="#BADAFF" />
-                  <Stop offset="1" stopColor="#FFFFFF" />
-                </LinearGradient>
-              </Defs>
-              <Rect x="0" y="0" width="100%" height="100%" rx={39} fill="url(#cd)" />
-            </Svg>
-            <Text style={styles.countdownText}>{countdown}</Text>
-          </Animated.View>
-        ) : null}
-        {announce ? <CenterPopup text={ACT_MSG[announce].text} emoji={ACT_MSG[announce].emoji} /> : null}
-        {active === 'quiz' ? (
-          <QuizOverlay
-            selected={selected}
-            quiz={quiz}
-            tries={tries}
-            onAnswer={handleAnswer}
-            onRetry={() => setSelected(null)}
-            onResume={resume}
-            onSkip={() => {
-              onQuizSkip();
-              resume();
-            }}
-          />
-        ) : null}
-      </View>
-      {stageActivity && active === stageActivity.type ? (
-        <ActivityStage
-          activity={stageActivity}
-          onDone={(ok) => {
-            // These activities have no failure state — the buddy solves it rather than letting
-            // the child fail, so a finish is always "correct"; only closing early (back button)
-            // is a skip. Same shape as handleAnswer's onResult call for the quiz path.
-            if (onResult) onResult(activityId.current, ok ? 'correct' : 'skip', stageActivity.type);
-            setStageActivity(null);
-            resume();
-          }}
-        />
-      ) : null}
-      {active === 'traceword' ? (
-        <TraceWordOverlay word={quiz.answer} onDone={resume} />
-      ) : null}
-      {active === 'puzzle' ? (
-        <Modal transparent visible animationType="fade" presentationStyle="overFullScreen" supportedOrientations={['landscape', 'landscape-left', 'landscape-right']} onRequestClose={resumePuzzle}>
-          <View style={styles.puzzleModal}>
-            <TabletHeader rightLabel="보호자 설정" onHome={onHome} onReport={onReport} />
-            <PuzzleScreen image={puzzleImage} onDone={(solved) => resumePuzzle(solved !== false)} />
-          </View>
-        </Modal>
-      ) : null}
-      {celebrate ? <CenterPopup text="잘했어요! 🎉" emoji="🎉" /> : null}
-    </View>
-  );
-}
 
 
 
@@ -1036,167 +782,8 @@ function WatchScreen({ source, plan = [], picks = [0, 1, 2], seekTo, onResult, o
 
 
 
-function ActivitiesScreen({ characterImage, onDrawing, onFinish }) {
-  return (
-    <View style={styles.activitiesScreen}>
-      <View style={styles.activitiesFriend}>
-        {characterImage ? <GeneratedCharacter uri={characterImage} size={170} /> : <PattiCharacter tone="blue" size={0.82} />}
-        <Quote>다 봤다! 오늘 본 걸 그림으로 그려볼까?</Quote>
-      </View>
-      <View style={styles.wrapupActions}>
-        <TouchableOpacity style={styles.drawCta} onPress={onDrawing}>
-          <Text style={styles.drawCtaIcon}>✎</Text>
-          <Text style={styles.drawCtaText}>그림 그리기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={buttons.lightButton} onPress={onFinish}>
-          <Text style={buttons.lightButtonText}>마무리</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
 
-const QUIZ_BUDDY = require('./assets/characters/bunny.png');
 
-function QuizOverlay({ quiz, selected, tries = 0, onAnswer, onRetry, onResume, onSkip }) {
-  // The pipeline lists the answer first; shuffled once per question so it moves around.
-  const options = useMemo(() => {
-    const list = [...quiz.options];
-    for (let i = list.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [list[i], list[j]] = [list[j], list[i]];
-    }
-    return list;
-  }, [quiz]);
-  const win = useWindowDimensions();
-  const correct = selected === quiz.answer;
-  const shakeX = useRef(new Animated.Value(0)).current;
-  const popScale = useRef(new Animated.Value(0)).current;
-  const enter = useRef(new Animated.Value(0)).current;
-  const [cardBox, setCardBox] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    // Question audio is authored with the question, so playback is a single URL away.
-    if (quiz.audioUrl) speakUrl(quiz.audioUrl);
-    return () => stopSpeaking();
-  }, []);
-
-  useEffect(() => {
-    Animated.spring(enter, { toValue: 1, friction: 7, tension: 80, useNativeDriver: true }).start();
-  }, []);
-  const enterScale = enter.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1] });
-
-  useEffect(() => {
-    if (!selected) return;
-    if (correct) {
-      popScale.setValue(0);
-      Animated.spring(popScale, { toValue: 1, friction: 4, tension: 90, useNativeDriver: true }).start();
-    } else {
-      shakeX.setValue(0);
-      Animated.sequence([
-        Animated.timing(shakeX, { toValue: -14, duration: 55, useNativeDriver: true }),
-        Animated.timing(shakeX, { toValue: 14, duration: 55, useNativeDriver: true }),
-        Animated.timing(shakeX, { toValue: -9, duration: 55, useNativeDriver: true }),
-        Animated.timing(shakeX, { toValue: 9, duration: 55, useNativeDriver: true }),
-        Animated.timing(shakeX, { toValue: 0, duration: 55, useNativeDriver: true }),
-      ]).start();
-    }
-  }, [selected]);
-
-  return (
-    <Modal transparent visible animationType="fade" supportedOrientations={['landscape', 'landscape-left', 'landscape-right']} onRequestClose={onResume}>
-      <View style={[styles.quizOverlay, { width: win.width, height: win.height }]}>
-        <TouchableOpacity style={styles.ffBtn} onPress={onSkip}>
-          <Text style={styles.ffBtnText}>⏭</Text>
-        </TouchableOpacity>
-        <BlurView intensity={28} tint="dark" style={StyleSheet.absoluteFill} pointerEvents="none" />
-        {/* 정답 시 캐릭터 등장 자리 (popScale 애니메이션 재사용) */}
-        <Animated.View
-          onLayout={(e) => setCardBox(e.nativeEvent.layout)}
-          style={[styles.quizCard, { opacity: enter, transform: [{ translateX: shakeX }, { scale: enterScale }] }]}
-        >
-          {/* Inset by half the stroke so the rim sits inside the card without clipping — clipping
-              would cut off the bubble and the buddy that hang above the card. */}
-          {cardBox.width ? (
-            <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-              <Defs>
-                <LinearGradient id="cardRim" x1="0" y1="0" x2="1" y2="0">
-                  <Stop offset="0" stopColor="#609EF5" />
-                  <Stop offset="1" stopColor="#1b3a7a" />
-                </LinearGradient>
-              </Defs>
-              <Rect x={2.5} y={2.5} width={cardBox.width - 5} height={cardBox.height - 5} rx={31.5} fill="none" stroke="url(#cardRim)" strokeWidth={5} />
-            </Svg>
-          ) : null}
-        {/* Buddy leans on the question bubble, and the options sit on the card below it. */}
-        {selected ? null : (
-          <TouchableOpacity style={styles.dunnoBtn} onPress={onSkip}>
-            <Text style={styles.dunnoText}>모르겠어요</Text>
-          </TouchableOpacity>
-        )}
-        <View style={styles.quizPromptRow}>
-          <Image source={QUIZ_BUDDY} style={styles.quizBuddy} resizeMode="contain" />
-          <View style={styles.questionBox}>
-            <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-              <Defs>
-                <LinearGradient id="qRim" x1="0" y1="0" x2="1" y2="0">
-                  <Stop offset="0" stopColor="#609EF5" />
-                  <Stop offset="1" stopColor="#1b3a7a" />
-                </LinearGradient>
-              </Defs>
-              <Rect x="0" y="0" width="100%" height="100%" rx={42} ry={42} fill="none" stroke="url(#qRim)" strokeWidth={7} />
-            </Svg>
-            <Text style={styles.questionText}>
-              {selected && correct
-                ? '맞아 정답이야! 잘했어 :)'
-                : selected && tries >= 2
-                ? `정답은 '${quiz.answer}' 였어!`
-                : selected
-                ? '앗 다시 생각해보자~!'
-                : quiz.title}
-            </Text>
-          </View>
-        </View>
-        {selected && correct ? (
-          <View style={styles.answerResult}>
-            <Text style={styles.answerLabel}>정답 :</Text>
-            <Text style={styles.answerValue}>{quiz.answer}</Text>
-          </View>
-        ) : (
-          <View style={styles.quizOptions}>
-            {options.map((option) => (
-              <TouchableOpacity
-                key={option.label}
-                style={[styles.quizOption, { borderColor: option.color, backgroundColor: option.bg }, selected === option.label && styles.quizOptionDimmed]}
-                onPress={() => onAnswer(option.label)}
-              >
-                <Text style={[styles.quizOptionText, { color: option.color }]}>{option.label}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-        <View style={styles.bottomActions}>
-          {/* Right answer needs no skip; a second wrong answer ends the question. */}
-          {selected && correct ? null : selected && tries < 2 ? (
-            <TouchableOpacity style={buttons.lightButton} onPress={onRetry}>
-              <Text style={buttons.lightButtonText}>다시 고르기</Text>
-            </TouchableOpacity>
-          ) : selected ? (
-            <TapScale style={buttons.darkButton} onPress={onSkip}>
-              <Text style={buttons.darkButtonText}>영상 이어보기</Text>
-            </TapScale>
-          ) : null}
-          {selected && correct ? (
-            <TouchableOpacity style={buttons.darkButton} onPress={onResume}>
-              <Text style={buttons.darkButtonText}>영상 이어보기</Text>
-            </TouchableOpacity>
-          ) : null}
-        </View>
-      </Animated.View>
-      </View>
-    </Modal>
-  );
-}
 
 
 
@@ -1265,225 +852,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: TEXT_MUTED_ON_DARK,
   },
-  puzzleModal: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-  },
-  watchScreen: {
-    flex: 1,
-    padding: 36,
-    backgroundColor: COLORS.stage,
-  },
-  videoCard: {
-    flex: 1,
-    borderRadius: 34,
-    overflow: 'hidden',
-    padding: 7,
-    backgroundColor: '#f4f7fe',
-    shadowColor: '#91a2c0',
-    shadowOpacity: 0.12,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 12 },
-  },
-  video: {
-    flex: 1,
-    borderRadius: 27,
-    overflow: 'hidden',
-    backgroundColor: '#000',
-  },
-  activitiesScreen: {
-    flex: 1,
-    padding: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 40,
-    backgroundColor: COLORS.stage,
-  },
-  activitiesFriend: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 24,
-  },
-  wrapupActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  drawCta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    minHeight: 72,
-    paddingHorizontal: 40,
-    borderRadius: 26,
-    backgroundColor: COLORS.blue,
-    shadowColor: COLORS.blue,
-    shadowOpacity: 0.28,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-  },
-  drawCtaIcon: {
-    color: '#fff',
-    fontSize: 30,
-    fontWeight: '900',
-  },
-  drawCtaText: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: '900',
-  },
-  countdown: {
-    position: 'absolute',
-    right: 26,
-    bottom: 26,
-    zIndex: 7,
-    width: 78,
-    height: 78,
-    borderRadius: 39,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 3,
-    borderColor: '#609EF5',
-  },
-  countdownText: {
-    color: '#192853',
-    fontSize: 40,
-    lineHeight: 46,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontWeight: '900',
-  },
-  quizOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 28,
-    backgroundColor: 'rgba(26, 28, 35, 0.35)',
-    zIndex: 50,
-  },
-  quizCard: {
-    maxWidth: '90%',
-    // Bubble overlaps the card's top edge, so the card starts below it.
-    marginTop: 66,
-    paddingTop: 58,
-    paddingBottom: 30,
-    paddingHorizontal: 34,
-    borderRadius: 34,
-    backgroundColor: '#ffffff',
-    shadowColor: '#000',
-    shadowOpacity: 0.18,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 14 },
-  },
-  dunnoBtn: {
-    position: 'absolute',
-    top: -112,
-    alignSelf: 'center',
-    marginLeft: 40,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 999,
-    backgroundColor: '#eef2f8',
-    zIndex: 4,
-  },
-  dunnoText: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: '#8a97b1',
-  },
-  quizPromptRow: {
-    position: 'absolute',
-    top: -74,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 3,
-  },
-  quizBuddy: {
-    width: 130,
-    height: 130,
-    // Leans in over the bubble's left edge, tucked a little further in.
-    marginRight: -66,
-    marginBottom: 34,
-    zIndex: 4,
-  },
-  questionBox: {
-    minWidth: 460,
-    minHeight: 84,
-    paddingLeft: 74,
-    paddingRight: 44,
-    borderRadius: 999,
-    overflow: 'hidden',
-    backgroundColor: '#dbeafe',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  questionText: {
-    textAlign: 'center',
-    color: TEXT_ON_DARK,
-    fontSize: 27,
-    fontWeight: '900',
-  },
-  quizOptions: {
-    marginTop: 16,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 38,
-  },
-  quizOption: {
-    minWidth: 150,
-    height: 60,
-    borderRadius: 30,
-    borderWidth: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#94a3b8',
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  quizOptionDimmed: {
-    opacity: 0.48,
-  },
-  quizOptionText: {
-    fontSize: 21,
-    fontWeight: '900',
-  },
-  answerResult: {
-    alignSelf: 'center',
-    marginTop: 28,
-    minWidth: 260,
-    height: 58,
-    borderRadius: 999,
-    borderWidth: 1.5,
-    borderColor: '#609EF5',
-    backgroundColor: '#f1fdff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 14,
-  },
-  answerLabel: {
-    fontSize: 20,
-    fontWeight: '900',
-    color: TEXT_ON_DARK,
-  },
-  answerValue: {
-    fontSize: 21,
-    fontWeight: '900',
-    color: '#609EF5',
-  },
-  bottomActions: {
-    marginTop: 30,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 14,
-  },
   // Balances the star so the greeting itself stays screen-centred.
   mainGreetingSub: {
     fontSize: 20,
@@ -1527,21 +895,6 @@ const styles = StyleSheet.create({
     bottom: 14,
     height: 320,
   },
-  backButton: {
-    position: 'absolute',
-    top: 16,
-    left: 16,
-    zIndex: 60,
-    paddingHorizontal: 16,
-    paddingVertical: 9,
-    borderRadius: 18,
-    backgroundColor: 'rgba(20,28,60,0.35)',
-  },
-  backButtonText: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: '#ffffff',
-  },
   backChip: {
     width: 42,
     height: 42,
@@ -1552,23 +905,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f5ff',
   },
   backChipText: {
-    fontSize: 22,
-    fontWeight: '900',
-    color: '#171d31',
-  },
-  ffBtn: {
-    position: 'absolute',
-    top: 20,
-    right: 24,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    zIndex: 20,
-  },
-  ffBtnText: {
     fontSize: 22,
     fontWeight: '900',
     color: '#171d31',
