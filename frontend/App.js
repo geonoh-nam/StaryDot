@@ -52,7 +52,7 @@ import { CenterPopup } from './ui/CenterPopup';
 import { TabletHeader } from './ui/Header';
 import { StaryLogo } from './ui/Logo';
 import { GradientRim, ScreenFade, TapScale } from './ui/motion';
-import { CharacterScreen, SPARKS, StarStage } from './screens/Character';
+import { CharacterScreen, EvolvePopup, SPARKS, StarStage } from './screens/Character';
 import { ParentReportScreen } from './screens/ParentReport';
 import { ChildProfileScreen, GuardianSetupScreen, OnboardIntroScreen } from './screens/Onboarding';
 import { buttons } from './ui/buttons';
@@ -1464,27 +1464,6 @@ const MINUTE_VALUES = [0, 10, 20, 30, 40, 50];
 
 const EVOLVE_AT = 3;
 
-// The one moment the child picks a species: the star has grown and becomes a friend.
-function EvolvePopup({ onPick }) {
-  return (
-    <Modal transparent visible animationType="fade" supportedOrientations={['landscape', 'landscape-left', 'landscape-right']}>
-      <View style={styles.evolveBackdrop}>
-        <View style={styles.evolveCard}>
-          <Text style={styles.evolveTitle}>별이 자랐어요!</Text>
-          <Text style={styles.evolveCopy}>어떤 친구가 될까?</Text>
-          <View style={styles.evolveRow}>
-            {[{ key: 'rabbit', label: '토끼' }, { key: 'dino', label: '공룡' }].map((c) => (
-              <TouchableOpacity key={c.key} style={styles.evolveChoice} onPress={() => onPick(c.key)}>
-                <Image source={CHARACTER_IMAGES[c.key]} style={styles.evolveImage} resizeMode="contain" />
-                <Text style={styles.chipText}>{c.label}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-}
 
 
 
@@ -3581,50 +3560,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: '#e3e9f7',
   },
-  evolveBackdrop: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(20,28,60,0.35)',
-  },
-  evolveCard: {
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 36,
-    paddingVertical: 28,
-    borderRadius: 28,
-    backgroundColor: '#f4f7fe',
-    borderWidth: 1.5,
-    borderColor: '#e3e9f7',
-  },
-  evolveTitle: {
-    fontSize: 24,
-    fontWeight: '900',
-    color: TEXT_ON_DARK,
-  },
-  evolveCopy: {
-    fontSize: 14,
-    color: TEXT_MUTED_ON_DARK,
-  },
-  evolveRow: {
-    flexDirection: 'row',
-    gap: 20,
-    marginTop: 6,
-  },
-  evolveChoice: {
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderRadius: 22,
-    backgroundColor: '#f1f5ff',
-    borderWidth: 1.5,
-    borderColor: '#e3e9f7',
-  },
-  evolveImage: {
-    width: 110,
-    height: 110,
-  },
   debugWrap: {
     position: 'absolute',
     top: 8,
@@ -4125,25 +4060,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 6,
   },
-  evolveTitle: {
-    fontSize: 22,
-    fontWeight: '900',
-    color: '#ffffff',
-  },
-  evolveRow: {
-    flexDirection: 'row',
-    gap: 18,
-  },
-  evolveCard: {
-    width: 170,
-    alignItems: 'center',
-    gap: 8,
-    padding: 16,
-    borderRadius: 22,
-    backgroundColor: '#ffffff',
-    borderWidth: 3,
-    borderColor: '#609EF5',
-  },
 
   // Sits behind the words, faded, so the card reads as a sentence with a picture rather than
   // an icon with a caption.
@@ -4216,11 +4132,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  chipText: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: TEXT_ON_DARK,
   },
   toolStrip: {
     alignSelf: 'center',
