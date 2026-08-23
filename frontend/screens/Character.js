@@ -549,6 +549,27 @@ export function CharacterScreen({ profile, food, fed, onFeed }) {
 }
 
 const styles = StyleSheet.create({
+  evolveWrap: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 18,
+    backgroundColor: 'rgba(10,18,45,0.55)',
+    zIndex: 6,
+  },
+  evolveArt: {
+    width: 110,
+    height: 110,
+  },
+  evolveLabel: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: '#171d31',
+  },
   charBarFill: {
     position: 'absolute',
     left: 0,
