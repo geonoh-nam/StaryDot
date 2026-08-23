@@ -48,6 +48,10 @@ import { LIBRARY, SERIES_ART, THUMBS } from './data/library';
 import { QUIZ_KINDS, QUIZ_POOL } from './data/quiz-pool';
 import { CANDY_ICON, CLOSET_ICON, COSTUMES, EVOLUTIONS, FULL_BAR, GROWTH_CHECKPOINTS, GROWTH_PER_CANDY, SCENES, STAGE1_ART, STAR_FIELD } from './data/character';
 import { INTEREST_ART, MOCK_REPORT, PARENT_WEEKS, STAT_ART } from './data/report';
+import { CenterPopup } from './ui/CenterPopup';
+import { TabletHeader } from './ui/Header';
+import { StaryLogo } from './ui/Logo';
+import { GradientRim, ScreenFade, TapScale } from './ui/motion';
 import ActivityStage from './activities/ActivityStage';
 import IntroScreen from './Intro';
 import * as ImagePicker from 'expo-image-picker';
@@ -70,21 +74,6 @@ function contentBase() {
   return `http://${host}:${CONTENT_PORT}`;
 }
 
-function GradientRim({ radius = 34, width = 6 }) {
-  return (
-    <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-      <Defs>
-        <LinearGradient id="rimTheme" x1="0" y1="0" x2="1" y2="1">
-          <Stop offset="0" stopColor="#609EF5" />
-          <Stop offset="0.55" stopColor="#609EF5" />
-          <Stop offset="1" stopColor="#ffffff" />
-        </LinearGradient>
-      </Defs>
-      {/* Drawn on the edge at double width so the outer half clips away, leaving an inner rim. */}
-      <Rect x="0" y="0" width="100%" height="100%" rx={radius} fill="none" stroke="url(#rimTheme)" strokeWidth={width * 2} />
-    </Svg>
-  );
-}
 
 // One place that talks to the content server. Failures are swallowed: a missing server must
 // never stop a child from watching, it only means today's records are not kept.
@@ -181,31 +170,7 @@ function pickQuizzes(history, count) {
   return picks;
 }
 
-// Button that dips slightly when pressed for tactile feedback.
-function TapScale({ style, onPress, children, activeScale = 0.94 }) {
-  const s = useRef(new Animated.Value(1)).current;
-  const to = (v) => Animated.spring(s, { toValue: v, friction: 7, tension: 200, useNativeDriver: true }).start();
-  return (
-    <Pressable onPressIn={() => to(activeScale)} onPressOut={() => to(1)} onPress={onPress}>
-      <Animated.View style={[style, { transform: [{ scale: s }] }]}>{children}</Animated.View>
-    </Pressable>
-  );
-}
 
-// Soft fade+rise on every screen change so navigation never hard-cuts.
-function ScreenFade({ screenKey, children }) {
-  const anim = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    anim.setValue(0);
-    Animated.timing(anim, { toValue: 1, duration: 280, useNativeDriver: true }).start();
-  }, [screenKey]);
-  const translateY = anim.interpolate({ inputRange: [0, 1], outputRange: [12, 0] });
-  return (
-    <Animated.View style={{ flex: 1, opacity: anim, transform: [{ translateY }] }}>
-      {children}
-    </Animated.View>
-  );
-}
 
 const STORE_KEY = 'patti.profile.v1';
 const DEFAULT_PROFILE = { name: '', birth: { y: new Date().getFullYear() - 5, m: 1, d: 1 }, tone: 'blue', species: 'star', level: 1 };
@@ -649,80 +614,10 @@ export default function App() {
   );
 }
 
-// Distance from a Text box's top edge down to the cap line, as a share of font size.
-const CAP_TOP_RATIO = -0.11;
 
-// Wordmark: "Story" with a ringed star riding as a superscript — ring and star share the brand blue.
-function StaryLogo({ size = 26, color = '#609EF5', textColor = TEXT_ON_DARK }) {
-  const mark = size * 0.5;
-  return (
-    <View style={styles.logoRow}>
-      <Text style={[styles.logoWord, { fontSize: size, color: textColor }]}>Story</Text>
-      <Text style={[styles.logoWord, { fontSize: size, color, marginLeft: size * 0.16 }]}>Dot</Text>
-      <Svg width={mark} height={mark} viewBox="0 0 32 32" // The text box starts above the cap line, so nudge the mark down to sit level with the S.
-        style={{ marginLeft: size * 0.06, marginTop: size * CAP_TOP_RATIO }}>
-        <Circle cx={16} cy={16} r={16} fill={color} />
-        <Polygon
-          points="16,5.6 19.1,12.4 26.5,13.2 20.9,18.2 22.5,25.5 16,21.8 9.5,25.5 11.1,18.2 5.5,13.2 12.9,12.4"
-          fill="#ffffff"
-        />
-      </Svg>
-    </View>
-  );
-}
 
-function TabletHeader({ rightLabel, onHome, onReport, onTab }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <View style={styles.header}>
-      <TouchableOpacity onPress={onHome}>
-        <StaryLogo size={20} />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.headerMenu} onPress={() => (onTab ? setOpen((v) => !v) : onReport())} accessibilityLabel={rightLabel}>
-        <View style={styles.headerMenuLine} />
-        <View style={styles.headerMenuLine} />
-        <View style={styles.headerMenuLine} />
-      </TouchableOpacity>
 
-      {open ? (
-        <>
-          <Pressable style={styles.headerSheetBackdrop} onPress={() => setOpen(false)} />
-          <View style={styles.headerSheet}>
-            {TABS.map((t) => (
-              <TouchableOpacity
-                key={t.key}
-                style={styles.headerSheetItem}
-                onPress={() => { setOpen(false); playSound('pop'); onTab(t.key); }}
-              >
-                {t.art ? (
-                  <Image source={t.art} style={styles.headerSheetArt} resizeMode="contain" />
-                ) : (
-                  <Text style={styles.headerSheetIcon}>{t.icon}</Text>
-                )}
-                <Text style={styles.headerSheetText}>{t.label}</Text>
-              </TouchableOpacity>
-            ))}
-            <View style={styles.headerSheetDivider} />
-            <TouchableOpacity style={styles.headerSheetItem} onPress={() => { setOpen(false); onReport(); }}>
-              <Text style={styles.headerSheetIcon}>▤</Text>
-              <Text style={styles.headerSheetText}>활동 리포트</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      ) : null}
-    </View>
-  );
-}
 
-const SETTINGS_ICON = require('./assets/scenes/settings.png');
-
-const TABS = [
-  { key: 'library', label: '영상', icon: '▶' },
-  { key: 'parent', label: '부모 리포트', icon: '▤' },
-  { key: 'character', label: '캐릭터', icon: '★' },
-  { key: 'words', label: '단어장', icon: '가' },
-  { key: 'settings', label: '설정', art: SETTINGS_ICON },
-];
 
 
 // Cards wear a lighter ring of their own colour, like the mockup.
@@ -2611,31 +2506,7 @@ function EvolvePopup({ onPick }) {
   );
 }
 
-// Speech bubble with the buddy leaning in from the left, per the mockup.
-const POPUP_BUDDY = require('./assets/characters/dino.png');
 
-function CenterPopup({ text, emoji = '✨' }) {
-  const a = useRef(new Animated.Value(0)).current;
-  const win = useWindowDimensions();
-  useEffect(() => {
-    Animated.spring(a, { toValue: 1, friction: 6, tension: 90, useNativeDriver: true }).start();
-  }, []);
-  return (
-    <Modal transparent visible animationType="fade" supportedOrientations={['landscape', 'landscape-left', 'landscape-right']}>
-      <View style={{ width: win.width, height: win.height, alignItems: 'center', justifyContent: 'center' }} pointerEvents="none">
-        <View style={styles.praiseScrim} />
-        <Animated.View
-          style={[styles.praiseRow, { opacity: a, transform: [{ scale: a.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) }] }]}
-        >
-          <Image source={POPUP_BUDDY} style={styles.praiseBuddy} resizeMode="contain" />
-          <View style={styles.praiseCard}>
-            <Text style={styles.praiseText}>{text}</Text>
-          </View>
-        </Animated.View>
-      </View>
-    </Modal>
-  );
-}
 
 function WatchScreen({ source, plan = [], picks = [0, 1, 2], seekTo, onResult, onWatched, quizDone, onQuizAsk, onQuizCorrect, onQuizSkip, onFinish, onBack, onHome, onReport }) {
   const player = useVideoPlayer(source, (instance) => {
@@ -4262,25 +4133,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: COLORS.card,
   },
-  logoRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  logoWord: {
-    fontFamily: 'BnviitLasik',
-    fontWeight: '900',
-    letterSpacing: -0.5,
-  },
-  header: {
-    height: 76,
-    paddingHorizontal: 42,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#f4f7fe',
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.line,
-  },
   screen: {
     flex: 1,
     padding: 40,
@@ -4558,43 +4410,6 @@ const styles = StyleSheet.create({
     color: COLORS.blueDark,
     fontSize: 22,
     fontWeight: '900',
-  },
-  praiseScrim: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(20,28,48,0.18)',
-  },
-  praiseRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  praiseBuddy: {
-    width: 190,
-    height: 190,
-    // Leans over the bubble's left edge instead of sitting beside it.
-    marginRight: -84,
-    zIndex: 2,
-  },
-  praiseCard: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 520,
-    paddingVertical: 30,
-    paddingLeft: 120,
-    paddingRight: 56,
-    borderRadius: 999,
-    backgroundColor: '#dbeafe',
-    borderWidth: 4,
-    borderColor: '#609EF5',
-    shadowColor: '#1b2a4a',
-    shadowOpacity: 0.18,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 12 },
-  },
-  praiseText: {
-    color: '#171d31',
-    fontSize: 34,
-    fontWeight: '900',
-    textAlign: 'center',
   },
   quizOverlay: {
     position: 'absolute',
@@ -5279,70 +5094,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '900',
     color: '#171d31',
-  },
-  headerSheetBackdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 4000,
-    zIndex: 60,
-  },
-  headerSheet: {
-    position: 'absolute',
-    top: 68,
-    right: 24,
-    minWidth: 176,
-    borderRadius: 18,
-    paddingVertical: 6,
-    backgroundColor: '#ffffff',
-    borderWidth: 1,
-    borderColor: '#e3e9f7',
-    shadowColor: '#0b1c4a',
-    shadowOpacity: 0.16,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 10,
-    zIndex: 70,
-  },
-  headerSheetItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-  },
-  headerSheetArt: {
-    width: 17,
-    height: 17,
-  },
-  headerSheetIcon: {
-    fontSize: 15,
-    color: '#609EF5',
-  },
-  headerSheetText: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: '#171d31',
-  },
-  headerSheetDivider: {
-    height: 1,
-    marginVertical: 4,
-    backgroundColor: '#eef2fb',
-  },
-  headerMenu: {
-    width: 46,
-    height: 46,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5,
-  },
-  headerMenuLine: {
-    width: 24,
-    height: 3,
-    borderRadius: 2,
-    backgroundColor: TEXT_ON_DARK,
   },
   detailScreen: {
     flex: 1,
