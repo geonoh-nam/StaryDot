@@ -8,7 +8,7 @@ import { COLORS, TEXT_ON_DARK } from '../theme';
 
 const SETTINGS_ICON = require('../assets/scenes/settings.png');
 
-const TABS = [
+export const TABS = [
   { key: 'library', label: '영상', icon: '▶' },
   { key: 'parent', label: '부모 리포트', icon: '▤' },
   { key: 'character', label: '캐릭터', icon: '★' },
