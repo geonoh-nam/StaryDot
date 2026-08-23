@@ -1,19 +1,17 @@
 // Choosing what to watch: the ring of series cards on the main screen, the episode grid inside
 // one series, and the still that plays it.
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { Animated, Easing, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { SERIES_ART, THUMBS } from '../data/library';
 import { playSound } from '../sound';
-import { BG, TEXT_MUTED_ON_DARK, TEXT_ON_DARK, hexToRgb, rgbToHex } from '../theme';
-import { TapScale } from '../ui/motion';
+import { BG, hexToRgb, rgbToHex, TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
+import { GradientRim, TapScale } from '../ui/motion';
 import { SETTINGS_ICON } from '../ui/Header';
-import Rea, { Extrapolation, interpolate, useAnimatedStyle, useSharedValue, withDecay } from 'react-native-reanimated';
+import Rea, { Extrapolation, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withDecay, withSpring } from 'react-native-reanimated';
 import { DebugJump } from '../ui/DebugJump';
-import { GradientRim } from '../ui/motion';
 import { StaryLogo } from '../ui/Logo';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS, withSpring } from 'react-native-reanimated';
 
 export const CARD_W = 300;
 

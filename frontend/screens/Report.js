@@ -3,9 +3,8 @@ import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DEMO_VIDEO } from '../data/library';
 import { playSound } from '../sound';
-import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
+import { COLORS, TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
 import { buttons } from '../ui/buttons';
-import { COLORS } from '../theme';
 import { GeneratedCharacter, PattiCharacter, StrokeArt } from '../ui/artwork';
 import { TapScale } from '../ui/motion';
 

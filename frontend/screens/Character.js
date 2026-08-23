@@ -4,16 +4,14 @@ import {
   Animated, Easing, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View,
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { makeMutable } from 'react-native-reanimated';
+import Rea, { makeMutable, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from 'react-native-reanimated';
 import Svg, { Circle, Defs, LinearGradient, RadialGradient, Rect, Stop } from 'react-native-svg';
 import {
-  CANDY_ICON, CLOSET_ICON, COSTUMES, EVOLUTIONS, FULL_BAR, GROWTH_CHECKPOINTS, GROWTH_PER_CANDY,
-  SCENES, STAGE1_ART, STAR_FIELD,
+  CANDY_ICON, CHARACTER_IMAGES, CLOSET_ICON, COSTUMES, EVOLUTIONS, FULL_BAR, GROWTH_CHECKPOINTS,
+  GROWTH_PER_CANDY, SCENES, STAGE1_ART, STAR_FIELD,
 } from '../data/character';
 import { playSound } from '../sound';
 import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
-import { CHARACTER_IMAGES } from '../data/character';
-import Rea, { useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from 'react-native-reanimated';
 import { Spark } from './Browse';
 
 // How much speed a thrown star keeps off a wall, and how fast it coasts to a stop.
