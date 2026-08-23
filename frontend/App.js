@@ -3748,6 +3748,9 @@ function QuizOverlay({ quiz, selected, tries = 0, onAnswer, onRetry, onResume, o
   return (
     <Modal transparent visible animationType="fade" supportedOrientations={['landscape', 'landscape-left', 'landscape-right']} onRequestClose={onResume}>
       <View style={[styles.quizOverlay, { width: win.width, height: win.height }]}>
+        <TouchableOpacity style={styles.ffBtn} onPress={onSkip}>
+          <Text style={styles.ffBtnText}>⏭</Text>
+        </TouchableOpacity>
         <BlurView intensity={28} tint="dark" style={StyleSheet.absoluteFill} pointerEvents="none" />
         {/* 정답 시 캐릭터 등장 자리 (popScale 애니메이션 재사용) */}
         <Animated.View
@@ -3819,11 +3822,7 @@ function QuizOverlay({ quiz, selected, tries = 0, onAnswer, onRetry, onResume, o
             <TapScale style={styles.darkButton} onPress={onSkip}>
               <Text style={styles.darkButtonText}>영상 이어보기</Text>
             </TapScale>
-          ) : (
-            <TouchableOpacity style={styles.lightButton} onPress={onSkip}>
-              <Text style={styles.lightButtonText}>건너뛰기</Text>
-            </TouchableOpacity>
-          )}
+          ) : null}
           {selected && correct ? (
             <TouchableOpacity style={styles.darkButton} onPress={onResume}>
               <Text style={styles.darkButtonText}>영상 이어보기</Text>
@@ -5925,6 +5924,23 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: '#ffffff',
     opacity: 0.85,
+  },
+  ffBtn: {
+    position: 'absolute',
+    top: 20,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    zIndex: 20,
+  },
+  ffBtnText: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#171d31',
   },
   costumeRow: {
     flexDirection: 'row',

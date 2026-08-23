@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Modal, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Modal, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Buddy from './Buddy';
 import CountIt from './CountIt';
@@ -136,6 +136,10 @@ export default function ActivityStage({ activity, onDone }) {
             />
           ) : null}
           <Buddy ref={buddyRef} character={character} stage={stage} />
+        {/* For whoever is driving a demo — a child is never asked to skip anything. */}
+        <TouchableOpacity style={styles.ff} onPress={() => finish(true)}>
+          <Text style={styles.ffText}>⏭</Text>
+        </TouchableOpacity>
         </View>
       </GestureHandlerRootView>
     </Modal>
@@ -143,6 +147,25 @@ export default function ActivityStage({ activity, onDone }) {
 }
 
 const styles = StyleSheet.create({
+  ff: {
+    position: 'absolute',
+    top: 20,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    borderWidth: 2,
+    borderColor: '#e3e9f7',
+    zIndex: 20,
+  },
+  ffText: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#171d31',
+  },
   stage: {
     flex: 1,
     backgroundColor: '#ffffff',
