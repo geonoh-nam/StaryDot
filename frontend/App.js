@@ -500,7 +500,8 @@ const DEFAULT_SETTINGS = {
 
 export default function App() {
   // First run walks the grown-up through setup, then the intro animation hands over to the child.
-  const [screen, setScreen] = useState('intro');
+  // The opening animation is parked for now — Intro.js stays, it just is not entered.
+  const [screen, setScreen] = useState('welcome');
   const [childProfile, setChildProfile] = useState(DEFAULT_PROFILE);
   const [guardianSettings, setGuardianSettings] = useState(DEFAULT_SETTINGS);
   // Until the saved profile is read back, onboarding must not flash on an returning child's tablet.
@@ -528,7 +529,7 @@ export default function App() {
   };
   // A returning child still watches the intro; only the setup steps are skipped.
   const [onboarded, setOnboarded] = useState(false);
-  const [introDone, setIntroDone] = useState(false);
+  const [introDone, setIntroDone] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [series, setSeries] = useState(LIBRARY[0].videos);
   const [contentUp, setContentUp] = useState(false);
@@ -4675,7 +4676,7 @@ const styles = StyleSheet.create({
     borderColor: '#e3e9f7',
   },
   lightButtonText: {
-    color: COLORS.blueDark,
+    color: '#609EF5',
     fontSize: 18,
     fontWeight: '900',
   },
@@ -5296,7 +5297,7 @@ const styles = StyleSheet.create({
   welcomeBadge: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   welcomeTitle: {
     fontSize: 40,
@@ -5314,7 +5315,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#00CFE9',
+    backgroundColor: '#609EF5',
   },
   welcomeButtonText: {
     fontSize: 18,
@@ -6792,7 +6793,7 @@ const styles = StyleSheet.create({
     borderRadius: 19,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#00CFE9',
+    backgroundColor: '#609EF5',
     borderWidth: 2,
     borderColor: '#e3e9f7',
   },
@@ -6830,7 +6831,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     lineHeight: 26,
     fontWeight: '900',
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   stepperArrowDown: {
     marginTop: -4,
@@ -6839,13 +6840,13 @@ const styles = StyleSheet.create({
     fontSize: 42,
     lineHeight: 52,
     fontWeight: '900',
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   stepperColon: {
     marginTop: 44,
     fontSize: 30,
     fontWeight: '900',
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   stepperLabel: {
     fontSize: 14,
@@ -6929,7 +6930,7 @@ const styles = StyleSheet.create({
   birthAge: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#00CFE9',
+    color: '#609EF5',
   },
   guardianFields: {
     alignItems: 'center',
@@ -6954,8 +6955,8 @@ const styles = StyleSheet.create({
     borderColor: '#e3e9f7',
   },
   checkboxOn: {
-    backgroundColor: '#00CFE9',
-    borderColor: '#00CFE9',
+    backgroundColor: '#609EF5',
+    borderColor: '#609EF5',
   },
   checkboxMark: {
     fontSize: 15,
