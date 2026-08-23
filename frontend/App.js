@@ -6299,6 +6299,10 @@ const styles = StyleSheet.create({
     flex: 1.15,
     gap: 8,
   },
+  parentColRight: {
+    flex: 1,
+    gap: 8,
+  },
   parentTitle: {
     fontSize: 24,
     fontWeight: '900',
