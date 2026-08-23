@@ -3771,6 +3771,11 @@ function QuizOverlay({ quiz, selected, tries = 0, onAnswer, onRetry, onResume, o
             </Svg>
           ) : null}
         {/* Buddy leans on the question bubble, and the options sit on the card below it. */}
+        {selected ? null : (
+          <TouchableOpacity style={styles.dunnoBtn} onPress={onSkip}>
+            <Text style={styles.dunnoText}>모르겠어요</Text>
+          </TouchableOpacity>
+        )}
         <View style={styles.quizPromptRow}>
           <Image source={QUIZ_BUDDY} style={styles.quizBuddy} resizeMode="contain" />
           <View style={styles.questionBox}>
@@ -5042,6 +5047,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 24,
     shadowOffset: { width: 0, height: 14 },
+  },
+  dunnoBtn: {
+    position: 'absolute',
+    top: -112,
+    alignSelf: 'center',
+    marginLeft: 40,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 999,
+    backgroundColor: '#eef2f8',
+    zIndex: 4,
+  },
+  dunnoText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#8a97b1',
   },
   quizPromptRow: {
     position: 'absolute',
