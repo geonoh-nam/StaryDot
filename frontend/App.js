@@ -1498,9 +1498,19 @@ const SCENES = [
   { id: 'sky', label: '하늘', sky: '#7cc4f5', ground: '#d9eeff', image: require('./assets/scenes/sky.png') },
   { id: 'sea', label: '바다', sky: '#0a4f7a', ground: '#23a6c9', image: require('./assets/scenes/sea.png') },
   { id: 'forest', label: '숲', sky: '#1f5c3a', ground: '#69b06a', image: require('./assets/scenes/forest.png') },
+  { id: 'room', label: '방', sky: '#f4e2c8', ground: '#d9b98d', image: require('./assets/scenes/room.png') },
 ];
 
 // Fixed sprinkle, so the sky does not reshuffle on every render.
+// What the closet holds: the outfit on its hanger, and who the star becomes wearing it.
+const COSTUMES = [
+  { id: 1, icon: require('./assets/costumes/costume1.png'), art: require('./assets/costumes/newdino1.png') },
+  { id: 2, icon: require('./assets/costumes/costume2.png'), art: require('./assets/costumes/newdino2.png') },
+  { id: 3, icon: require('./assets/costumes/costume3.png'), art: require('./assets/costumes/newdino3.png') },
+  { id: 4, icon: require('./assets/costumes/costume4.png'), art: require('./assets/costumes/newdino4.png') },
+  { id: 5, icon: require('./assets/costumes/costume5.png'), art: require('./assets/costumes/newdino5.png') },
+];
+
 const CANDY_ICON = require('./assets/scenes/candy.png');
 const CLOSET_ICON = require('./assets/scenes/closet.png');
 
@@ -1684,6 +1694,22 @@ function Heart({ dx, dy }) {
 function CharacterScreen({ profile, food, fed, onFeed }) {
   const [scene, setScene] = useState('space');
   const [panel, setPanel] = useState(false);
+  const [closet, setCloset] = useState(false);
+  const [costume, setCostume] = useState(null);
+  // A white flash covers the swap, so the star never visibly pops from one body to another.
+  const flash = useRef(new Animated.Value(0)).current;
+
+  const wearCostume = (item) => {
+    setCloset(false);
+    playSound('fanfare');
+    Animated.sequence([
+      Animated.timing(flash, { toValue: 1, duration: 260, useNativeDriver: true }),
+      Animated.delay(120),
+      Animated.timing(flash, { toValue: 0, duration: 420, useNativeDriver: true }),
+    ]).start();
+    setTimeout(() => setCostume(item), 300);
+  };
+
   const [evolved, setEvolved] = useState(null);
   const [evolvedAt, setEvolvedAt] = useState(null);
   const current = SCENES.find((sc) => sc.id === scene) || SCENES[0];
@@ -1883,9 +1909,9 @@ function CharacterScreen({ profile, food, fed, onFeed }) {
             taps; the pan still wins once the finger actually moves. */}
         <Pressable onPress={() => { wake(); playSound('pop'); setTapTick((n) => n + 1); }}>
           <StarStage
-            art={chosen ? (grownUp ? chosen.grown : chosen.art) : STAGE1_ART}
+            art={costume ? costume.art : chosen ? (grownUp ? chosen.grown : chosen.art) : STAGE1_ART}
             ready={full && !chosen}
-            evolved={chosen ? `${chosen.id}-${grownUp ? 3 : 2}` : null}
+            evolved={costume ? `costume-${costume.id}` : chosen ? `${chosen.id}-${grownUp ? 3 : 2}` : null}
             feedTick={feedTick}
             tapTick={tapTick}
           />
@@ -1992,11 +2018,33 @@ function CharacterScreen({ profile, food, fed, onFeed }) {
               </TouchableOpacity>
             </Animated.View>
           </GestureDetector>
-          <View style={styles.charDockBtn}>
+          <TouchableOpacity style={styles.charDockBtn} onPress={() => { playSound('pop'); setCloset(true); }}>
             <Image source={CLOSET_ICON} style={styles.charDockArt} resizeMode="contain" />
-            <View style={styles.charDockBadge}><Text style={styles.charDockBadgeText}>{stage - 1}</Text></View>
-          </View>
+            <View style={styles.charDockBadge}><Text style={styles.charDockBadgeText}>{COSTUMES.length}</Text></View>
+          </TouchableOpacity>
         </View>
+
+        {closet ? (
+          <View style={styles.evolveWrap}>
+            <Text style={styles.evolveTitle}>오늘은 뭘 입을까?</Text>
+            <View style={styles.costumeRow}>
+              {COSTUMES.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={[styles.costumeCard, costume?.id === item.id && styles.costumeCardOn]}
+                  onPress={() => wearCostume(item)}
+                >
+                  <Image source={item.icon} style={styles.costumeArt} resizeMode="contain" />
+                </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity style={styles.costumeClose} onPress={() => setCloset(false)}>
+              <Text style={styles.costumeCloseText}>닫기</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+
+        <Animated.View style={[styles.charFlash, { opacity: flash }]} pointerEvents="none" />
 
         {panel ? (
           <View style={styles.charPanel}>
@@ -2188,7 +2236,7 @@ function ParentReportScreen({ profile, report, words }) {
 
 
   return (
-    <ScrollView contentContainerStyle={styles.parentScroll} showsVerticalScrollIndicator={false}>
+    <View style={styles.parentScroll}>
       <View style={styles.parentBody}>
       <View style={styles.parentCol}>
         <Text style={styles.parentTitle}>부모 리포트</Text>
@@ -2275,7 +2323,7 @@ function ParentReportScreen({ profile, report, words }) {
 
       </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -5878,6 +5926,51 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     opacity: 0.85,
   },
+  costumeRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 14,
+    paddingHorizontal: 24,
+  },
+  costumeCard: {
+    width: 132,
+    height: 132,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 24,
+    backgroundColor: '#ffffff',
+    borderWidth: 3,
+    borderColor: '#ffffff',
+  },
+  costumeCardOn: {
+    borderColor: '#609EF5',
+  },
+  costumeArt: {
+    width: 108,
+    height: 108,
+  },
+  costumeClose: {
+    marginTop: 6,
+    paddingHorizontal: 26,
+    paddingVertical: 10,
+    borderRadius: 999,
+    backgroundColor: 'rgba(255,255,255,0.9)',
+  },
+  costumeCloseText: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#171d31',
+  },
+  charFlash: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#ffffff',
+    zIndex: 8,
+  },
   charDockBadgeText: {
     fontSize: 13,
     fontWeight: '900',
@@ -6118,9 +6211,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#609EF5',
   },
   parentScroll: {
+    flex: 1,
     paddingBottom: 20,
   },
   parentBody: {
+    flex: 1,
     flexDirection: 'row',
     // Columns stretch to the tallest one, so the dividers run the full height.
     alignItems: 'stretch',
@@ -6267,12 +6362,12 @@ const styles = StyleSheet.create({
   parentStatGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    rowGap: 18,
-    columnGap: 18,
+    rowGap: 10,
+    columnGap: 10,
   },
   parentStat: {
-    width: '48%',
-    paddingVertical: 14,
+    width: '47%',
+    paddingVertical: 4,
   },
   parentStatHead: {
     flexDirection: 'row',
@@ -6280,29 +6375,29 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   parentStatArt: {
-    width: 74,
-    height: 74,
+    width: 52,
+    height: 52,
   },
   parentStatValue: {
-    fontSize: 48,
+    fontSize: 34,
     fontWeight: '900',
     color: '#609EF5',
   },
   parentStatUnit: {
-    fontSize: 19,
+    fontSize: 15,
     fontWeight: '800',
     color: '#609EF5',
     marginBottom: 4,
   },
   parentStatLabel: {
-    marginLeft: 86,
-    fontSize: 18,
+    marginLeft: 62,
+    fontSize: 15,
     fontWeight: '800',
     color: TEXT_ON_DARK,
   },
   parentStatDelta: {
-    marginLeft: 86,
-    fontSize: 14,
+    marginLeft: 62,
+    fontSize: 12,
     fontWeight: '800',
   },
   deltaUp: {
