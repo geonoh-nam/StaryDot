@@ -31,6 +31,7 @@ const PEN_MAX = 100;
 // range the fixed-size buttons used to cover (drawn width is about twice this).
 const penPx = (value) => 1 + (value - 1) * 0.25;
 
+// The four crayons every canvas offers before the mixer is opened.
 const DRAW_COLORS = ['#111111', '#e5484d', '#00CFE9', '#f5c518'];
 
 
@@ -43,8 +44,6 @@ const TRACE_GRID = 18;
 const TRACE_FONT = require('../assets/fonts/Pretendard-Bold.otf');
 
 const TRACE_SIZE = 150;
-
-const COLOR_SWATCHES = ['#111111', '#e5484d', '#00CFE9', '#f5c518'];
 
 const TRACE_LINEART = require('../assets/trace_lineart_v2.png');
 
@@ -661,7 +660,7 @@ export function TraceOverlay({ onDone }) {
               : [{ key: 'pen', icon: '✏️', label: '펜' }, { key: 'eraser', icon: '🩹', label: '지우개' }]}
             color={erasing ? '#9aa6bf' : color}
             onColor={setColor}
-            swatches={COLOR_SWATCHES}
+            swatches={DRAW_COLORS}
             size={erasing ? eraserWidth : penWidth}
             onSize={erasing ? setEraserWidth : setPenWidth}
             onUndo={history.undo}

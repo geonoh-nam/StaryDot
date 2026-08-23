@@ -8,7 +8,8 @@
     "ios": "expo run:ios",
     "android": "expo run:android",
     "server": "node server/index.js",
-    "server:test": "node server/test.js"
+    "server:test": "node server/test.js",
+    "check": "sh scripts/check.sh"
   },
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.4.1",

@@ -2,6 +2,7 @@
 // mislaid StyleSheet entry shows up as a layout glitch rather than an error. This names them.
 //   node scripts/style-check.js App.js screens/*.js
 const fs = require('fs');
+let bad = 0;
 for (const f of process.argv.slice(2)) {
   const s = fs.readFileSync(f, 'utf8');
   const sheet = s.split('StyleSheet.create(')[1] || '';
@@ -9,4 +10,6 @@ for (const f of process.argv.slice(2)) {
   const missing = new Set();
   for (const m of s.matchAll(/\bstyles\.([a-zA-Z][a-zA-Z0-9]*)/g)) if (!defined.has(m[1])) missing.add(m[1]);
   for (const n of missing) console.log(`${f}: styles.${n} is used but never defined`);
+  bad += missing.size;
 }
+if (bad) process.exit(1);
