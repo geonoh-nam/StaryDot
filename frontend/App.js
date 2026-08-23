@@ -43,6 +43,11 @@ import { Gesture, GestureDetector, GestureHandlerRootView, PointerType } from 'r
 import getStroke from 'perfect-freehand';
 import PuzzleScreen from './Puzzle';
 import { playSound, speak, speakUrl, stopSpeaking } from './sound';
+import { BG, COLORS, TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from './theme';
+import { LIBRARY, SERIES_ART, THUMBS } from './data/library';
+import { QUIZ_KINDS, QUIZ_POOL } from './data/quiz-pool';
+import { CANDY_ICON, CLOSET_ICON, COSTUMES, EVOLUTIONS, FULL_BAR, GROWTH_CHECKPOINTS, GROWTH_PER_CANDY, SCENES, STAGE1_ART, STAR_FIELD } from './data/character';
+import { INTEREST_ART, MOCK_REPORT, PARENT_WEEKS, STAT_ART } from './data/report';
 import ActivityStage from './activities/ActivityStage';
 import IntroScreen from './Intro';
 import * as ImagePicker from 'expo-image-picker';
@@ -99,14 +104,6 @@ async function api(path, options) {
 
 const mmss = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
 
-// Card art, colours and the character's line stay in the app; the server owns the episodes.
-const SERIES_ART = {
-  teenieping: { topic: '내가 좋아하는 티니핑', color: '#ff5fa2', tint: '#fff0f6', accent: '#e0327c', line: '“같이보자츄~”', thumb: require('./assets/characters/thumbs/thumb1.png') },
-  tayo: { topic: '내가 타고 싶은 자동차', color: '#2b7fd7', tint: '#eef5ff', accent: '#1b5fae', line: '“꼬마버스 타요, 출발합니다!”', thumb: require('./assets/characters/thumbs/thumb2.png') },
-  bread: { topic: '맛있는 빵', color: '#f5c33b', tint: '#fffaec', accent: '#a8760c', line: '“어서 오세요, 브레드이발소!”', thumb: require('./assets/characters/thumbs/thumb6.png') },
-  shark: { topic: '바다 친구들', color: '#7c5cff', tint: '#f3f0ff', accent: '#ffb703', line: '“아기 상어 뚜루루 뚜루~”', thumb: require('./assets/characters/thumbs/thumb4.png') },
-  pororo: { topic: '눈 내리는 날', color: '#e5484d', tint: '#fff1f0', accent: '#1f6fd0', line: '“노는 게 제일 좋아!”', thumb: require('./assets/characters/thumbs/thumb5.png') },
-};
 
 // Turn one /library category into the shape the screens already expect.
 function toSeries(cat, base) {
@@ -128,41 +125,9 @@ function toSeries(cat, base) {
     })),
   };
 }
-// Thumbnail frames (from the demo video for now; per-video thumbnails come with the DB).
-const THUMBS = [
-  require('./assets/thumbs/t1.jpg'),
-  require('./assets/thumbs/t2.jpg'),
-  require('./assets/thumbs/t3.jpg'),
-  require('./assets/thumbs/t4.jpg'),
-  require('./assets/thumbs/t5.jpg'),
-  require('./assets/thumbs/t6.jpg'),
-  require('./assets/thumbs/t7.jpg'),
-  require('./assets/thumbs/t8.jpg'),
-];
 const TRACE_LINEART = require('./assets/trace_lineart_v2.png');
 
-const BG = '#08113D';
-const SURFACE = '#122055';
-const TEXT_ON_DARK = '#171d31';
-const TEXT_MUTED_ON_DARK = '#5b6b8c';
 
-const COLORS = {
-  ink: '#171d31',
-  muted: '#748198',
-  blue: '#609EF5',
-  blueDark: '#609EF5',
-  blueSoft: '#edf4ff',
-  sky: '#609EF5',
-  pink: '#ffe4ef',
-  pinkHot: '#f45aa2',
-  yellow: '#fff0b8',
-  purple: '#efe7ff',
-  mint: '#dffaf2',
-  line: '#dfe8f7',
-  card: '#ffffff',
-  stage: '#ffffff',
-  dark: '#101828',
-};
 
 const video = {
   title: '전설의 고래와 용기 이야기',
@@ -175,261 +140,14 @@ const video = {
   ],
 };
 
-// Mock video library. Shaped for a later DB swap: replace this array with a fetch
-// that returns the same { id, label, videos:[{ id, title, duration, emoji, color }] }.
-const LIBRARY = [
-  {
-    id: 'popular',
-    label: '인기',
-    videos: [
-      // Each series carries its own palette: card colour, the tint its screen washes over, and the
-      // accent used for chips and headings, so the mood changes with the character.
-      { id: 'pop-teenieping', title: '캐치 티니핑', duration: '4기 베리 하츄핑', color: '#ff5fa2', tint: '#fff0f6', accent: '#e0327c', line: '“같이보자츄~”', thumb: require('./assets/characters/thumbs/thumb1.png') },
-      { id: 'pop-tayo', title: '꼬마버스 타요', duration: '용감한 소방차 이야기', color: '#2b7fd7', tint: '#eef5ff', accent: '#1b5fae', line: '“꼬마버스 타요, 출발합니다!”', thumb: require('./assets/characters/thumbs/thumb2.png') },
-      { id: 'pop-bread', title: '브레드이발소', duration: '오늘도 손님이 와요', color: '#f2a65a', tint: '#fff6ec', accent: '#a55b1e', line: '“어서 오세요, 브레드이발소!”', artScale: 0.86, thumb: require('./assets/characters/thumbs/thumb6.png') },
-      { id: 'pop-shark', title: '핑크퐁 아기상어', duration: '상어 가족과 노래해요', color: '#7c5cff', tint: '#f3f0ff', accent: '#ffb703', line: '“아기 상어 뚜루루 뚜루~”', thumb: require('./assets/characters/thumbs/thumb4.png') },
-      { id: 'pop-pororo', title: '뽀롱뽀롱 뽀로로', duration: '뽀로로 인기 에피소드', color: '#e5484d', tint: '#fff1f0', accent: '#1f6fd0', line: '“노는 게 제일 좋아!”', thumb: require('./assets/characters/thumbs/thumb5.png') },
-    ],
-  },
-  {
-    id: 'story',
-    label: '동화',
-    videos: [
-      { id: 'story-hachu-whale', title: '사랑의 하츄핑: 고래보석의 전설', duration: '5:00', emoji: '🐳', color: '#dbeafe' },
-      { id: 'story-rabbit-moon', title: '달나라로 간 토끼', duration: '4:20', emoji: '🌙', color: '#ede9fe' },
-      { id: 'story-three-pigs', title: '아기 돼지 삼형제', duration: '6:10', emoji: '🐷', color: '#ffe4ef' },
-      { id: 'story-red-hood', title: '빨간 모자와 늑대', duration: '5:40', emoji: '🧺', color: '#fee2e2' },
-      { id: 'story-golden-axe', title: '금도끼 은도끼', duration: '3:50', emoji: '🪓', color: '#fef3c7' },
-    ],
-  },
-  {
-    id: 'animal',
-    label: '자연·동물',
-    videos: [
-      { id: 'animal-baby-shark', title: '아기 상어와 바다 친구들', duration: '3:20', emoji: '🦈', color: '#609EF5' },
-      { id: 'animal-zoo-trip', title: '동물원 나들이', duration: '4:00', emoji: '🦁', color: '#fff0b8' },
-      { id: 'animal-forest-friends', title: '숲속 친구들의 하루', duration: '5:15', emoji: '🦊', color: '#dcfce7' },
-      { id: 'animal-penguin-ice', title: '펭귄의 남극 모험', duration: '4:45', emoji: '🐧', color: '#e0f2fe' },
-    ],
-  },
-  {
-    id: 'song',
-    label: '노래·율동',
-    videos: [
-      { id: 'song-rainbow-play', title: '무지개 색깔 놀이', duration: '2:50', emoji: '🌈', color: '#ffe4ef' },
-      { id: 'song-clap-hands', title: '손뼉 치며 노래해요', duration: '2:30', emoji: '👏', color: '#fef3c7' },
-      { id: 'song-twinkle-star', title: '반짝반짝 작은 별', duration: '3:10', emoji: '⭐', color: '#e0e7ff' },
-      { id: 'song-bus-wheels', title: '빙글빙글 버스 바퀴', duration: '2:40', emoji: '🚌', color: '#dbeafe' },
-      { id: 'song-dino-dance', title: '아기 공룡 율동 대회', duration: '3:30', emoji: '🦕', color: '#dcfce7' },
-    ],
-  },
-  {
-    id: 'learn',
-    label: '숫자·한글',
-    videos: [
-      { id: 'learn-number-quest', title: '숫자 세기 모험', duration: '4:10', emoji: '🔢', color: '#e0f2fe' },
-      { id: 'learn-hangul-start', title: '가나다 첫걸음', duration: '5:00', emoji: '🔤', color: '#ede9fe' },
-      { id: 'learn-shape-hunt', title: '동그라미 세모 네모', duration: '3:40', emoji: '🔺', color: '#fef3c7' },
-      { id: 'learn-color-name', title: '색깔 이름 배우기', duration: '3:00', emoji: '🎨', color: '#ffe4ef' },
-    ],
-  },
-  {
-    id: 'play',
-    label: '놀이',
-    videos: [
-      { id: 'play-hide-seek', title: '숨바꼭질 놀이터', duration: '4:30', emoji: '🙈', color: '#fff0b8' },
-      { id: 'play-block-castle', title: '블록으로 성 쌓기', duration: '5:20', emoji: '🧱', color: '#dbeafe' },
-      { id: 'play-clay-friends', title: '점토로 친구 만들기', duration: '4:00', emoji: '🧸', color: '#ffe4ef' },
-      { id: 'play-water-splash', title: '물놀이 첨벙첨벙', duration: '3:50', emoji: '💦', color: '#609EF5' },
-    ],
-  },
-];
 
 const STAGE_KINDS = new Set(['findit', 'drag', 'count', 'say']);
 
-// Question kinds the content pipeline can author. The screen only needs `type` to label them;
-// everything else is the same four-option shape.
-const QUIZ_KINDS = {
-  // Keys match oneshot/schemas.py exactly, so a DB row needs no translation on the way in.
-  그림_속_대상_찾기: '그림 속 대상 찾기',
-  이야기_되새기기: '이야기 되새기기',
-  흉내_내는_말_이해: '흉내 내는 말 이해',
-  올바른_낱말_찾기: '올바른 낱말 찾기',
-  감정_추론: '감정 추론',
-  원인과_결과: '원인과 결과',
-  사물_첫글자_찾기: '사물 첫글자 찾기',
-  그림과_낱말_연결: '그림과 낱말 연결',
-  반대말_찾기: '반대말 찾기',
-  빠진_글자_완성: '빠진 글자 완성',
-  이야기_핵심_주제: '이야기 핵심 주제',
-  같은_글자로_시작하는_낱말: '같은 글자로 시작하는 낱말',
-  두_낱말_합치기: '두 낱말 합치기',
-  사건의_순서_파악: '사건의 순서 파악',
-  색_찾기: '색 찾기',
-  수량_확인: '수량 확인',
-};
 
 
 // Demo questions until the pipeline fills the activity table: one per template, so the variety
 // the pipeline will produce is visible today. Keys match oneshot/schemas.py.
-const opt = (label, color, bg, meaning, example) => ({ label, color, bg, meaning, example });
-const C = {
-  yellow: ['#f0ae03', '#fffaf0'],
-  purple: ['#9b5de5', '#f6f0ff'],
-  sky: ['#609EF5', '#f1fdff'],
-  pink: ['#e24e9e', '#fff4fa'],
-  green: ['#2fa96b', '#eefaf2'],
-  blue: ['#5b8def', '#f0f5ff'],
-  orange: ['#e07a3c', '#fff5ee'],
-  grey: ['#8a97b1', '#f4f7fe'],
-};
 
-const QUIZ_POOL = [
-  {
-    kind: '색_찾기', title: '우아핑의 색깔은?', answer: '하늘색',
-    options: [
-      opt('노랑색', ...C.yellow, '병아리처럼 밝고 환한 색이에요.', '노랑색 우산을 쓰고 나갔어요.'),
-      opt('보라색', ...C.purple, '포도처럼 진하고 신비로운 색이에요.', '보라색 꽃이 활짝 폈어요.'),
-      opt('하늘색', ...C.sky, '맑은 날 하늘처럼 시원한 색이에요.', '하늘색 크레파스로 바다를 그렸어요.'),
-      opt('핑크색', ...C.pink, '복숭아처럼 부드럽고 달콤한 색이에요.', '핑크색 리본을 머리에 달았어요.'),
-    ],
-  },
-  {
-    kind: '감정_추론', title: '친구가 넘어졌을 때 어떤 마음일까?', answer: '속상해요',
-    options: [
-      opt('속상해요', ...C.blue, '마음이 아프고 서운한 기분이에요.', '장난감이 부서져서 속상해요.'),
-      opt('신나요', ...C.yellow, '즐겁고 들뜬 기분이에요.', '소풍 가는 날이라 신나요.'),
-      opt('무서워요', ...C.purple, '겁이 나고 조마조마해요.', '천둥 소리가 무서워요.'),
-      opt('배고파요', ...C.orange, '먹고 싶은 마음이 들어요.', '점심시간이라 배고파요.'),
-    ],
-  },
-  {
-    kind: '반대말_찾기', title: "'크다'의 반대말은?", answer: '작다',
-    options: [
-      opt('작다', ...C.green, '크기가 크지 않아요.', '개미는 아주 작다.'),
-      opt('높다', ...C.blue, '위로 많이 올라가 있어요.', '산이 정말 높다.'),
-      opt('빠르다', ...C.pink, '움직임이 아주 빨라요.', '치타는 빠르다.'),
-      opt('무겁다', ...C.grey, '들기 힘들 만큼 무게가 나가요.', '가방이 무겁다.'),
-    ],
-  },
-  {
-    kind: '수량_확인', title: '화면에 사과가 몇 개 있을까?', answer: '3개',
-    options: [
-      opt('1개', ...C.yellow, '하나예요.', '사탕이 1개 남았어요.'),
-      opt('2개', ...C.green, '둘이에요.', '신발은 2개가 한 켤레예요.'),
-      opt('3개', ...C.pink, '셋이에요.', '풍선을 3개 들었어요.'),
-      opt('5개', ...C.blue, '다섯이에요.', '손가락은 한 손에 5개예요.'),
-    ],
-  },
-  {
-    kind: '사물_첫글자_찾기', title: "'바나나'는 어떤 글자로 시작할까?", answer: '바',
-    options: [
-      opt('바', ...C.yellow, "'바나나'의 첫 글자예요.", '바나나는 노랗다.'),
-      opt('가', ...C.green, "'가방'의 첫 글자예요.", '가방을 메고 갔어요.'),
-      opt('다', ...C.sky, "'다리'의 첫 글자예요.", '다리를 건넜어요.'),
-      opt('마', ...C.pink, "'마차'의 첫 글자예요.", '마차가 지나가요.'),
-    ],
-  },
-  {
-    kind: '같은_글자로_시작하는_낱말', title: "'구름'과 같은 글자로 시작하는 낱말은?", answer: '구두',
-    options: [
-      opt('구두', ...C.grey, '발에 신는 신발이에요.', '아빠가 구두를 신었어요.'),
-      opt('사과', ...C.pink, '빨갛고 달콤한 과일이에요.', '사과를 한 입 먹었어요.'),
-      opt('나무', ...C.green, '잎이 자라는 큰 식물이에요.', '나무 그늘에서 쉬었어요.'),
-      opt('바다', ...C.sky, '넓고 푸른 물이에요.', '바다에서 헤엄쳤어요.'),
-    ],
-  },
-  {
-    kind: '그림_속_대상_찾기', title: '화면에 있었던 것은?', answer: '풍선',
-    options: [
-      opt('풍선', ...C.pink, '바람을 넣어 둥글게 만든 놀잇감이에요.', '풍선이 하늘로 날아갔어요.'),
-      opt('자전거', ...C.blue, '두 바퀴로 타는 탈것이에요.', '자전거를 타고 공원에 갔어요.'),
-      opt('우산', ...C.purple, '비를 막아주는 물건이에요.', '비가 와서 우산을 폈어요.'),
-      opt('의자', ...C.orange, '앉을 때 쓰는 가구예요.', '의자에 앉아 밥을 먹었어요.'),
-    ],
-  },
-  {
-    kind: '그림과_낱말_연결', title: '이 그림의 이름은 무엇일까?', answer: '토끼',
-    options: [
-      opt('토끼', ...C.pink, '귀가 길고 깡충 뛰는 동물이에요.', '토끼가 당근을 먹어요.'),
-      opt('거북', ...C.green, '단단한 등딱지가 있는 동물이에요.', '거북이 천천히 걸어요.'),
-      opt('여우', ...C.orange, '꼬리가 복슬복슬한 동물이에요.', '여우가 숲으로 갔어요.'),
-      opt('오리', ...C.yellow, '물에서 헤엄치는 새예요.', '오리가 연못에서 헤엄쳐요.'),
-    ],
-  },
-  {
-    kind: '빠진_글자_완성', title: "호□이 - 빠진 글자는?", answer: '랑',
-    options: [
-      opt('랑', ...C.orange, "'호랑이'가 완성돼요.", '호랑이가 어흥 하고 울어요.'),
-      opt('두', ...C.grey, "'호두'가 되는 글자예요.", '호두를 깨서 먹었어요.'),
-      opt('수', ...C.sky, "'호수'가 되는 글자예요.", '호수에 오리가 있어요.'),
-      opt('박', ...C.green, "'호박'이 되는 글자예요.", '호박죽을 먹었어요.'),
-    ],
-  },
-  {
-    kind: '올바른_낱말_찾기', title: '바르게 쓴 낱말은?', answer: '깨끗이',
-    options: [
-      opt('깨끗이', ...C.sky, '먼지 없이 말끔하게라는 뜻이에요.', '손을 깨끗이 씻었어요.'),
-      opt('깨끄시', ...C.grey, '틀린 표기예요.', '바르게는 깨끗이라고 써요.'),
-      opt('깻끗이', ...C.grey, '틀린 표기예요.', '바르게는 깨끗이라고 써요.'),
-      opt('깨끗히', ...C.grey, '틀린 표기예요.', '바르게는 깨끗이라고 써요.'),
-    ],
-  },
-  {
-    kind: '두_낱말_합치기', title: "'꽃' + '병' 을 합치면?", answer: '꽃병',
-    options: [
-      opt('꽃병', ...C.pink, '꽃을 꽂아 두는 병이에요.', '꽃병에 장미를 꽂았어요.'),
-      opt('병꽃', ...C.grey, '거꾸로 붙인 말이에요.', '바른 말은 꽃병이에요.'),
-      opt('꽃집', ...C.green, '꽃을 파는 가게예요.', '꽃집에서 꽃을 샀어요.'),
-      opt('물병', ...C.sky, '물을 담는 병이에요.', '물병에 물을 채웠어요.'),
-    ],
-  },
-  {
-    kind: '흉내_내는_말_이해', title: '비가 내리는 소리는?', answer: '주룩주룩',
-    options: [
-      opt('주룩주룩', ...C.sky, '비가 세차게 내리는 소리예요.', '비가 주룩주룩 내려요.'),
-      opt('사각사각', ...C.green, '연필로 쓰는 소리예요.', '연필이 사각사각 소리를 내요.'),
-      opt('데굴데굴', ...C.orange, '공이 구르는 모습이에요.', '공이 데굴데굴 굴러가요.'),
-      opt('반짝반짝', ...C.yellow, '빛나는 모습이에요.', '별이 반짝반짝 빛나요.'),
-    ],
-  },
-  {
-    kind: '이야기_되새기기', title: '주인공이 하려던 일은?', answer: '친구 찾기',
-    options: [
-      opt('친구 찾기', ...C.blue, '잃어버린 친구를 찾는 일이에요.', '숲에서 친구를 찾았어요.'),
-      opt('밥 짓기', ...C.orange, '밥을 만드는 일이에요.', '엄마가 밥을 지었어요.'),
-      opt('그림 그리기', ...C.pink, '종이에 그림을 그리는 일이에요.', '바다를 그렸어요.'),
-      opt('잠자기', ...C.purple, '눈을 감고 쉬는 일이에요.', '일찍 잠자러 갔어요.'),
-    ],
-  },
-  {
-    kind: '원인과_결과', title: '우산을 쓴 까닭은?', answer: '비가 와서',
-    options: [
-      opt('비가 와서', ...C.sky, '비를 맞지 않으려고 우산을 써요.', '비가 와서 우산을 폈어요.'),
-      opt('배가 고파서', ...C.orange, '먹고 싶을 때 하는 말이에요.', '배가 고파서 밥을 먹었어요.'),
-      opt('졸려서', ...C.purple, '잠이 올 때 하는 말이에요.', '졸려서 하품이 나요.'),
-      opt('심심해서', ...C.grey, '할 일이 없을 때 하는 말이에요.', '심심해서 그림을 그렸어요.'),
-    ],
-  },
-  {
-    kind: '사건의_순서_파악', title: '가장 먼저 일어난 일은?', answer: '집을 나섰어요',
-    options: [
-      opt('집을 나섰어요', ...C.green, '밖으로 나가는 일이에요.', '아침에 집을 나섰어요.'),
-      opt('버스를 탔어요', ...C.blue, '버스에 오르는 일이에요.', '정류장에서 버스를 탔어요.'),
-      opt('학교에 왔어요', ...C.yellow, '학교에 도착한 일이에요.', '드디어 학교에 왔어요.'),
-      opt('밥을 먹었어요', ...C.orange, '음식을 먹는 일이에요.', '점심에 밥을 먹었어요.'),
-    ],
-  },
-  {
-    kind: '이야기_핵심_주제', title: '이 이야기가 알려주는 것은?', answer: '친구를 도와요',
-    options: [
-      opt('친구를 도와요', ...C.pink, '어려운 친구를 돕는 마음이에요.', '넘어진 친구를 도와줬어요.'),
-      opt('빨리 달려요', ...C.blue, '속도를 내는 일이에요.', '운동장을 빨리 달렸어요.'),
-      opt('혼자 놀아요', ...C.grey, '혼자서 노는 일이에요.', '방에서 혼자 놀았어요.'),
-      opt('많이 먹어요', ...C.orange, '음식을 많이 먹는 일이에요.', '밥을 많이 먹었어요.'),
-    ],
-  },
-].map((q) => ({ ...q, audioUrl: null }));
 
 // Which questions this episode asks. Ported from oneshot/plan_types.py: kinds the child gets
 // wrong come up more often, but only after enough attempts to tell a stumble from a pattern.
@@ -1498,49 +1216,12 @@ function SeriesScreen({ series, onBack, onStart }) {
   );
 }
 
-// The child's own star: quizzes earn food, feeding it makes the star grow.
-// One candy is one percent, and the star changes shape at each checkpoint.
-const GROWTH_CHECKPOINTS = [0, 50, 100];
-const GROWTH_PER_CANDY = 20;
 
-// Backdrops the child can switch between; drawn as a gradient so no art has to ship.
-const SCENES = [
-  { id: 'space', label: '우주', sky: '#0d1b3e', ground: '#1b2f63', image: require('./assets/scenes/space.png') },
-  { id: 'sky', label: '하늘', sky: '#7cc4f5', ground: '#d9eeff', image: require('./assets/scenes/sky.png') },
-  { id: 'sea', label: '바다', sky: '#0a4f7a', ground: '#23a6c9', image: require('./assets/scenes/sea.png') },
-  { id: 'forest', label: '숲', sky: '#1f5c3a', ground: '#69b06a', image: require('./assets/scenes/forest.png') },
-  { id: 'room', label: '방', sky: '#f4e2c8', ground: '#d9b98d', image: require('./assets/scenes/room.png') },
-];
 
-// Fixed sprinkle, so the sky does not reshuffle on every render.
-// What the closet holds: the outfit on its hanger, and who the star becomes wearing it.
-const COSTUMES = [
-  { id: 1, icon: require('./assets/costumes/costume1.png'), dino: require('./assets/costumes/newdino1.png'), bunny: require('./assets/costumes/newbunny1.png') },
-  { id: 2, icon: require('./assets/costumes/costume2.png'), dino: require('./assets/costumes/newdino2.png'), bunny: require('./assets/costumes/newbunny2.png') },
-  { id: 3, icon: require('./assets/costumes/costume3.png'), dino: require('./assets/costumes/newdino3.png'), bunny: require('./assets/costumes/newbunny3.png') },
-  { id: 4, icon: require('./assets/costumes/costume4.png'), dino: require('./assets/costumes/newdino4.png'), bunny: require('./assets/costumes/newbunny4.png') },
-  { id: 5, icon: require('./assets/costumes/costume5.png'), dino: require('./assets/costumes/newdino5.png'), bunny: require('./assets/costumes/newbunny5.png') },
-];
 
-const CANDY_ICON = require('./assets/scenes/candy.png');
-const CLOSET_ICON = require('./assets/scenes/closet.png');
 
-const STAR_FIELD = Array.from({ length: 46 }, (_, i) => ({
-  x: (i * 37) % 100,
-  y: (i * 61) % 70,
-  r: 1 + ((i * 7) % 3) * 0.7,
-  o: 0.4 + ((i * 13) % 5) * 0.12,
-}));
 
-// The star the child starts with, and the two it can become once the bar is full.
-const STAGE1_ART = require('./assets/characters/stage1.png');
-const EVOLUTIONS = [
-  { id: 'dino', label: '아기 공룡', art: require('./assets/characters/stage2-dino.png'), grown: require('./assets/characters/stage3-dino.png') },
-  { id: 'bunny', label: '아기 토끼', art: require('./assets/characters/stage2-bunny.png'), grown: require('./assets/characters/stage3-bunny.png') },
-];
 
-// Two full bars: the first picks a path, the second grows that path up.
-const FULL_BAR = 100;
 
 const SPARKS = Array.from({ length: 10 }, (_, i) => ({
   angle: (i / 10) * Math.PI * 2,
@@ -2092,77 +1773,9 @@ function CharacterScreen({ profile, food, fed, onFeed }) {
   );
 }
 
-// The grown-up's view: a month of weeks down the left, what happened in the middle, and what the
-// child kept coming back to on the right.
-const PARENT_WEEKS = ['1주 주간 리포트', '2주 주간 리포트', '3주 주간 리포트', '4주 주간 리포트'];
 
-// Pictures for the topics the pipeline surfaces most often.
-const STAT_ART = {
-  book: require('./assets/scenes/stat-book.png'),
-  quiz: require('./assets/scenes/stat-quiz.png'),
-  puzzle: require('./assets/scenes/stat-puzzle.png'),
-  paint: require('./assets/scenes/stat-paint.png'),
-};
 
-const INTEREST_ART = {
-  '공룡': require('./assets/scenes/interest-dino.png'),
-  '요리': require('./assets/scenes/interest-cook.png'),
-  '우주 · 행성': require('./assets/scenes/interest-planet.png'),
-};
 
-const MOCK_REPORT = [
-  {
-    minutes: [12, 26, 18, 31, 15, 34, 25],
-    stats: { stories: 10, quiz: 16, puzzle: 7, drawing: 4 },
-    deltas: { stories: 2, quiz: 5, puzzle: 4, drawing: -2 },
-    interests: ['공룡', '요리', '우주 · 행성'],
-    moments: [
-      { tag: '퍼즐 완주 횟수 증가', lead: '끈기 있게 끝까지', head: ' 도전했어요',
-        body: '포기하지 않고 퍼즐을 끝까지 완료한 비율이\n지난주보다 올랐어요', art: STAT_ART.puzzle },
-      { tag: '이야기 설명 비중 증가', lead: '이유를 설명하는 표현', head: '이 늘었어요',
-        body: "이번 주 이야기 속에서 '왜냐하면'처럼 이유를\n설명하는 말이 지난주보다 늘었어요", art: STAT_ART.book },
-      { tag: '그림 활동 창의성 및 탐구 증가', lead: '다양하게', head: ' 표현했어요',
-        body: '그림에 사용한 색이나 모양의 종류가\n지난주보다 훨씬 다양해졌어요', art: STAT_ART.paint },
-    ],
-    sessions: [
-      { from: 10.3, to: 11, span: '10:20 - 11:00', title: '사랑의 하츄핑', words: ['테올데굴', '따뜻하다'] },
-      { from: 4.5, to: 5, span: '4:30 - 5:00', title: '아기상어', words: ['아푸어푸'] },
-    ],
-  },
-  {
-    minutes: [20, 14, 28, 9, 33, 27, 18],
-    stats: { stories: 8, quiz: 21, puzzle: 5, drawing: 6 },
-    deltas: { stories: -2, quiz: 5, puzzle: -2, drawing: 2 },
-    interests: ['바다 생물', '공룡', '색깔'],
-    moments: null,
-    sessions: [
-      { from: 9.5, to: 10.2, span: '9:30 - 10:10', title: '꼬마버스 타요', words: ['부릉부릉', '신호등'] },
-      { from: 7, to: 7.5, span: '7:00 - 7:30', title: '브레드이발소', words: ['말랑말랑'] },
-    ],
-  },
-  {
-    minutes: [16, 22, 11, 24, 29, 13, 30],
-    stats: { stories: 12, quiz: 18, puzzle: 9, drawing: 3 },
-    deltas: { stories: 4, quiz: -3, puzzle: 4, drawing: -3 },
-    interests: ['숫자', '동물 친구', '노래'],
-    moments: null,
-    sessions: [
-      { from: 11, to: 11.5, span: '11:00 - 11:30', title: '핑크퐁 아기상어', words: ['뚜루루'] },
-      { from: 5, to: 5.7, span: '5:00 - 5:40', title: '뽀롱뽀롱 뽀로로', words: ['미끄럼틀', '눈사람'] },
-    ],
-  },
-  {
-    minutes: [9, 19, 25, 17, 21, 36, 28],
-    stats: { stories: 11, quiz: 24, puzzle: 6, drawing: 5 },
-    deltas: { stories: -1, quiz: 6, puzzle: -3, drawing: 2 },
-    interests: ['우주 · 행성', '요리', '탈것'],
-    moments: null,
-    sessions: [
-      { from: 10, to: 10.6, span: '10:00 - 10:35', title: '캐치 티니핑', words: ['반짝반짝', '모자'] },
-      { from: 6.5, to: 7, span: '6:30 - 7:00', title: '꼬마버스 타요', words: ['출발'] },
-    ],
-  },
-];
 // Bars rise from this offset; the average line and its badge hang off the same base.
 
 // The rim is a gradient, so it has to be drawn — and a drawn rim needs the chip's real size.
@@ -2748,10 +2361,8 @@ function ageLabel(birth) {
   return `만 ${Math.floor(months / 12)}세 ${months % 12}개월`;
 }
 // 10 to 180 minutes. Too many values for a chip row, hence the scrolling picker below.
-const DAILY_LIMITS = Array.from({ length: 18 }, (_, i) => (i + 1) * 10);
 const LIMIT_ITEM_W = 88;
 const LIMIT_TRACK_W = 440;
-const LIMIT_PAD = (LIMIT_TRACK_W - LIMIT_ITEM_W) / 2;
 
 // Toss-style opener: one promise, one button, nothing to decide yet.
 function OnboardIntroScreen({ onNext }) {
@@ -5118,19 +4729,6 @@ const styles = StyleSheet.create({
     marginBottom: 34,
     zIndex: 4,
   },
-  miniStar: {
-    width: 60,
-    height: 60,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#eaf2ff',
-  },
-  miniStarText: {
-    fontSize: 30,
-    color: COLORS.blue,
-    fontWeight: '900',
-  },
   questionBox: {
     minWidth: 460,
     minHeight: 84,
@@ -5141,12 +4739,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#dbeafe',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  questionKind: {
-    marginBottom: 6,
-    fontSize: 13,
-    fontWeight: '900',
-    color: '#609EF5',
   },
   questionText: {
     textAlign: 'center',
@@ -5913,30 +5505,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: BG,
   },
-  tabBar: {
-    flexDirection: 'row',
-    borderTopWidth: 1.5,
-    borderTopColor: '#e3e9f7',
-    backgroundColor: '#f4f7fe',
-  },
-  tabItem: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 2,
-    paddingVertical: 10,
-  },
-  tabIcon: {
-    fontSize: 18,
-    color: TEXT_MUTED_ON_DARK,
-  },
-  tabLabel: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: TEXT_MUTED_ON_DARK,
-  },
-  tabActive: {
-    color: '#609EF5',
-  },
   charScreen: {
     flex: 1,
   },
@@ -6174,16 +5742,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  charPops: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 5,
-  },
   charPopText: {
     // Pinned inside the star's own top-right corner so it travels with the drag. Android clips
     // children that stick out, so it sits just inside the box rather than beyond it.
@@ -6353,9 +5911,6 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: '#5b6b8c',
   },
-  parentMonthArrowOff: {
-    color: '#d3dcee',
-  },
   parentMonth: {
     width: 84,
     height: 100,
@@ -6432,17 +5987,6 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     fontWeight: '700',
     color: '#8a97b1',
-  },
-  parentClock: {
-    width: 132,
-    height: 132,
-    borderRadius: 66,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#dbeafe',
-  },
-  parentClockFace: {
-    fontSize: 64,
   },
   parentStatGrid: {
     flexDirection: 'row',
@@ -7277,47 +6821,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#ffffff',
-  },
-  reportIcon: {
-    width: 82,
-    height: 82,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f4f7fe',
-    borderWidth: 1,
-    borderColor: '#e3e9f7',
-    shadowColor: '#64748b',
-    shadowOpacity: 0.16,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  reportBadge: {
-    position: 'absolute',
-    top: -9,
-    right: -8,
-    width: 25,
-    height: 25,
-    borderRadius: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f057a8',
-  },
-  reportBadgeText: {
-    color: '#fff',
-    fontSize: 13,
-    fontWeight: '900',
-  },
-  reportIconSymbol: {
-    color: COLORS.blueDark,
-    fontSize: 29,
-    fontWeight: '900',
-  },
-  reportIconLabel: {
-    marginTop: 4,
-    color: TEXT_ON_DARK,
-    fontSize: 13,
-    fontWeight: '900',
   },
   reportActions: {
     flexDirection: 'row',
