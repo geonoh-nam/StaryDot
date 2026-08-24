@@ -22,14 +22,14 @@ function InterestChip({ label }) {
             </LinearGradient>
           </Defs>
           <Rect
-            x={0.8}
-            y={0.8}
-            width={box.width - 1.6}
-            height={box.height - 1.6}
-            rx={(box.height - 1.6) / 2}
+            x={1.5}
+            y={1.5}
+            width={box.width - 3}
+            height={box.height - 3}
+            rx={(box.height - 3) / 2}
             fill="none"
             stroke={`url(#chipRim-${label})`}
-            strokeWidth={1.6}
+            strokeWidth={3}
           />
         </Svg>
       ) : null}
@@ -52,22 +52,18 @@ function WeekPill({ label, index, on, onPress }) {
       {on && box.width ? (
         <Svg width={box.width} height={box.height} style={StyleSheet.absoluteFill} pointerEvents="none">
           <Defs>
-            <LinearGradient id={`weekFill-${index}`} x1="0" y1="0" x2="1" y2="0.6">
-              <Stop offset="0" stopColor="#609EF5" />
-              <Stop offset="1" stopColor="#3859B9" />
-            </LinearGradient>
             <LinearGradient id={`weekRim-${index}`} x1="0" y1="0" x2="1" y2="0.6">
               <Stop offset="0" stopColor="#BADAFF" />
               <Stop offset="1" stopColor="#3859B9" />
             </LinearGradient>
           </Defs>
-          <Rect x={0} y={0} width={box.width} height={box.height} rx={box.height / 2} fill={`url(#weekFill-${index})`} />
+          <Rect x={0} y={0} width={box.width} height={box.height} rx={box.height / 2} fill="#5891EA" />
           <Rect
-            x={1.5}
-            y={1.5}
-            width={box.width - 3}
-            height={box.height - 3}
-            rx={(box.height - 3) / 2}
+            x={2}
+            y={2}
+            width={box.width - 4}
+            height={box.height - 4}
+            rx={(box.height - 4) / 2}
             fill="none"
             stroke={`url(#weekRim-${index})`}
             strokeWidth={3}
@@ -113,7 +109,7 @@ export function ParentReportScreen({ profile, report, words }) {
             <Text style={styles.parentMonthArrow}>‹</Text>
           </TouchableOpacity>
           <View style={styles.parentMonth}>
-            <Svg width={170} height={210} style={StyleSheet.absoluteFill}>
+            <Svg width={132} height={166} style={StyleSheet.absoluteFill}>
               <Defs>
                 <LinearGradient id="monthGrad" x1="0" y1="0" x2="0.4" y2="1">
                   <Stop offset="0" stopColor="#609EF5" />
@@ -124,7 +120,7 @@ export function ParentReportScreen({ profile, report, words }) {
                   <FeGaussianBlur stdDeviation="9" />
                 </Filter>
               </Defs>
-              <Rect x={20} y={20} width={130} height={170} rx={62} fill="url(#monthGrad)" filter="url(#monthSoft)" />
+              <Rect x={16} y={16} width={100} height={134} rx={48} fill="url(#monthGrad)" filter="url(#monthSoft)" />
             </Svg>
             <Text style={styles.parentMonthYear}>{today.getFullYear()}</Text>
             <Text style={styles.parentMonthNum}>{month}</Text>
@@ -235,7 +231,7 @@ const styles = StyleSheet.create({
   momentHead: {
     marginTop: 4,
     fontSize: 20,
-    fontWeight: '900',
+    fontWeight: '700',
     color: '#171d31',
   },
   momentHeadOn: {
@@ -259,20 +255,20 @@ const styles = StyleSheet.create({
   parentChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: 26,
-    paddingVertical: 18,
+    gap: 10,
+    paddingHorizontal: 22,
+    paddingVertical: 13,
     borderRadius: 999,
     backgroundColor: '#ffffff',
   },
   parentChipArt: {
-    width: 42,
-    height: 42,
+    width: 36,
+    height: 36,
   },
   parentChipText: {
-    fontSize: 24,
+    fontSize: 21,
     fontWeight: '900',
-    color: '#171d31',
+    color: '#4570CD',
   },
   parentChips: {
     flexDirection: 'row',
@@ -283,7 +279,7 @@ const styles = StyleSheet.create({
     paddingBottom: 6,
   },
   parentCol: {
-    width: 300,
+    width: 260,
     gap: 10,
   },
   parentColRight: {
@@ -295,25 +291,25 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   parentDivider: {
-    width: 1,
+    width: 3,
     alignSelf: 'stretch',
     backgroundColor: '#a9c8f2',
   },
   parentHint: {
     marginTop: 4,
-    marginBottom: 14,
+    marginBottom: 10,
     fontSize: 15,
     lineHeight: 21,
     fontWeight: '700',
-    color: '#8a97b1',
+    color: '#609EF5',
   },
   parentHintOn: {
     color: '#609EF5',
     textDecorationLine: 'underline',
   },
   parentMonth: {
-    width: 170,
-    height: 210,
+    width: 132,
+    height: 166,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -330,7 +326,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   parentMonthNum: {
-    fontSize: 46,
+    fontSize: 38,
     fontWeight: '900',
     color: '#ffffff',
   },
@@ -352,7 +348,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'stretch',
-    paddingVertical: 10,
   },
   parentMonthYear: {
     fontSize: 15,
@@ -368,30 +363,31 @@ const styles = StyleSheet.create({
   },
   parentStat: {
     width: '47%',
-    paddingVertical: 4,
+    paddingVertical: 0,
   },
   parentStatArt: {
-    width: 40,
-    height: 40,
+    width: 52,
+    height: 52,
   },
   parentStatDelta: {
-    marginLeft: 48,
+    marginTop: 1,
     fontSize: 12,
     fontWeight: '800',
   },
   parentStatGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    rowGap: 10,
+    rowGap: 4,
     columnGap: 10,
+    paddingLeft: 4,
   },
   parentStatHead: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 4,
   },
   parentStatLabel: {
-    marginLeft: 48,
+    marginTop: 2,
     fontSize: 13,
     fontWeight: '800',
     color: TEXT_ON_DARK,
@@ -403,7 +399,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   parentStatValue: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '900',
     color: '#609EF5',
   },
@@ -439,7 +435,7 @@ const styles = StyleSheet.create({
   parentWeek: {
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 26,
+    borderRadius: 999,
     overflow: 'hidden',
     backgroundColor: 'rgba(0,0,0,0.1)',
   },

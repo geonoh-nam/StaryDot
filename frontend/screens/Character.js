@@ -455,40 +455,6 @@ export function CharacterScreen({ profile, food, fed, onFeed }) {
           </View>
         ) : null}
 
-        {/* Candy and closet live in the scene itself, as pictures with a count on them. */}
-        <View
-          style={styles.charDock}
-          pointerEvents="box-none"
-          onLayout={(e) => {
-            dockBox.current = { x: e.nativeEvent.layout.x, y: e.nativeEvent.layout.y };
-          }}
-        >
-          <TouchableOpacity
-            style={styles.charPanelBtn}
-            onPress={() => { playSound('pop'); setPanel((v) => !v); }}
-          >
-            <Text style={styles.charPanelBtnText}>{panel ? '✕' : '⚙'}</Text>
-          </TouchableOpacity>
-          <GestureDetector gesture={candyDrag}>
-            <Animated.View
-              style={{ transform: candyPos.getTranslateTransform(), zIndex: 6 }}
-              onLayout={(e) => {
-                const { x, y, width, height } = e.nativeEvent.layout;
-                candyBox.current = { x, y, w: width, h: height };
-              }}
-            >
-              <TouchableOpacity style={[styles.charDockBtn, food <= 0 && styles.charItemOff]} onPress={feedStar}>
-                <Image source={CANDY_ICON} style={styles.charDockArt} resizeMode="contain" />
-                <View style={styles.charDockBadge}><Text style={styles.charDockBadgeText}>{food}</Text></View>
-              </TouchableOpacity>
-            </Animated.View>
-          </GestureDetector>
-          <TouchableOpacity style={styles.charDockBtn} onPress={() => { playSound('pop'); setCloset(true); }}>
-            <Image source={CLOSET_ICON} style={styles.charDockArt} resizeMode="contain" />
-            <View style={styles.charDockBadge}><Text style={styles.charDockBadgeText}>{COSTUMES.length}</Text></View>
-          </TouchableOpacity>
-        </View>
-
         {closet ? (
           <View style={styles.evolveWrap}>
             <Text style={styles.evolveTitle}>오늘은 뭘 입을까?</Text>
@@ -510,38 +476,76 @@ export function CharacterScreen({ profile, food, fed, onFeed }) {
         ) : null}
 
         <Animated.View style={[styles.charFlash, { opacity: flash }]} pointerEvents="none" />
-
-        {panel ? (
-          <View style={styles.charPanel}>
-            <Text style={styles.charCardTitle}>성장도</Text>
-            <View style={styles.charBarTrack}>
-              <View style={[styles.charBarFill, { width: `${percent}%` }]} />
-              {GROWTH_CHECKPOINTS.map((c) => (
-                <View
-                  key={c}
-                  style={[
-                    styles.charCheck,
-                    { left: `${c}%`, marginLeft: c === 0 ? 0 : c === 100 ? -14 : -7 },
-                    percent >= c && styles.charCheckOn,
-                  ]}
-                />
-              ))}
-            </View>
-            <Text style={styles.charGrowthValue}>{stage}단계 · {percent}%</Text>
-            <View style={styles.charPanelLine} />
-            <Text style={styles.charCardTitle}>배경 바꾸기</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.sceneStrip}>
-              {SCENES.map((sc) => (
-                <TouchableOpacity key={sc.id} style={styles.sceneCell} onPress={() => { playSound('pop'); setScene(sc.id); }}>
-                  <Image source={sc.image} style={[styles.sceneThumb, scene === sc.id && styles.sceneThumbOn]} resizeMode="cover" />
-                  <Text style={[styles.sceneLabel, scene === sc.id && styles.sceneLabelOn]}>{sc.label}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        ) : null}
       </View>
       </GestureDetector>
+
+      {/* Growth, candy, wardrobe and backdrops stand beside the stage, all visible at once. */}
+      <View
+        style={styles.charSide}
+        onLayout={(e) => {
+          dockBox.current = { x: e.nativeEvent.layout.x, y: e.nativeEvent.layout.y };
+        }}
+      >
+        <View style={styles.charCard}>
+          <Text style={styles.charCardTitle}>성장도</Text>
+          <View style={styles.charBarTrack}>
+            <View style={[styles.charBarFill, { width: `${percent}%` }]} />
+            {GROWTH_CHECKPOINTS.map((c) => (
+              <View
+                key={c}
+                style={[
+                  styles.charCheck,
+                  { left: `${c}%`, marginLeft: c === 0 ? 0 : c === 100 ? -14 : -7 },
+                  percent >= c && styles.charCheckOn,
+                ]}
+              />
+            ))}
+          </View>
+          <Text style={styles.charGrowthValue}>{stage}단계 · {percent}%</Text>
+        </View>
+
+        {/* Candy and wardrobe share one card, a row each. */}
+        <View style={styles.charItemCard}>
+          <GestureDetector gesture={candyDrag}>
+            <Animated.View
+              style={{ transform: candyPos.getTranslateTransform(), zIndex: 6 }}
+              onLayout={(e) => {
+                const { x, y, width, height } = e.nativeEvent.layout;
+                candyBox.current = { x, y, w: width, h: height };
+              }}
+            >
+              <TouchableOpacity style={[styles.charItemLine, food <= 0 && styles.charItemOff]} onPress={feedStar}>
+                <Image source={CANDY_ICON} style={styles.charItemArt} resizeMode="contain" />
+                <Text style={styles.charItemLabel}>별사탕</Text>
+                <Text style={styles.charItemCount}>{food}개</Text>
+              </TouchableOpacity>
+            </Animated.View>
+          </GestureDetector>
+          {/* A star has nothing to wear yet: the wardrobe opens once it has grown into a friend. */}
+          <TouchableOpacity
+            style={[styles.charItemLine, !evolved && styles.charItemOff]}
+            disabled={!evolved}
+            onPress={() => { playSound('pop'); setCloset(true); }}
+          >
+            <Image source={CLOSET_ICON} style={styles.charItemArt} resizeMode="contain" />
+            <Text style={styles.charItemLabel}>옷장</Text>
+            <Text style={styles.charItemCount}>{evolved ? COSTUMES.length : 0}개</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.charItemHint}>퀴즈를 맞히면 별사탕을 줄 수 있어요 !</Text>
+
+        <View style={styles.charCard}>
+          <Text style={styles.charCardTitle}>배경 바꾸기</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.sceneStrip}>
+            {SCENES.map((sc) => (
+              <TouchableOpacity key={sc.id} style={styles.sceneCell} onPress={() => { playSound('pop'); setScene(sc.id); }}>
+                <Image source={sc.image} style={[styles.sceneThumb, scene === sc.id && styles.sceneThumbOn]} resizeMode="cover" />
+                <Text style={[styles.sceneLabel, scene === sc.id && styles.sceneLabelOn]}>{sc.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      </View>
     </View>
   );
 }
@@ -787,6 +791,56 @@ const styles = StyleSheet.create({
   },
   charScreen: {
     flex: 1,
+    flexDirection: 'row',
+    gap: 12,
+  },
+  charSide: {
+    width: 300,
+    gap: 12,
+  },
+  charCard: {
+    padding: 16,
+    borderRadius: 20,
+    backgroundColor: '#D7EAFF',
+    gap: 10,
+  },
+
+
+  charItemCard: {
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 20,
+    backgroundColor: '#ffffff',
+    borderWidth: 2,
+    borderColor: '#BADAFF',
+  },
+  charItemLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 10,
+  },
+  charItemCount: {
+    marginLeft: 'auto',
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#609EF5',
+  },
+  charItemHint: {
+    marginTop: -4,
+    textAlign: 'center',
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#609EF5',
+  },
+  charItemArt: {
+    width: 34,
+    height: 34,
+  },
+  charItemLabel: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: TEXT_ON_DARK,
   },
   charStage: {
     flex: 1,
@@ -858,6 +912,7 @@ const styles = StyleSheet.create({
   sceneStrip: {
     gap: 10,
     paddingVertical: 2,
+    paddingRight: 4,
   },
   sceneThumb: {
     width: 74,
