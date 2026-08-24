@@ -6,6 +6,13 @@
 export const PARENT_WEEKS = ['1주 주간 리포트', '2주 주간 리포트', '3주 주간 리포트', '4주 주간 리포트'];
 
 // Pictures for the topics the pipeline surfaces most often.
+// The three pictures the "moments" cards wear, one per kind of growth.
+export const MOMENT_ART = {
+  puzzle: require('../assets/scenes/moment-puzzle.png'),
+  talk: require('../assets/scenes/moment-talk.png'),
+  paint: require('../assets/scenes/moment-paint.png'),
+};
+
 export const STAT_ART = {
   book: require('../assets/scenes/stat-book.png'),
   quiz: require('../assets/scenes/stat-quiz.png'),
@@ -27,11 +34,11 @@ export const MOCK_REPORT = [
     interests: ['공룡', '요리', '우주 · 행성'],
     moments: [
       { tag: '퍼즐 완주 횟수 증가', lead: '끈기 있게 끝까지', head: ' 도전했어요',
-        body: '포기하지 않고 퍼즐을 끝까지 완료한 비율이\n지난주보다 올랐어요', art: STAT_ART.puzzle },
+        body: '포기하지 않고 퍼즐을 끝까지 완료한 비율이\n지난주보다 올랐어요', art: MOMENT_ART.puzzle },
       { tag: '이야기 설명 비중 증가', lead: '이유를 설명하는 표현', head: '이 늘었어요',
-        body: "이번 주 이야기 속에서 '왜냐하면'처럼 이유를\n설명하는 말이 지난주보다 늘었어요", art: STAT_ART.book },
+        body: "이번 주 이야기 속에서 '왜냐하면'처럼 이유를\n설명하는 말이 지난주보다 늘었어요", art: MOMENT_ART.talk },
       { tag: '그림 활동 창의성 및 탐구 증가', lead: '다양하게', head: ' 표현했어요',
-        body: '그림에 사용한 색이나 모양의 종류가\n지난주보다 훨씬 다양해졌어요', art: STAT_ART.paint },
+        body: '그림에 사용한 색이나 모양의 종류가\n지난주보다 훨씬 다양해졌어요', art: MOMENT_ART.paint },
     ],
     sessions: [
       { from: 10.3, to: 11, span: '10:20 - 11:00', title: '사랑의 하츄핑', words: ['테올데굴', '따뜻하다'] },

@@ -207,11 +207,11 @@ const styles = StyleSheet.create({
   },
   momentArt: {
     position: 'absolute',
-    right: 10,
-    bottom: 6,
-    width: 74,
-    height: 74,
-    opacity: 0.28,
+    right: 16,
+    bottom: 12,
+    width: 92,
+    height: 92,
+    opacity: 0.75,
   },
   momentBody: {
     marginTop: 10,
