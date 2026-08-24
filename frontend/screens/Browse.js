@@ -1,7 +1,7 @@
 // Choosing what to watch: the ring of series cards on the main screen, the episode grid inside
 // one series, and the still that plays it.
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { Animated, Easing, Image, PanResponder, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { SERIES_ART, THUMBS } from '../data/library';
 import { playSound } from '../sound';
@@ -36,6 +36,9 @@ const RING_SAMPLES = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
 const SERIES_HERO_W = 330;
 
 const STAR_BUDDY = require('../assets/characters/star-buddy.png');
+
+// How far the star may wander from where it starts: never down onto the card ring.
+const BUDDY_RANGE = { left: -1100, right: 900, up: -90, down: 120 };
 
 const BUDDY_MENU = [
   { key: 'character', label: '캐릭터', icon: '★' },
@@ -224,6 +227,38 @@ function StarBuddy({ onPress }) {
 export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, contentUp }) {
   const win = useWindowDimensions();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  // The star can be dragged, but only around the greeting: below it the cards begin.
+  const buddyPos = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  // Where the star was left, so a new drag continues from there rather than snapping back.
+  const buddyAt = useRef({ x: 0, y: 0 });
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const buddyDrag = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_e, g) => Math.hypot(g.dx, g.dy) > 6,
+      onPanResponderMove: (_e, g) => {
+        buddyPos.setValue({
+          x: clamp(buddyAt.current.x + g.dx, BUDDY_RANGE.left, BUDDY_RANGE.right),
+          y: clamp(buddyAt.current.y + g.dy, BUDDY_RANGE.up, BUDDY_RANGE.down),
+        });
+      },
+      onPanResponderRelease: (_e, g) => {
+        buddyAt.current = {
+          x: clamp(buddyAt.current.x + g.dx, BUDDY_RANGE.left, BUDDY_RANGE.right),
+          y: clamp(buddyAt.current.y + g.dy, BUDDY_RANGE.up, BUDDY_RANGE.down),
+        };
+      },
+    })
+  ).current;
+  // Every episode in the library, matched on title as the grown-up types.
+  const hits = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return (series || [])
+      .flatMap((s) => s.episodes || [])
+      .filter((v) => (v.title || '').toLowerCase().includes(q))
+      .slice(0, 5);
+  }, [query, series]);
   const bubble = useRef(new Animated.Value(0)).current;
   const toggleMenu = (next) => {
     setMenuOpen(next);
@@ -287,7 +322,11 @@ export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, 
         </View>
         <Text style={styles.mainGreeting}>오늘은 우리 뭐 할까?</Text>
       </View>
-      <View style={styles.buddyAnchor} collapsable={false}>
+      <Animated.View
+        style={[styles.buddyAnchor, { transform: buddyPos.getTranslateTransform() }]}
+        collapsable={false}
+        {...buddyDrag.panHandlers}
+      >
         <StarBuddy onPress={() => toggleMenu(!menuOpen)} />
         {menuOpen ? (
           <Animated.View
@@ -304,6 +343,28 @@ export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, 
           >
             <View style={styles.buddyTail} />
             <Text style={styles.buddyText}>어디로 갈까?</Text>
+            {/* Type a title and the episodes come to you; empty box, and it is just the menu. */}
+            <TextInput
+              style={styles.buddySearch}
+              value={query}
+              onChangeText={setQuery}
+              placeholder="영상 제목 찾기"
+              placeholderTextColor="#c9dcf8"
+              returnKeyType="search"
+            />
+            {query.trim() ? (
+              <View style={styles.buddyHits}>
+                {hits.length ? hits.map((v) => (
+                  <TouchableOpacity
+                    key={v.id}
+                    style={styles.buddyHit}
+                    onPress={() => { toggleMenu(false); setQuery(''); playSound('pop'); onStart(v); }}
+                  >
+                    <Text style={styles.buddyHitText} numberOfLines={1}>{v.title}</Text>
+                  </TouchableOpacity>
+                )) : <Text style={styles.buddyHitEmpty}>그런 영상은 없어요</Text>}
+              </View>
+            ) : null}
             <View style={styles.buddyMenu}>
               {BUDDY_MENU.map((m) => (
                 <TouchableOpacity
@@ -322,7 +383,7 @@ export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, 
             </View>
           </Animated.View>
         ) : null}
-      </View>
+      </Animated.View>
       </View>
 
       <GestureDetector gesture={ring}>
@@ -487,6 +548,9 @@ const styles = StyleSheet.create({
   },
   buddyAnchor: {
     position: 'relative',
+    // Above the card ring on Android, which stacks by elevation rather than zIndex.
+    zIndex: 40,
+    elevation: 24,
   },
   buddyBubble: {
     // Hangs off the star's right side; the anchor keeps it glued there.
@@ -494,11 +558,44 @@ const styles = StyleSheet.create({
     left: 198,
     top: 24,
     zIndex: 40,
+    // Android stacks by elevation, not zIndex: without this the cards swallow the taps.
+    elevation: 24,
     minWidth: 230,
     paddingHorizontal: 18,
     paddingVertical: 14,
     borderRadius: 20,
     backgroundColor: '#609EF5',
+  },
+  buddySearch: {
+    marginTop: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#ffffff',
+  },
+  buddyHits: {
+    marginTop: 8,
+    gap: 6,
+  },
+  buddyHit: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 12,
+    backgroundColor: '#ffffff',
+  },
+  buddyHitText: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#171d31',
+  },
+  buddyHitEmpty: {
+    paddingVertical: 6,
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#dbeafe',
   },
   buddyMenu: {
     marginTop: 10,

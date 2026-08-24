@@ -540,15 +540,15 @@ export function CharacterScreen({ profile, food, fed, onFeed }) {
               </TouchableOpacity>
             </Animated.View>
           </GestureDetector>
-          {/* A star has nothing to wear yet: the wardrobe opens once it has grown into a friend. */}
+          {/* Clothes are the third-stage reward: nothing to wear until the friend is fully grown. */}
           <TouchableOpacity
-            style={[styles.charItemLine, !evolved && styles.charItemOff]}
-            disabled={!evolved}
+            style={[styles.charItemLine, !grownUp && styles.charItemOff]}
+            disabled={!grownUp}
             onPress={() => { playSound('pop'); setCloset(true); }}
           >
             <Image source={CLOSET_ICON} style={styles.charItemArt} resizeMode="contain" />
             <Text style={styles.charItemLabel}>옷장</Text>
-            <Text style={styles.charItemCount}>{evolved ? COSTUMES.length : 0}개</Text>
+            <Text style={styles.charItemCount}>{grownUp ? COSTUMES.length : 0}개</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.charItemHint}>퀴즈를 맞히면 별사탕을 줄 수 있어요 !</Text>
