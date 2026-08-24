@@ -1,11 +1,15 @@
 // What a grown-up reads: the month down the left, the moments the child made on their own in
 // the middle, and what they keep coming back to on the right.
-import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { TextInput } from '../Typography';
 import Svg, { Defs, FeGaussianBlur, Filter, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { INTEREST_ART, MOCK_REPORT, PARENT_WEEKS, STAT_ART } from '../data/report';
 import { playSound } from '../sound';
 import { TEXT_ON_DARK } from '../theme';
+
+// How wide one month page is, so a swipe lands on exactly one.
+const MONTH_PAGE = 180;
 
 // The rim is a gradient, so it has to be drawn — and a drawn rim needs the chip's real size.
 function InterestChip({ label }) {
@@ -75,10 +79,55 @@ function WeekPill({ label, index, on, onPress }) {
   );
 }
 
+// Two-digit multiplication in front of the report: a five-year-old cannot get past it, and a
+// grown-up does not need a password to.
+function ParentGate({ onPass }) {
+  const [sum, setSum] = useState(() => ({ a: 11 + Math.floor(Math.random() * 89), b: 2 + Math.floor(Math.random() * 8) }));
+  const [answer, setAnswer] = useState('');
+  const [wrong, setWrong] = useState(false);
+
+  const submit = () => {
+    if (Number(answer) === sum.a * sum.b) {
+      playSound('pop');
+      onPass();
+      return;
+    }
+    setWrong(true);
+    setAnswer('');
+    setSum({ a: 11 + Math.floor(Math.random() * 89), b: 2 + Math.floor(Math.random() * 8) });
+  };
+
+  return (
+    <View style={styles.gateWrap}>
+      <View style={styles.gateCard}>
+        <Text style={styles.gateTitle}>보호자 확인</Text>
+        <Text style={styles.gateSub}>아래 문제를 풀면 리포트를 볼 수 있어요.</Text>
+        <Text style={styles.gateSum}>{sum.a} × {sum.b} = ?</Text>
+        <TextInput
+          style={styles.gateInput}
+          value={answer}
+          onChangeText={(t) => { setAnswer(t.replace(/[^0-9]/g, '')); setWrong(false); }}
+          keyboardType="number-pad"
+          placeholder="답"
+          placeholderTextColor="#a9b6cf"
+          onSubmitEditing={submit}
+          returnKeyType="done"
+        />
+        {wrong ? <Text style={styles.gateWrong}>다시 한 번 계산해 주세요.</Text> : null}
+        <TouchableOpacity style={styles.gateButton} onPress={submit}>
+          <Text style={styles.gateButtonText}>확인</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
 export function ParentReportScreen({ profile, report, words }) {
+  const [passed, setPassed] = useState(false);
   const [week, setWeek] = useState(0);
   const today = new Date();
   const [month, setMonth] = useState(today.getMonth() + 1);
+  const monthRef = useRef(null);
   // Minutes per day. Real numbers land here once sessions are recorded server-side; the week
   // selector shifts them so the screen behaves like the finished thing.
   const data = MOCK_REPORT[week];
@@ -94,6 +143,8 @@ export function ParentReportScreen({ profile, report, words }) {
   ];
 
 
+  if (!passed) return <ParentGate onPass={() => setPassed(true)} />;
+
   return (
     <View style={styles.parentScroll}>
       <View style={styles.parentBody}>
@@ -101,34 +152,52 @@ export function ParentReportScreen({ profile, report, words }) {
         <Text style={styles.parentTitle}>부모 리포트</Text>
         <Text style={styles.parentSub}>이번 달 아이 학습에 대한 분석을 살펴보세요.</Text>
 
-        <View style={styles.parentMonthWrap}>
+        {/* One month per page: arrows step, and the row can be swiped too. */}
+        <View style={styles.parentMonthRow}>
           <TouchableOpacity
             style={styles.parentMonthNav}
-            onPress={() => { playSound('pop'); setMonth((m) => Math.max(1, m - 1)); }}
+            onPress={() => { if (month <= 1) return; playSound('pop'); setMonth(month - 1); monthRef.current?.scrollTo({ x: (month - 2) * MONTH_PAGE }); }}
           >
-            <Text style={styles.parentMonthArrow}>‹</Text>
+            <Text style={[styles.parentMonthArrow, month <= 1 && styles.parentMonthArrowOff]}>‹</Text>
           </TouchableOpacity>
-          <View style={styles.parentMonth}>
-            <Svg width={132} height={166} style={StyleSheet.absoluteFill}>
-              <Defs>
-                <LinearGradient id="monthGrad" x1="0" y1="0" x2="0.4" y2="1">
-                  <Stop offset="0" stopColor="#609EF5" />
-                  <Stop offset="1" stopColor="#3859B9" />
-                </LinearGradient>
-                {/* Soft edge: the shape is blurred so it melts into the panel. */}
-                <Filter id="monthSoft" x="-25%" y="-25%" width="150%" height="150%">
-                  <FeGaussianBlur stdDeviation="9" />
-                </Filter>
-              </Defs>
-              <Rect x={16} y={16} width={100} height={134} rx={48} fill="url(#monthGrad)" filter="url(#monthSoft)" />
-            </Svg>
-            <Text style={styles.parentMonthYear}>{today.getFullYear()}</Text>
-            <Text style={styles.parentMonthNum}>{month}</Text>
-          </View>
-          {/* Only offered while there is a later month to come back to. */}
+          <ScrollView
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            style={styles.parentMonthScroll}
+            contentContainerStyle={styles.parentMonthWrap}
+            ref={monthRef}
+            onContentSizeChange={() => monthRef.current?.scrollTo({ x: (month - 1) * MONTH_PAGE, animated: false })}
+            onMomentumScrollEnd={(e) => {
+              const next = Math.round(e.nativeEvent.contentOffset.x / MONTH_PAGE) + 1;
+              if (next !== month) { playSound('pop'); setMonth(next); }
+            }}
+          >
+            {Array.from({ length: today.getMonth() + 1 }, (_, i) => i + 1).map((m) => (
+              <View key={m} style={styles.parentMonthPage}>
+                <View style={styles.parentMonth}>
+                  <Svg width={132} height={166} style={StyleSheet.absoluteFill}>
+                    <Defs>
+                      <LinearGradient id={`monthGrad-${m}`} x1="0" y1="0" x2="0.4" y2="1">
+                        <Stop offset="0" stopColor="#609EF5" />
+                        <Stop offset="1" stopColor="#3859B9" />
+                      </LinearGradient>
+                      {/* Soft edge: the shape is blurred so it melts into the panel. */}
+                      <Filter id={`monthSoft-${m}`} x="-25%" y="-25%" width="150%" height="150%">
+                        <FeGaussianBlur stdDeviation="9" />
+                      </Filter>
+                    </Defs>
+                    <Rect x={16} y={16} width={100} height={134} rx={48} fill={`url(#monthGrad-${m})`} filter={`url(#monthSoft-${m})`} />
+                  </Svg>
+                  <Text style={styles.parentMonthYear}>{today.getFullYear()}</Text>
+                  <Text style={styles.parentMonthNum}>{m}</Text>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
           <TouchableOpacity
             style={styles.parentMonthNav}
-            onPress={() => { playSound('pop'); setMonth((m) => Math.min(today.getMonth() + 1, m + 1)); }}
+            onPress={() => { if (month >= today.getMonth() + 1) return; playSound('pop'); setMonth(month + 1); monthRef.current?.scrollTo({ x: month * MONTH_PAGE }); }}
           >
             <Text style={[styles.parentMonthArrow, month >= today.getMonth() + 1 && styles.parentMonthArrowOff]}>›</Text>
           </TouchableOpacity>
@@ -199,6 +268,62 @@ export function ParentReportScreen({ profile, report, words }) {
 }
 
 const styles = StyleSheet.create({
+  gateWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gateCard: {
+    width: 420,
+    alignItems: 'center',
+    gap: 10,
+    padding: 28,
+    borderRadius: 26,
+    backgroundColor: '#D7EAFF',
+  },
+  gateTitle: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: TEXT_ON_DARK,
+  },
+  gateSub: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#609EF5',
+  },
+  gateSum: {
+    marginTop: 6,
+    fontSize: 34,
+    fontWeight: '900',
+    color: '#3859B9',
+  },
+  gateInput: {
+    width: 200,
+    paddingVertical: 12,
+    borderRadius: 16,
+    backgroundColor: '#ffffff',
+    textAlign: 'center',
+    fontSize: 22,
+    fontWeight: '900',
+    color: TEXT_ON_DARK,
+  },
+  gateWrong: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#d9534f',
+  },
+  gateButton: {
+    marginTop: 4,
+    paddingVertical: 12,
+    paddingHorizontal: 42,
+    borderRadius: 999,
+    backgroundColor: '#5891EA',
+  },
+  gateButtonText: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#ffffff',
+  },
   deltaDown: {
     color: '#d9534f',
   },
@@ -272,8 +397,6 @@ const styles = StyleSheet.create({
   },
   parentChips: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    rowGap: 10,
     columnGap: 10,
     paddingTop: 6,
     paddingBottom: 6,
@@ -285,6 +408,7 @@ const styles = StyleSheet.create({
   parentColRight: {
     flex: 1.1,
     gap: 8,
+    justifyContent: 'space-between',
   },
   parentColWide: {
     flex: 1,
@@ -339,23 +463,28 @@ const styles = StyleSheet.create({
   parentMonthRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 2,
+    justifyContent: 'center',
+    alignSelf: 'stretch',
   },
   parentMonthWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'stretch',
+  },
+  parentMonthScroll: {
+    width: 180,
+    flexGrow: 0,
+  },
+  parentMonthPage: {
+    width: 180,
+    alignItems: 'center',
+  },
+  parentMonthYearOff: {
+    color: '#8fa6c9',
   },
   parentMonthYear: {
     fontSize: 15,
     fontWeight: '800',
     color: '#dbeafe',
-  },
-  parentMonthYearOff: {
-    color: '#a9b6cf',
   },
   parentScroll: {
     flex: 1,
