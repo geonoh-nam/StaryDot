@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
   },
   logoWord: {
     fontFamily: 'BnviitLasik',
-    fontWeight: '900',
     letterSpacing: -0.5,
   },
 });

@@ -8,9 +8,6 @@ import { useFonts } from 'expo-font';
 
 const AGGRO_FONTS = {
   BnviitLasik: require('./assets/fonts/BnviitLasik.ttf'),
-  Poppins: require('@expo-google-fonts/poppins/400Regular/Poppins_400Regular.ttf'),
-  PoppinsSemiBold: require('@expo-google-fonts/poppins/600SemiBold/Poppins_600SemiBold.ttf'),
-  PoppinsBold: require('@expo-google-fonts/poppins/700Bold/Poppins_700Bold.ttf'),
   Pretendard: require('./assets/fonts/Pretendard-Regular.otf'),
   PretendardSemiBold: require('./assets/fonts/Pretendard-SemiBold.otf'),
   PretendardBold: require('./assets/fonts/Pretendard-Bold.otf'),
@@ -24,40 +21,24 @@ export function useAggroFonts() {
   return loaded || !!error;
 }
 
-// Two families, picked per string: Korean text gets Pretendard, Latin-only text gets Poppins.
-// React Native applies one font per Text and does not fall back per script, so the choice has to
-// be made here — a mixed string keeps Pretendard, whose Latin is the better compromise.
+// One family for everything the app reads — Korean and Latin alike. Only the wordmark passes its
+// own fontFamily, and an explicit family always wins below.
 const BY_WEIGHT = {
-  ko: {
-    100: 'Pretendard', 200: 'Pretendard', 300: 'Pretendard',
-    400: 'Pretendard', normal: 'Pretendard',
-    500: 'PretendardSemiBold', 600: 'PretendardSemiBold',
-    700: 'PretendardBold', 800: 'PretendardBold', 900: 'PretendardBold', bold: 'PretendardBold',
-  },
-  en: {
-    100: 'Poppins', 200: 'Poppins', 300: 'Poppins',
-    400: 'Poppins', normal: 'Poppins',
-    500: 'PoppinsSemiBold', 600: 'PoppinsSemiBold',
-    700: 'PoppinsBold', 800: 'PoppinsBold', 900: 'PoppinsBold', bold: 'PoppinsBold',
-  },
+  100: 'Pretendard', 200: 'Pretendard', 300: 'Pretendard',
+  400: 'Pretendard', normal: 'Pretendard',
+  500: 'PretendardSemiBold', 600: 'PretendardSemiBold',
+  700: 'PretendardBold', 800: 'PretendardBold', 900: 'PretendardBold', bold: 'PretendardBold',
 };
 
-const HANGUL = /[\u3131-\u318E\uAC00-\uD7A3]/;
-
-function scriptOf(children) {
-  const text = Array.isArray(children) ? children.join('') : String(children ?? '');
-  return HANGUL.test(text) ? 'ko' : 'en';
-}
-
-function aggroStyle(style, script = 'ko') {
+function aggroStyle(style) {
   const flat = StyleSheet.flatten(style) || {};
   const { fontWeight, fontFamily, ...rest } = flat;
   // An explicit fontFamily wins — that is how the wordmark keeps its display face.
-  return { ...rest, fontFamily: fontFamily || BY_WEIGHT[script][fontWeight] || BY_WEIGHT[script][400] };
+  return { ...rest, fontFamily: fontFamily || BY_WEIGHT[fontWeight] || BY_WEIGHT[400] };
 }
 
 export function Text({ style, children, ...rest }) {
-  return <RNText {...rest} style={aggroStyle(style, scriptOf(children))}>{children}</RNText>;
+  return <RNText {...rest} style={aggroStyle(style)}>{children}</RNText>;
 }
 
 export function TextInput({ style, value, placeholder, ...rest }) {
@@ -66,7 +47,7 @@ export function TextInput({ style, value, placeholder, ...rest }) {
       {...rest}
       value={value}
       placeholder={placeholder}
-      style={aggroStyle(style, scriptOf(value || placeholder))}
+      style={aggroStyle(style)}
     />
   );
 }

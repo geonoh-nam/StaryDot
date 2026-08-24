@@ -1,8 +1,8 @@
 // What a grown-up reads: the month down the left, the moments the child made on their own in
 // the middle, and what they keep coming back to on the right.
-import React, { useRef, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import React, { useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Svg, { Defs, FeGaussianBlur, Filter, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { INTEREST_ART, MOCK_REPORT, PARENT_WEEKS, STAT_ART } from '../data/report';
 import { playSound } from '../sound';
 import { TEXT_ON_DARK } from '../theme';
@@ -39,11 +39,50 @@ function InterestChip({ label }) {
   );
 }
 
+// The picked week wears a gradient fill inside a gradient rim; both are drawn, since a React
+// Native border takes one flat colour — and a drawn rim needs the pill's real size.
+function WeekPill({ label, index, on, onPress }) {
+  const [box, setBox] = useState({ width: 0, height: 0 });
+  return (
+    <TouchableOpacity
+      style={[styles.parentWeek, on && styles.parentWeekOn]}
+      onPress={onPress}
+      onLayout={(e) => setBox(e.nativeEvent.layout)}
+    >
+      {on && box.width ? (
+        <Svg width={box.width} height={box.height} style={StyleSheet.absoluteFill} pointerEvents="none">
+          <Defs>
+            <LinearGradient id={`weekFill-${index}`} x1="0" y1="0" x2="1" y2="0.6">
+              <Stop offset="0" stopColor="#609EF5" />
+              <Stop offset="1" stopColor="#3859B9" />
+            </LinearGradient>
+            <LinearGradient id={`weekRim-${index}`} x1="0" y1="0" x2="1" y2="0.6">
+              <Stop offset="0" stopColor="#BADAFF" />
+              <Stop offset="1" stopColor="#3859B9" />
+            </LinearGradient>
+          </Defs>
+          <Rect x={0} y={0} width={box.width} height={box.height} rx={box.height / 2} fill={`url(#weekFill-${index})`} />
+          <Rect
+            x={1.5}
+            y={1.5}
+            width={box.width - 3}
+            height={box.height - 3}
+            rx={(box.height - 3) / 2}
+            fill="none"
+            stroke={`url(#weekRim-${index})`}
+            strokeWidth={3}
+          />
+        </Svg>
+      ) : null}
+      <Text style={[styles.parentWeekText, on && styles.parentWeekTextOn]}>{label}</Text>
+    </TouchableOpacity>
+  );
+}
+
 export function ParentReportScreen({ profile, report, words }) {
   const [week, setWeek] = useState(0);
   const today = new Date();
   const [month, setMonth] = useState(today.getMonth() + 1);
-  const monthRef = useRef(null);
   // Minutes per day. Real numbers land here once sessions are recorded server-side; the week
   // selector shifts them so the screen behaves like the finished thing.
   const data = MOCK_REPORT[week];
@@ -67,49 +106,40 @@ export function ParentReportScreen({ profile, report, words }) {
         <Text style={styles.parentSub}>이번 달 아이 학습에 대한 분석을 살펴보세요.</Text>
 
         <View style={styles.parentMonthWrap}>
-          <TouchableOpacity style={styles.parentMonthNav} onPress={() => setMonth((m) => Math.max(1, m - 1))}>
+          <TouchableOpacity
+            style={styles.parentMonthNav}
+            onPress={() => { playSound('pop'); setMonth((m) => Math.max(1, m - 1)); }}
+          >
             <Text style={styles.parentMonthArrow}>‹</Text>
           </TouchableOpacity>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.parentMonthRow}
-            ref={monthRef}
-            onLayout={() => monthRef.current?.scrollToEnd({ animated: false })}
+          <View style={styles.parentMonth}>
+            <Svg width={170} height={210} style={StyleSheet.absoluteFill}>
+              <Defs>
+                <LinearGradient id="monthGrad" x1="0" y1="0" x2="0.4" y2="1">
+                  <Stop offset="0" stopColor="#609EF5" />
+                  <Stop offset="1" stopColor="#3859B9" />
+                </LinearGradient>
+                {/* Soft edge: the shape is blurred so it melts into the panel. */}
+                <Filter id="monthSoft" x="-25%" y="-25%" width="150%" height="150%">
+                  <FeGaussianBlur stdDeviation="9" />
+                </Filter>
+              </Defs>
+              <Rect x={20} y={20} width={130} height={170} rx={62} fill="url(#monthGrad)" filter="url(#monthSoft)" />
+            </Svg>
+            <Text style={styles.parentMonthYear}>{today.getFullYear()}</Text>
+            <Text style={styles.parentMonthNum}>{month}</Text>
+          </View>
+          {/* Only offered while there is a later month to come back to. */}
+          <TouchableOpacity
+            style={styles.parentMonthNav}
+            onPress={() => { playSound('pop'); setMonth((m) => Math.min(today.getMonth() + 1, m + 1)); }}
           >
-          {Array.from({ length: today.getMonth() + 1 }, (_, i) => i + 1).map((m) => (
-            <TouchableOpacity key={m} onPress={() => { playSound('pop'); setMonth(m); }}>
-              <View style={[styles.parentMonth, month !== m && styles.parentMonthOff]}>
-                {month === m ? (
-                  <Svg style={StyleSheet.absoluteFill}>
-                    <Defs>
-                      <LinearGradient id="monthGrad" x1="0" y1="0" x2="0.6" y2="1">
-                        <Stop offset="0" stopColor="#7db4ff" />
-                        <Stop offset="1" stopColor="#2f62c4" />
-                      </LinearGradient>
-                    </Defs>
-                    <Rect x="0" y="0" width="100%" height="100%" rx={42} fill="url(#monthGrad)" />
-                  </Svg>
-                ) : null}
-                <Text style={[styles.parentMonthYear, month !== m && styles.parentMonthYearOff]}>{today.getFullYear()}</Text>
-                <Text style={[styles.parentMonthNum, month !== m && styles.parentMonthNumOff]}>{m}</Text>
-              </View>
-            </TouchableOpacity>
-            ))}
-          </ScrollView>
-          <TouchableOpacity style={styles.parentMonthNav} onPress={() => setMonth((m) => Math.min(today.getMonth() + 1, m + 1))}>
-            <Text style={styles.parentMonthArrow}>›</Text>
+            <Text style={[styles.parentMonthArrow, month >= today.getMonth() + 1 && styles.parentMonthArrowOff]}>›</Text>
           </TouchableOpacity>
         </View>
 
         {PARENT_WEEKS.map((label, i) => (
-          <TouchableOpacity
-            key={label}
-            style={[styles.parentWeek, week === i && styles.parentWeekOn]}
-            onPress={() => setWeek(i)}
-          >
-            <Text style={[styles.parentWeekText, week === i && styles.parentWeekTextOn]}>{month}월 {label}</Text>
-          </TouchableOpacity>
+          <WeekPill key={label} label={`${month}월 ${label}`} index={i} on={week === i} onPress={() => { playSound('pop'); setWeek(i); }} />
         ))}
       </View>
 
@@ -120,6 +150,15 @@ export function ParentReportScreen({ profile, report, words }) {
         <Text style={styles.parentHint}>이번 주 {childName}이가 <Text style={styles.parentHintOn}>스스로 해낸 순간들</Text>을 모아봤어요</Text>
         {moments.map((mo) => (
           <View key={mo.tag} style={styles.momentCard}>
+            <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+              <Defs>
+                <LinearGradient id={`momentGrad-${mo.tag}`} x1="0" y1="0" x2="1" y2="0.4">
+                  <Stop offset="0" stopColor="#ffffff" />
+                  <Stop offset="1" stopColor="#cfe2ff" />
+                </LinearGradient>
+              </Defs>
+              <Rect x="0" y="0" width="100%" height="100%" fill={`url(#momentGrad-${mo.tag})`} />
+            </Svg>
             <Image source={mo.art} style={styles.momentArt} resizeMode="contain" />
             <Text style={styles.momentTag}>{mo.tag}</Text>
             <Text style={styles.momentHead}>
@@ -136,7 +175,7 @@ export function ParentReportScreen({ profile, report, words }) {
         <View style={styles.parentTag}><Text style={styles.parentTagStar}>★</Text><Text style={styles.parentTagText}>숨은 관심사</Text></View>
         <Text style={styles.parentHint}>최근 2주 시청기록에서 반복적으로 등장한 주제 중심으로 3개 보여드려요</Text>
         <View style={styles.parentChips}>
-          {data.interests.map((t) => (
+          {MOCK_REPORT[0].interests.map((t) => (
             <InterestChip key={t} label={t} />
           ))}
         </View>
@@ -190,7 +229,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 14,
     borderRadius: 18,
-    backgroundColor: '#e4efff',
+    backgroundColor: '#eef5ff',
     overflow: 'hidden',
   },
   momentHead: {
@@ -220,18 +259,18 @@ const styles = StyleSheet.create({
   parentChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 20,
-    paddingVertical: 13,
+    gap: 12,
+    paddingHorizontal: 26,
+    paddingVertical: 18,
     borderRadius: 999,
     backgroundColor: '#ffffff',
   },
   parentChipArt: {
-    width: 32,
-    height: 32,
+    width: 42,
+    height: 42,
   },
   parentChipText: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: '900',
     color: '#171d31',
   },
@@ -248,11 +287,11 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   parentColRight: {
-    flex: 1,
+    flex: 1.1,
     gap: 8,
   },
   parentColWide: {
-    flex: 1.15,
+    flex: 1,
     gap: 8,
   },
   parentDivider: {
@@ -273,25 +312,25 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   parentMonth: {
-    width: 84,
-    height: 100,
-    borderRadius: 42,
-    overflow: 'hidden',
-    opacity: 0.92,
+    width: 170,
+    height: 210,
     alignItems: 'center',
     justifyContent: 'center',
   },
   parentMonthArrow: {
-    paddingHorizontal: 6,
-    fontSize: 26,
+    paddingHorizontal: 10,
+    fontSize: 34,
     fontWeight: '900',
     color: '#5b6b8c',
+  },
+  parentMonthArrowOff: {
+    opacity: 0.25,
   },
   parentMonthNav: {
     paddingHorizontal: 2,
   },
   parentMonthNum: {
-    fontSize: 32,
+    fontSize: 46,
     fontWeight: '900',
     color: '#ffffff',
   },
@@ -311,10 +350,12 @@ const styles = StyleSheet.create({
   parentMonthWrap: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     alignSelf: 'stretch',
+    paddingVertical: 10,
   },
   parentMonthYear: {
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '800',
     color: '#dbeafe',
   },
@@ -400,21 +441,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 26,
     overflow: 'hidden',
-    // Solid base under the gradient: without it a dropped fill leaves an invisible button.
-    backgroundColor: '#eef3fd',
+    backgroundColor: 'rgba(0,0,0,0.1)',
   },
   parentWeekOn: {
-    backgroundColor: '#ffffff',
-    borderWidth: 2,
-    borderColor: '#609EF5',
+    backgroundColor: 'transparent',
   },
   parentWeekText: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#8a97b1',
+    color: 'rgba(0,0,0,0.5)',
     textAlign: 'center',
   },
   parentWeekTextOn: {
-    color: '#171d31',
+    color: '#ffffff',
   },
 });
