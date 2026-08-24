@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Rea, { makeMutable, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from 'react-native-reanimated';
-import Svg, { Circle, Defs, LinearGradient, RadialGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Circle, Defs, Ellipse, LinearGradient, RadialGradient, Rect, Stop } from 'react-native-svg';
 import {
   CANDY_ICON, CHARACTER_IMAGES, CLOSET_ICON, COSTUMES, EVOLUTIONS, FULL_BAR, GROWTH_CHECKPOINTS,
   GROWTH_PER_CANDY, SCENES, STAGE1_ART, STAR_FIELD,
@@ -126,6 +126,12 @@ const StarStage = React.memo(function StarStage({ art, ready, evolved, feedTick 
     transform: [{ scale: 0.5 + burst.value * 1.6 }],
   }));
 
+  // Floating up lifts the character off its shadow, so the shadow tightens as it rises.
+  const shadowStyle = useAnimatedStyle(() => ({
+    opacity: (0.85 - idle.value * 0.2) * (1 - flash.value),
+    transform: [{ scaleX: 1 - idle.value * 0.09 }, { scaleY: 1 - idle.value * 0.12 }],
+  }));
+
   const artStyle = useAnimatedStyle(() => ({
     transform: [
       { translateY: -10 * idle.value - 34 * hop.value },
@@ -155,6 +161,19 @@ const StarStage = React.memo(function StarStage({ art, ready, evolved, feedTick 
       {SPARKS.map((sp, i) => (
         <Spark key={i} spark={sp} burst={burst} />
       ))}
+      {/* The ground under the character: a blurred ellipse that shrinks as it floats up. */}
+      <Rea.View pointerEvents="none" style={[styles.starShadow, shadowStyle]}>
+        <Svg width={240} height={70}>
+          <Defs>
+            <RadialGradient id="starShade" cx="50%" cy="50%" r="50%">
+              <Stop offset="0" stopColor="#8fbcff" stopOpacity="0.55" />
+              <Stop offset="0.6" stopColor="#a9ccff" stopOpacity="0.28" />
+              <Stop offset="1" stopColor="#cfe4ff" stopOpacity="0" />
+            </RadialGradient>
+          </Defs>
+          <Ellipse cx={120} cy={35} rx={118} ry={30} fill="url(#starShade)" />
+        </Svg>
+      </Rea.View>
       <Rea.View style={artStyle}>
         <Image source={art} style={styles.starArt} resizeMode="contain" />
       </Rea.View>
@@ -964,6 +983,12 @@ const styles = StyleSheet.create({
   starArt: {
     width: 260,
     height: 260,
+  },
+  starShadow: {
+    position: 'absolute',
+    bottom: -18,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   strokeHeart: {
     position: 'absolute',

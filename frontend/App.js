@@ -460,6 +460,17 @@ export default function App() {
               fed={fedCount}
               onFeed={() => setFedCount((n) => n + 1)}
               onEditProfile={() => setScreen('profile')}
+              onWipe={() => {
+                AsyncStorage.removeItem(STORE_KEY).catch(() => {});
+                setChildProfile(DEFAULT_PROFILE);
+                setGuardianSettings(DEFAULT_SETTINGS);
+                setWords([]);
+                setFedCount(0);
+                setQuizCorrectCount(__DEV__ ? 1000 : 0);
+                setOnboarded(false);
+                setIntroDone(false);
+                setScreen('intro');
+              }}
               onStart={(v) => { setSelectedVideo(v || null); startWatching(v); }}
             />
           )}

@@ -508,7 +508,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     rowGap: 4,
     columnGap: 10,
-    paddingLeft: 4,
+    paddingLeft: 26,
   },
   parentStatHead: {
     flexDirection: 'row',

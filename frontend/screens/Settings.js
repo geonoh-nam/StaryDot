@@ -1,12 +1,12 @@
 // Everything a grown-up can change after setup, and the one button that wipes it all.
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
 import { ageLabel } from '../age';
 import { DailyLimitPicker } from './Onboarding';
 
 // The grown-ups' screen: what the child is allowed to do, and for how long.
-export function SettingsScreen({ profile, settings, onChange, onEditProfile }) {
+export function SettingsScreen({ profile, settings, onChange, onEditProfile, onWipe }) {
   const set = (patch) => onChange({ ...settings, ...patch });
   const act = (key) => set({ activities: { ...settings.activities, [key]: !settings.activities[key] } });
   return (
@@ -62,11 +62,84 @@ export function SettingsScreen({ profile, settings, onChange, onEditProfile }) {
           </View>
         </TouchableOpacity>
       </View>
+
+      <View style={styles.settingsCard}>
+        <Text style={styles.settingsCardTitle}>계정 정보</Text>
+        <TouchableOpacity style={styles.settingsRow} onPress={onEditProfile}>
+          <View style={styles.settingsRowText}>
+            <Text style={styles.settingsLabel}>프로필 추가</Text>
+            <Text style={styles.settingsHint}>아이를 한 명 더 등록해요</Text>
+          </View>
+          <Text style={styles.settingsChevron}>›</Text>
+        </TouchableOpacity>
+        {/* Wipes the profile, the words and the growth — the one button there is no way back from. */}
+        <TouchableOpacity
+          style={styles.settingsRow}
+          onPress={() => Alert.alert('계정 삭제', '저장된 프로필과 활동 기록이 모두 지워져요.', [
+            { text: '취소', style: 'cancel' },
+            { text: '삭제', style: 'destructive', onPress: onWipe },
+          ])}
+        >
+          <View style={styles.settingsRowText}>
+            <Text style={[styles.settingsLabel, styles.settingsDanger]}>계정 삭제</Text>
+            <Text style={styles.settingsHint}>프로필과 활동 기록을 모두 지워요</Text>
+          </View>
+          <Text style={[styles.settingsChevron, styles.settingsDanger]}>›</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.settingsCard}>
+        <Text style={styles.settingsCardTitle}>언어 설정</Text>
+        <View style={styles.langRow}>
+          {[['ko', '한국어'], ['en', 'English']].map(([key, label]) => (
+            <TouchableOpacity
+              key={key}
+              style={[styles.langChip, (settings.language || 'ko') === key && styles.langChipOn]}
+              onPress={() => set({ language: key })}
+            >
+              <Text style={[styles.langChipText, (settings.language || 'ko') === key && styles.langChipTextOn]}>{label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={styles.settingsHint}>지금은 한국어만 준비되어 있어요.</Text>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  settingsChevron: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#a9b6cf',
+  },
+  settingsDanger: {
+    color: '#d9534f',
+  },
+  langRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  langChip: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 999,
+    backgroundColor: '#ffffff',
+    borderWidth: 2,
+    borderColor: '#e3e9f7',
+  },
+  langChipOn: {
+    borderColor: '#609EF5',
+    backgroundColor: '#eaf3ff',
+  },
+  langChipText: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#8a97b1',
+  },
+  langChipTextOn: {
+    color: '#3859B9',
+  },
   settingsBody: {
     gap: 14,
     paddingBottom: 24,

@@ -41,7 +41,7 @@ function WordsScreen({ words }) {
   );
 }
 
-export function HomeScreen({ characterImage, onStart, profile, tab = 'library', onTab, onBack, series, settings, onSettings, onEditProfile, words = [], feed = 0, fed = 0, onFeed, report = {}, onJumpMoment }) {
+export function HomeScreen({ characterImage, onStart, profile, tab = 'library', onTab, onBack, series, settings, onSettings, onEditProfile, onWipe, words = [], feed = 0, fed = 0, onFeed, report = {}, onJumpMoment }) {
   const [focus, setFocus] = useState(0);
   const [previewQuiz, setPreviewQuiz] = useState(null);
   const [previewPick, setPreviewPick] = useState(null);
@@ -84,7 +84,7 @@ export function HomeScreen({ characterImage, onStart, profile, tab = 'library', 
           ) : tab === 'words' ? (
             <WordsScreen words={words} />
           ) : tab === 'settings' ? (
-            <SettingsScreen profile={profile} settings={settings} onChange={onSettings} onEditProfile={onEditProfile} />
+            <SettingsScreen profile={profile} settings={settings} onChange={onSettings} onEditProfile={onEditProfile} onWipe={onWipe} />
           ) : (
             <View style={styles.tabPlaceholder}>
               <Text style={styles.mainGreetingSub}>{(TABS.find((t) => t.key === tab) || {}).label} 화면은 준비 중이에요</Text>
