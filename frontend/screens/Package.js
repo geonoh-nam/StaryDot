@@ -67,7 +67,7 @@ export function PackageScreen({ profile, videos = [], onBack, onStart }) {
 
         {/* Drawn last and lifted above everything: the bubble is never covered by the card. */}
         <View style={styles.bubbleWrap} pointerEvents="none">
-          <Bubble>{ask}</Bubble>
+          <Bubble textStyle={styles.askText}>{ask}</Bubble>
         </View>
       </View>
 
@@ -75,7 +75,7 @@ export function PackageScreen({ profile, videos = [], onBack, onStart }) {
         {/* Sending the set back is the child's one real choice here, so it sits beside Start. */}
         {/* Back to the friends, for a child who picked the wrong one. */}
         <Pressable onPress={() => { playSound('pop'); onBack && onBack(); }}>
-          <Image source={BACK_ICON} style={styles.knob} resizeMode="contain" />
+          <Image source={BACK_ICON} style={[styles.knob, styles.knobBig]} resizeMode="contain" />
         </Pressable>
 
         <Pressable onPress={() => { playSound('pop'); onStart && onStart(); }}>
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   headRow: {
     // Straddles the card's top edge: head and arms clear of it, legs behind the stills.
     position: 'absolute',
-    left: 26,
+    left: 60,
     top: -108,
   },
   buddy: {
@@ -110,12 +110,17 @@ const styles = StyleSheet.create({
   },
   bubbleWrap: {
     position: 'absolute',
-    top: -58,
+    top: -12,
     left: 236,
     right: 120,
     alignItems: 'stretch',
     zIndex: 9,
     elevation: 9,
+  },
+  askText: {
+    // Nudged off the centre of the box: the drawn bubble's round part sits low and left of it.
+    marginTop: 10,
+    marginRight: 180,
   },
   // The tail that points back at the buddy, drawn as a rotated square tucked under the bubble.
   card: {

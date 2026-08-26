@@ -86,7 +86,9 @@ export function OnboardSlides({ onNext }) {
               opacity: fades[i],
               transform: [
                 { translateX: slides[i].interpolate({ inputRange: [-1, 0, 1], outputRange: [-(win.width - 2), 0, win.width - 2] }) },
-                { scale: drifts[i].interpolate({ inputRange: [0, 1], outputRange: [1, 1.035] }) },
+                // The sliding pair holds still: a zoom running under a slide reads as the screen
+                // swelling mid-move.
+                { scale: drifts[i].interpolate({ inputRange: [0, 1], outputRange: [1, i === SLIDE_IN || i === SLIDE_IN - 1 ? 1 : 1.035] }) },
               ],
             },
           ]}

@@ -1,7 +1,7 @@
 // Choosing what to watch: the ring of series cards on the main screen, the episode grid inside
 // one series, and the still that plays it.
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, Image, PanResponder, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { Animated, Easing, Image, PanResponder, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { SERIES_ART, THUMBS } from '../data/library';
 import { playSound } from '../sound';
@@ -102,7 +102,14 @@ const ringFacet = () => {
     opacity: RING_SAMPLES.map((d) => (Math.abs(d) > 2.5 ? 0 : 1)),
   };
 };
-function RingCard({ video, index, offset, step, total, centerX, focused, onPress }) {
+// How many cards away this one sits, going the short way round the ring. Counted in cards, so the
+// pair either side of the wrap are neighbours here too.
+function ringGap(index, focus, count) {
+  const raw = ((index - focus) % count + count) % count;
+  return Math.min(raw, count - raw);
+}
+
+function RingCard({ video, index, offset, step, total, count, centerX, focused, focus, onPress }) {
   const facet = ringFacet();
   const style = useAnimatedStyle(() => {
     const half = total / 2;
@@ -122,7 +129,15 @@ function RingCard({ video, index, offset, step, total, centerX, focused, onPress
   return (
     <Rea.View
       pointerEvents={focused ? 'auto' : 'none'}
-      style={[styles.ringCard, { zIndex: focused ? 20 : 1, elevation: focused ? 12 : 0 }, style]}
+      // Nearer the middle means nearer the front. The distance has to wrap the same way the
+      // position does, or the card where the ring closes jumps to the back.
+      style={[
+        styles.ringCard,
+        // Android stacks by elevation, not zIndex, so both carry the same number: the middle card
+        // sits highest, its two neighbours next, the pair beyond them lowest.
+        { zIndex: 20 - ringGap(index, focus, count), elevation: 20 - ringGap(index, focus, count) },
+        style,
+      ]}
     >
       <VideoCard video={video} onPress={onPress} />
     </Rea.View>
@@ -229,10 +244,9 @@ function StarBuddy({ onPress }) {
   );
 }
 
-export function MainScreen({ series, profile, onStart, onOpenVideo, onMenu, onJump, onReset, contentUp }) {
+export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, contentUp }) {
   const win = useWindowDimensions();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [query, setQuery] = useState('');
   // The star can be dragged, but only around the greeting: below it the cards begin.
   const buddyPos = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   // Where the star was left, so a new drag continues from there rather than snapping back.
@@ -302,15 +316,6 @@ export function MainScreen({ series, profile, onStart, onOpenVideo, onMenu, onJu
       },
     })
   ).current;
-  // Every episode in the library, matched on title as the grown-up types.
-  const hits = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return [];
-    return (series || [])
-      .flatMap((s) => s.episodes || [])
-      .filter((v) => (v.title || '').toLowerCase().includes(q))
-      .slice(0, 5);
-  }, [query, series]);
   const bubble = useRef(new Animated.Value(0)).current;
   const toggleMenu = (next) => {
     setMenuOpen(next);
@@ -397,28 +402,6 @@ export function MainScreen({ series, profile, onStart, onOpenVideo, onMenu, onJu
           >
             <View style={styles.buddyTail} />
             <Text style={styles.buddyText}>어디로 갈까?</Text>
-            {/* Type a title and the episodes come to you; empty box, and it is just the menu. */}
-            <TextInput
-              style={styles.buddySearch}
-              value={query}
-              onChangeText={setQuery}
-              placeholder="영상 제목 찾기"
-              placeholderTextColor="#c9dcf8"
-              returnKeyType="search"
-            />
-            {query.trim() ? (
-              <View style={styles.buddyHits}>
-                {hits.length ? hits.map((v) => (
-                  <TouchableOpacity
-                    key={v.id}
-                    style={styles.buddyHit}
-                    onPress={() => { toggleMenu(false); setQuery(''); playSound('pop'); (onOpenVideo || onStart)(v); }}
-                  >
-                    <Text style={styles.buddyHitText} numberOfLines={1}>{v.title}</Text>
-                  </TouchableOpacity>
-                )) : <Text style={styles.buddyHitEmpty}>그런 영상은 없어요</Text>}
-              </View>
-            ) : null}
             <View style={styles.buddyMenu}>
               {BUDDY_MENU.map((m) => (
                 <TouchableOpacity
@@ -450,8 +433,10 @@ export function MainScreen({ series, profile, onStart, onOpenVideo, onMenu, onJu
               offset={offset}
               step={step}
               total={total}
+              count={base.length}
               centerX={(win.width - CARD_W) / 2}
               focused={i === focus}
+              focus={focus}
               onPress={onStart}
             />
           ))}
@@ -620,44 +605,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#609EF5',
   },
-  buddySearch: {
-    marginTop: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.18)',
-    fontSize: 15,
-    fontWeight: '800',
-    color: '#ffffff',
-  },
-  buddyHits: {
-    marginTop: 8,
-    gap: 6,
-  },
-  buddyHit: {
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 12,
-    backgroundColor: '#ffffff',
-  },
-  buddyHitText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#171d31',
-  },
-  buddyHitEmpty: {
-    paddingVertical: 6,
-    fontSize: 13,
-    fontWeight: '800',
-    color: '#dbeafe',
-  },
   buddyMenu: {
     marginTop: 10,
     gap: 8,
   },
   buddyMenuArt: {
-    width: 18,
-    height: 18,
+    // Sized and nudged to sit where the glyphs beside it sit — its PNG has less air than they do.
+    marginLeft: -3,
+    width: 16,
+    height: 16,
   },
   buddyMenuIcon: {
     fontSize: 16,

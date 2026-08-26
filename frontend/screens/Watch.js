@@ -602,7 +602,8 @@ const styles = StyleSheet.create({
   },
   quizPromptRow: {
     position: 'absolute',
-    top: -74,
+    // Sits lower, close enough to the card that the pair reads as one block.
+    top: -52,
     left: 0,
     right: 0,
     flexDirection: 'row',
@@ -613,16 +614,17 @@ const styles = StyleSheet.create({
   quizBuddy: {
     width: 130,
     height: 130,
-    // Leans in over the bubble's left edge, tucked a little further in.
-    marginRight: -66,
-    marginBottom: 34,
+    // Overlaps the bubble's left edge so buddy and bubble touch.
+    marginRight: -40,
+    marginBottom: 20,
     zIndex: 4,
   },
   questionBox: {
     minWidth: 460,
     minHeight: 84,
-    paddingLeft: 74,
-    paddingRight: 44,
+    // Even padding on both sides, so the words land in the middle of the bubble.
+    paddingLeft: 58,
+    paddingRight: 58,
     borderRadius: 999,
     overflow: 'hidden',
     backgroundColor: '#dbeafe',

@@ -7,10 +7,12 @@ import { Text } from '../Typography';
 // the artwork is nine-patched by hand: the padding below leaves room for it.
 const ART = require('../assets/scenes/bubble.png');
 
-export function Bubble({ children, style, textStyle }) {
+// `art` swaps in a different bubble picture. A tailless one needs no room left below it, so the
+// padding evens out when one is passed.
+export function Bubble({ children, style, textStyle, art }) {
   return (
-    <View style={[styles.bubble, style]}>
-      <Image source={ART} style={StyleSheet.absoluteFill} resizeMode="stretch" pointerEvents="none" />
+    <View style={[styles.bubble, art && styles.noTail, style]}>
+      <Image source={art || ART} style={StyleSheet.absoluteFill} resizeMode="stretch" pointerEvents="none" />
       <Text style={[styles.text, textStyle]} numberOfLines={1}>{children}</Text>
     </View>
   );
@@ -19,15 +21,20 @@ export function Bubble({ children, style, textStyle }) {
 const styles = StyleSheet.create({
   bubble: {
     paddingHorizontal: 54,
-    // The tail lives in the lower part of the artwork, so the words sit above it.
-    paddingTop: 20,
-    paddingBottom: 30,
+    // The tail lives in the lower part of the artwork, so the words sit above it. The two paddings
+    // differ by exactly the tail's height, which is what leaves the line centred in the round part.
+    paddingTop: 8,
+    paddingBottom: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  noTail: {
+    paddingVertical: 20,
+  },
   text: {
-    fontSize: 25,
-    fontWeight: '900',
+    fontSize: 34,
+    fontFamily: 'PretendardExtraBold',
+    textAlign: 'center',
     color: '#171d31',
   },
 });

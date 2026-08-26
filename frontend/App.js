@@ -33,7 +33,6 @@ import { MainScreen, VideoDetailScreen } from './screens/Browse';
 import { OFFLINE_ACTIVITIES } from './data/activities';
 import { ReportScreen } from './screens/Report';
 import ActivityStage from './activities/ActivityStage';
-import IntroScreen from './Intro';
 import * as ImagePicker from 'expo-image-picker';
 import { DebugJump } from './ui/DebugJump';
 
@@ -138,8 +137,7 @@ const DEFAULT_SETTINGS = {
 };
 
 export default function App() {
-  // First run walks the grown-up through setup, then the intro animation hands over to the child.
-  // The opening animation is parked for now — Intro.js stays, it just is not entered.
+  // First run walks the grown-up through setup; every launch opens on the painted slides.
   const [screen, setScreen] = useState('welcome');
   const [childProfile, setChildProfile] = useState(DEFAULT_PROFILE);
   const [guardianSettings, setGuardianSettings] = useState(DEFAULT_SETTINGS);
@@ -168,7 +166,6 @@ export default function App() {
   };
   // A returning child still watches the intro; only the setup steps are skipped.
   const [onboarded, setOnboarded] = useState(false);
-  const [introDone, setIntroDone] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [series, setSeries] = useState(LIBRARY[0].videos);
   const [contentUp, setContentUp] = useState(false);
@@ -241,10 +238,10 @@ export default function App() {
 
   useEffect(() => {
     // Waits for the saved profile, so a slow read never drops a returning child into onboarding.
-    if (!introDone || !restored) return;
+    if (!restored) return;
     // The slides open every launch; where their button leads is what the saved profile decides.
     setScreen('welcome');
-  }, [introDone, restored, onboarded]);
+  }, [restored, onboarded]);
 
   useEffect(() => {
     if (!restored) return; // never write the defaults over a saved profile before it is read
@@ -254,7 +251,6 @@ export default function App() {
   // The tablet's own back gesture should walk the app back, not drop the child out of it.
   useEffect(() => {
     const back = {
-      welcome: 'intro',
       profile: 'welcome',
       guardian: 'profile',
       home: 'main',
@@ -393,7 +389,7 @@ export default function App() {
         <StatusBar hidden />
         <View style={styles.outer}>
         <View style={styles.tablet}>
-          {screen !== 'intro' && screen !== 'welcome' && screen !== 'profile' && screen !== 'guardian' && screen !== 'main' && screen !== 'bye' && (
+          {screen !== 'welcome' && screen !== 'profile' && screen !== 'guardian' && screen !== 'main' && screen !== 'bye' && (
             <TabletHeader
               rightLabel={screen === 'report' ? '오늘 활동 집계' : '더보기'}
               onHome={() => setScreen('main')}
@@ -403,7 +399,6 @@ export default function App() {
             />
           )}
           <ScreenFade screenKey={screen}>
-          {screen === 'intro' && <IntroScreen onDone={() => setIntroDone(true)} logo={<StaryLogo size={54} textColor="#ffffff" />} />}
           {screen === 'loading' && (
             <LoadingScreen
               profile={childProfile}
@@ -449,7 +444,6 @@ export default function App() {
               profile={childProfile}
               onStart={(v) => { setSelectedSeries(v || null); setScreen('loading'); }}
               // A search hit is one episode, so it goes straight to its own screen.
-              onOpenVideo={(v) => { setSelectedSeries(null); setSelectedVideo(v); setScreen('detail'); }}
               onMenu={(key) => { setSelectedSeries(null); setTab(key); setScreen('home'); }}
               onJump={(key) => { if (key === 'detail' || key === 'watch') setSelectedVideo(series[0]?.episodes?.[0] || LIBRARY[1].videos[0]); setScreen(key); }}
               contentUp={contentUp}
@@ -461,8 +455,7 @@ export default function App() {
                 setFedCount(0);
                 setQuizCorrectCount(__DEV__ ? 1000 : 0);
                 setOnboarded(false);
-                setIntroDone(false);
-                setScreen('intro');
+                setScreen('welcome');
               }}
             />
           )}
@@ -497,8 +490,7 @@ export default function App() {
                 setFedCount(0);
                 setQuizCorrectCount(__DEV__ ? 1000 : 0);
                 setOnboarded(false);
-                setIntroDone(false);
-                setScreen('intro');
+                setScreen('welcome');
               }}
               onStart={(v) => { setSelectedVideo(v || null); startWatching(v); }}
             />

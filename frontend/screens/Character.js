@@ -62,13 +62,14 @@ function Heart({ dx, dy }) {
 }
 
 // Rebuilt only when the character itself changes — never when candy or scene state moves.
-const StarStage = React.memo(function StarStage({ art, ready, evolved, feedTick = 0, tapTick = 0 }) {
+const StarStage = React.memo(function StarStage({ art, ready, evolved, feedTick = 0, tapTick = 0, facing = 1 }) {
   const pulse = useSharedValue(0);
   const flash = useSharedValue(0);
   const pop = useSharedValue(1);
   const burst = useSharedValue(0);
   const nibble = useSharedValue(0);
   const hop = useSharedValue(0);
+  const face = useSharedValue(1);
   const idle = IDLE;
 
   useEffect(() => {
@@ -93,6 +94,12 @@ const StarStage = React.memo(function StarStage({ art, ready, evolved, feedTick 
       withSpring(0, { damping: 8, stiffness: 180 })
     );
   }, [feedTick]);
+
+  // Turning passes through zero width, so the star reads as spinning on the spot rather than
+  // snapping to its mirror image.
+  useEffect(() => {
+    face.value = withTiming(facing, { duration: 300 });
+  }, [facing]);
 
   // Poke the star and it hops — the reward for touching it at all.
   useEffect(() => {
@@ -136,7 +143,7 @@ const StarStage = React.memo(function StarStage({ art, ready, evolved, feedTick 
     transform: [
       { translateY: -10 * idle.value - 34 * hop.value },
       { rotate: `${-2.5 + idle.value * 5 + hop.value * 6}deg` },
-      { scaleX: pop.value * (1 + idle.value * 0.02) * (1 + nibble.value * 0.14) * (1 - hop.value * 0.06) },
+      { scaleX: face.value * pop.value * (1 + idle.value * 0.02) * (1 + nibble.value * 0.14) * (1 - hop.value * 0.06) },
       { scaleY: pop.value * (1 + idle.value * 0.02) * (1 - nibble.value * 0.1) * (1 + hop.value * 0.08) },
     ],
     opacity: 1 - flash.value * 0.65,
@@ -217,6 +224,8 @@ export function CharacterScreen({ profile, food, fed, onFeed }) {
   const STAR_SIZE = 230;
   // Offset-based drag: each move is measured from where the finger went down, so nothing drifts.
   const [tapTick, setTapTick] = useState(0);
+  // Every poke turns the star to face the other way.
+  const [facing, setFacing] = useState(1);
 
   // Left alone the star dozes off; any touch wakes it up again.
   const [asleep, setAsleep] = useState(false);
@@ -391,13 +400,15 @@ export function CharacterScreen({ profile, food, fed, onFeed }) {
       <Animated.View style={{ transform: [...pos.getTranslateTransform(), { scale }] }}>
         {/* Pan claims the touch before a Tap gesture can settle, so a Pressable catches the quick
             taps; the pan still wins once the finger actually moves. */}
-        <Pressable onPress={() => { wake(); playSound('star'); setTapTick((n) => n + 1); }}>
+        <Pressable onPress={() => { wake(); playSound('star'); setTapTick((n) => n + 1); setFacing((f) => -f); }}>
           <StarStage
             art={costume ? costume[chosen?.id || 'dino'] : chosen ? (grownUp ? chosen.grown : chosen.art) : STAGE1_ART}
             ready={full && !chosen}
-            evolved={costume ? `${chosen?.id || 'dino'}-costume-${costume.id}` : chosen ? `${chosen.id}-${grownUp ? 3 : 2}` : null}
+            evolved={chosen ? `${chosen.id}-${grownUp ? 3 : 2}` : null}
             feedTick={feedTick}
             tapTick={tapTick}
+            facing={facing}
+            facing={facing}
           />
         </Pressable>
         {hearts.map((h) => (

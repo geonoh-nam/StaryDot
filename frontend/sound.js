@@ -27,7 +27,9 @@ const voices = {
 };
 
 let urlPlayer = null;
-let linePlayer = null;
+// One slot per speaker, so two characters talking at once are heard at once. A second line from
+// the same character still cuts its own first one — nobody talks over themselves.
+const linePlayers = {};
 
 export function speak(name) {
   const p = voices[name];
@@ -52,15 +54,16 @@ export function speakUrl(uri) {
   }
 }
 
-// A voice line that arrives as a bundled module rather than a fixed name. Players are made
-// on demand and thrown away — only one line plays at a time. Its own slot, separate from
-// urlPlayer, so a reaction line never cuts off question audio mid-word.
-export function playVoice(mod) {
+// A voice line that arrives as a bundled module rather than a fixed name. Players are made on
+// demand and thrown away. `speaker` is who is talking: lines from different speakers overlap,
+// lines from the same one replace each other. Separate from urlPlayer, so a reaction line never
+// cuts off question audio mid-word.
+export function playVoice(mod, speaker = 'line') {
   if (!mod) return;
   try {
-    if (linePlayer) linePlayer.remove();
-    linePlayer = createAudioPlayer(mod);
-    linePlayer.play();
+    if (linePlayers[speaker]) linePlayers[speaker].remove();
+    linePlayers[speaker] = createAudioPlayer(mod);
+    linePlayers[speaker].play();
   } catch (e) {
     // ignore playback races
   }
@@ -69,7 +72,7 @@ export function playVoice(mod) {
 export function stopSpeaking() {
   try {
     if (urlPlayer) urlPlayer.pause();
-    if (linePlayer) linePlayer.pause();
+    Object.values(linePlayers).forEach((p) => p.pause());
     Object.values(voices).forEach((p) => p.pause());
   } catch (e) {
     // ignore

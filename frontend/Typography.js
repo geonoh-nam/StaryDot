@@ -11,6 +11,7 @@ const AGGRO_FONTS = {
   Pretendard: require('./assets/fonts/Pretendard-Regular.otf'),
   PretendardSemiBold: require('./assets/fonts/Pretendard-SemiBold.otf'),
   PretendardBold: require('./assets/fonts/Pretendard-Bold.otf'),
+  PretendardExtraBold: require('./assets/fonts/Pretendard-ExtraBold.otf'),
 };
 
 export function useAggroFonts() {

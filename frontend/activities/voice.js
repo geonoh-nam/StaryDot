@@ -16,7 +16,7 @@ export function sayLine(character, key, last) {
   if (text === null) return null;
   const clips = (VOICE[character] || {})[key] || [];
   const idx = pool.indexOf(text);
-  if (clips[idx]) playVoice(clips[idx]);
+  if (clips[idx]) playVoice(clips[idx], character);
   return text;
 }
 
@@ -24,6 +24,6 @@ export function sayLine(character, key, last) {
 export function sayCount(character, n) {
   const text = (LINES.count || [])[n - 1] || String(n);
   const clips = (VOICE[character] || {}).count || [];
-  if (clips[n - 1]) playVoice(clips[n - 1]);
+  if (clips[n - 1]) playVoice(clips[n - 1], character);
   return text;
 }

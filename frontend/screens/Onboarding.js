@@ -15,6 +15,9 @@ const range = (from, to) => Array.from({ length: to - from + 1 }, (_, i) => from
 
 const THIS_YEAR = new Date().getFullYear();
 
+// A birth date the child actually has: the day list follows the month that was picked.
+const daysIn = (y, m) => (m ? new Date(y || THIS_YEAR, m, 0).getDate() : 31);
+
 const HOUR_VALUES = [0, 1, 2, 3, 4, 5, 6];
 
 const MINUTE_VALUES = [0, 10, 20, 30, 40, 50];
@@ -74,9 +77,8 @@ function ProfilePhotoPicker({ photo, tone, onPick }) {
       ) : (
         <PattiCharacter tone={tone} size={0.85} />
       )}
-      <View style={styles.photoBadge}>
-        <Text style={styles.photoBadgeText}>📷</Text>
-      </View>
+      {/* Rides the top edge of the circle, half in and half out. */}
+      <Image source={CAMERA_ICON} style={styles.photoBadge} resizeMode="contain" />
     </TouchableOpacity>
   );
 }
@@ -121,59 +123,76 @@ function BirthDropdown({ values, value, unit, onSelect }) {
 export function ChildProfileScreen({ profile, onChange, onNext }) {
   const ready = profile.name.trim().length > 0 && ageInMonths(profile.birth) != null;
   return (
-    <View style={styles.onboardScreen}>
-      <View style={styles.onboardHeader}>
-        <Text style={styles.onboardStep}>1 / 2</Text>
-        <Text style={styles.onboardTitle}>아이 프로필</Text>
-        <Text style={styles.onboardCopy}>이름과 나이를 알려주면 맞춤 활동을 준비해요.</Text>
-      </View>
-
-      <View style={styles.onboardBody}>
+    <View style={styles.profileScreen}>
+      <View style={styles.profileLeft}>
         <ProfilePhotoPicker
           photo={profile.photo}
           tone={profile.tone}
           onPick={(photo) => onChange({ ...profile, photo })}
         />
-        <View style={styles.onboardFields}>
-          <Text style={styles.onboardLabel}>닉네임</Text>
+        <Text style={styles.photoHint}>아이 사진을 찍어서 프로필로 저장할 수 있어요!</Text>
+      </View>
+
+      <View style={styles.profileCard}>
+        <Text style={styles.profileTitle}>스토리닷을 시작할{'\n'}아이 정보를 알려주세요</Text>
+
+        <View style={styles.fieldRow}>
+          <Text style={styles.fieldLabel}>아이 이름</Text>
           <TextInput
-            style={styles.onboardInput}
+            style={styles.fieldInput}
             value={profile.name}
             onChangeText={(name) => onChange({ ...profile, name })}
             placeholder="예: 하늘"
-            placeholderTextColor="#a8b2c8"
+            placeholderTextColor="#b6c1d6"
             maxLength={10}
           />
+        </View>
 
-          <Text style={styles.onboardLabel}>생년월일</Text>
-          <View style={styles.birthRow}>
+        <View style={styles.fieldRow}>
+          <Text style={styles.fieldLabel}>아이 생년월일</Text>
+          <View style={styles.fieldValueRow}>
             <BirthDropdown
               values={range(THIS_YEAR - 8, THIS_YEAR)}
               value={profile.birth?.y}
               unit="년"
-              onSelect={(y) => onChange({ ...profile, birth: { ...profile.birth, y } })}
+              onSelect={(y) => onChange({ ...profile, birth: { ...profile.birth, y, d: profile.birth?.d || 1 } })}
             />
             <BirthDropdown
               values={range(1, 12)}
               value={profile.birth?.m}
               unit="월"
-              onSelect={(m) => onChange({ ...profile, birth: { ...profile.birth, m } })}
+              onSelect={(m) => onChange({ ...profile, birth: { ...profile.birth, m, d: Math.min(profile.birth?.d || 1, daysIn(profile.birth?.y, m)) } })}
             />
             <BirthDropdown
-              values={range(1, 31)}
+              values={range(1, daysIn(profile.birth?.y, profile.birth?.m))}
               value={profile.birth?.d}
               unit="일"
               onSelect={(d) => onChange({ ...profile, birth: { ...profile.birth, d } })}
             />
           </View>
-          {ageLabel(profile.birth) ? <Text style={styles.birthAge}>{ageLabel(profile.birth)}</Text> : null}
-
         </View>
-      </View>
 
-      <TapScale style={[buttons.darkButton, !ready && buttons.buttonDisabled]} onPress={() => ready && onNext()}>
-        <Text style={buttons.darkButtonText}>다음</Text>
-      </TapScale>
+        <View style={styles.fieldRow}>
+          <Text style={styles.fieldLabel} numberOfLines={1}>아이 성별(선택)</Text>
+          <View style={[styles.fieldValueRow, styles.genderRow]}>
+            {[['boy', '남자'], ['girl', '여자']].map(([key, label]) => (
+              <TouchableOpacity key={key} onPress={() => onChange({ ...profile, gender: key })}>
+                <Text style={[
+                  styles.genderText,
+                  profile.gender === key && (key === 'girl' ? styles.genderTextGirl : styles.genderTextOn),
+                ]}>{label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <TapScale
+          style={[styles.nextBtn, !ready && buttons.buttonDisabled]}
+          onPress={() => ready && onNext()}
+        >
+          <Text style={styles.nextBtnText}>다음</Text>
+        </TapScale>
+      </View>
     </View>
   );
 }
@@ -278,7 +297,102 @@ export function GuardianSetupScreen({ settings, onChange, onBack, onDone }) {
   );
 }
 
+const CAMERA_ICON = require('../assets/characters/camera.png');
+
 const styles = StyleSheet.create({
+  profileScreen: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 60,
+    paddingHorizontal: 40,
+  },
+  profileLeft: {
+    alignItems: 'center',
+    gap: 26,
+  },
+  photoHint: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#5891EA',
+  },
+  profileCard: {
+    width: 510,
+    gap: 14,
+    padding: 30,
+    borderRadius: 28,
+    backgroundColor: '#ffffff',
+    borderWidth: 3,
+    borderColor: '#bcd9ff',
+  },
+  profileTitle: {
+    marginBottom: 8,
+    fontSize: 25,
+    lineHeight: 34,
+    fontWeight: '900',
+    color: TEXT_ON_DARK,
+  },
+  fieldRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    // Every row is the same height, whatever sits in it: three date boxes, a name, or two words.
+    height: 76,
+    gap: 12,
+    paddingHorizontal: 20,
+    borderRadius: 999,
+    backgroundColor: '#f1f3f7',
+  },
+  fieldLabel: {
+    // Fixed, so the values on the right start at the same place in all three rows. Wide enough
+    // that the longest of them — 아이 성별(선택) — stays on one line.
+    width: 128,
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#8a97b1',
+  },
+  fieldInput: {
+    flex: 1,
+    textAlign: 'right',
+    fontSize: 17,
+    fontWeight: '900',
+    color: TEXT_ON_DARK,
+  },
+  fieldValueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  genderRow: {
+    gap: 30,
+    // Pulled in from the pill's edge so the two words do not crowd the rim.
+    marginRight: 22,
+  },
+  genderTextGirl: {
+    color: '#F07FA8',
+  },
+  genderText: {
+    fontSize: 17,
+    fontWeight: '900',
+    color: '#8a97b1',
+  },
+  genderTextOn: {
+    color: '#5891EA',
+  },
+  nextBtn: {
+    alignSelf: 'flex-end',
+    marginTop: 6,
+    paddingHorizontal: 32,
+    paddingVertical: 14,
+    borderRadius: 999,
+    backgroundColor: '#609EF5',
+  },
+  nextBtnText: {
+    fontSize: 17,
+    fontWeight: '900',
+    color: '#ffffff',
+  },
   birthAge: {
     fontSize: 14,
     fontWeight: '800',
@@ -338,10 +452,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 10,
-    width: 116,
+    gap: 4,
+    width: 84,
     height: 48,
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
     borderRadius: 16,
     backgroundColor: '#f1f5ff',
     borderWidth: 1.5,
@@ -354,7 +468,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(20,28,60,0.3)',
   },
   dropdownCaret: {
-    fontSize: 13,
+    fontSize: 10,
     color: TEXT_MUTED_ON_DARK,
   },
   dropdownOption: {
@@ -384,7 +498,7 @@ const styles = StyleSheet.create({
     borderColor: '#e3e9f7',
   },
   dropdownValue: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '800',
     color: TEXT_ON_DARK,
   },
@@ -450,34 +564,25 @@ const styles = StyleSheet.create({
   },
   photoBadge: {
     position: 'absolute',
-    right: 0,
-    bottom: 2,
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#609EF5',
-    borderWidth: 2,
-    borderColor: '#e3e9f7',
-  },
-  photoBadgeText: {
-    fontSize: 16,
+    top: -34,
+    width: 74,
+    height: 74,
   },
   photoCircle: {
-    width: 132,
-    height: 132,
-    borderRadius: 66,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f4f7fe',
-    borderWidth: 2,
-    borderColor: '#e3e9f7',
+    overflow: 'visible',
+    backgroundColor: '#eaf3ff',
+    borderWidth: 4,
+    borderColor: '#bcd9ff',
   },
   photoImage: {
-    width: 128,
-    height: 128,
-    borderRadius: 64,
+    width: '100%',
+    height: '100%',
+    borderRadius: 150,
   },
   stepperArrowDown: {
     marginTop: -4,

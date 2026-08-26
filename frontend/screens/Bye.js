@@ -7,11 +7,20 @@ import { Text } from '../Typography';
 import { playSound } from '../sound';
 import { StaryLogo } from '../ui/Logo';
 import { Bubble } from '../ui/Bubble';
+import { sayLine } from '../activities/voice';
 
 const BUDDY = require('../assets/characters/bye.png');
+// A tailless bubble: nothing on this screen for a tail to point at.
+const GOODBYE_BUBBLE = require('../assets/scenes/goodbyement.png');
 
 export function ByeScreen({ profile, onUnlock }) {
   const name = profile?.name || '친구';
+  // Both friends say goodbye together — one slot each, so the two recordings overlap.
+  const [line, setLine] = useState('');
+  useEffect(() => {
+    setLine(sayLine('bunny', 'bye.see') || '');
+    sayLine('dino', 'bye.see');
+  }, []);
   const bob = useRef(new Animated.Value(0)).current;
   const glow = useRef(new Animated.Value(0)).current;
   const [asking, setAsking] = useState(false);
@@ -66,7 +75,7 @@ export function ByeScreen({ profile, onUnlock }) {
             { transform: [{ translateY: bob.interpolate({ inputRange: [0, 1], outputRange: [0, -14] }) }] },
           ]}
         />
-        <Bubble style={styles.line}>{name}아 우리 내일 또 보자!</Bubble>
+        <Bubble art={GOODBYE_BUBBLE} style={styles.line} textStyle={styles.lineText}>{name}아 {line}</Bubble>
       </View>
 
       {/* Two presses, not one: a child who finds the button still cannot get past it alone. */}
@@ -115,7 +124,12 @@ const styles = StyleSheet.create({
     height: 420,
   },
   line: {
-    marginTop: 6,
+    // Pulled up into the space the buddy's artwork leaves empty above its head.
+    marginTop: -100,
+  },
+  lineText: {
+    // Sits lower than the middle of the box: the drawn oval's round part is below its centre.
+    marginTop: 60,
   },
   unlock: {
     position: 'absolute',

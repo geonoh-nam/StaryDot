@@ -8,7 +8,6 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { Text } from '../Typography';
 import { playSound } from '../sound';
 import { sayLine } from '../activities/voice';
-import { StaryLogo } from '../ui/Logo';
 const BG = require('../assets/scenes/bg.png');
 const BUDDY = require('../assets/characters/loading.png');
 
@@ -143,8 +142,6 @@ export function LoadingScreen({ profile, onStart }) {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.logo} pointerEvents="none"><StaryLogo size={30} /></View>
-
       <View style={styles.bubbleWrap} pointerEvents="none">
         <Animated.View
           onLayout={(e) => setBubbleBox(e.nativeEvent.layout)}
@@ -249,15 +246,11 @@ export function LoadingScreen({ profile, onStart }) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    paddingHorizontal: 30,
-    paddingTop: 96,
-    paddingBottom: 34,
+    // Same frame as the video screen, pulled in — more off the top and bottom than the sides, so
+    // the scene keeps the wide shape of its background picture.
+    paddingHorizontal: 56,
+    paddingVertical: 92,
     backgroundColor: '#eef5ff',
-  },
-  logo: {
-    position: 'absolute',
-    top: 30,
-    left: 34,
   },
   stage: {
     flex: 1,
@@ -268,9 +261,9 @@ const styles = StyleSheet.create({
   },
   bubbleWrap: {
     // Sits above the card rather than inside it: the card clips its children, and the bubble
-    // straddles its top edge.
+    // straddles its top edge — the rim runs through the middle of the bubble.
     position: 'absolute',
-    top: 66,
+    top: 62,
     left: 0,
     right: 0,
     alignItems: 'center',

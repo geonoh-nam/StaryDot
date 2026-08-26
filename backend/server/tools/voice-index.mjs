@@ -1,4 +1,5 @@
-// Turns whatever sits in frontend/assets/voice/<character>/ into a require map.
+// Turns whatever sits in frontend/assets/voice/<character>/ into a require map. Either format
+// is fine — what matters is <key>.<number>.<ext>, where the number picks the line from lines.json.
 // Metro cannot require a path it computes at runtime, so the map has to be written out.
 //   node backend/server/tools/voice-index.mjs
 import fs from 'node:fs';
@@ -16,7 +17,7 @@ const body = CHARACTERS.map((who) => {
   if (!fs.existsSync(dir)) return `  ${who}: {},`;
   const byKey = {};
   for (const file of fs.readdirSync(dir).sort()) {
-    const m = file.match(/^(.+)\.(\d+)\.m4a$/);
+    const m = file.match(/^(.+)\.(\d+)\.(?:m4a|mp3|wav)$/);
     if (!m) continue;
     (byKey[m[1]] ||= []).push(`require('./voice/${who}/${file}')`);
   }

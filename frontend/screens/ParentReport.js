@@ -489,6 +489,7 @@ const styles = StyleSheet.create({
   parentScroll: {
     flex: 1,
     paddingBottom: 20,
+    backgroundColor: '#D7EAFF',
   },
   parentStat: {
     width: '47%',

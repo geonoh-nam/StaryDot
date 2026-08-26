@@ -6,7 +6,8 @@ import { playSound } from '../sound';
 import { StaryLogo } from './Logo';
 import { COLORS, TEXT_ON_DARK } from '../theme';
 
-const SETTINGS_ICON = require('../assets/scenes/settings.png');
+// Shared with the star's menu on the main screen, which lists the same places.
+export const SETTINGS_ICON = require('../assets/scenes/settings.png');
 
 export const TABS = [
   { key: 'library', label: '영상', icon: '▶' },
