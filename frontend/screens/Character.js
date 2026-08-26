@@ -391,7 +391,7 @@ export function CharacterScreen({ profile, food, fed, onFeed }) {
       <Animated.View style={{ transform: [...pos.getTranslateTransform(), { scale }] }}>
         {/* Pan claims the touch before a Tap gesture can settle, so a Pressable catches the quick
             taps; the pan still wins once the finger actually moves. */}
-        <Pressable onPress={() => { wake(); playSound('pop'); setTapTick((n) => n + 1); }}>
+        <Pressable onPress={() => { wake(); playSound('star'); setTapTick((n) => n + 1); }}>
           <StarStage
             art={costume ? costume[chosen?.id || 'dino'] : chosen ? (grownUp ? chosen.grown : chosen.art) : STAGE1_ART}
             ready={full && !chosen}

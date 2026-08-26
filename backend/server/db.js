@@ -127,7 +127,7 @@ export function setVideoStatus(db, videoId, status) {
 export function getLibrary(db) {
   const cats = db.prepare('SELECT id, label FROM category ORDER BY sort, id').all();
   const videos = db.prepare(
-    `SELECT id, category_id, title, duration_sec, emoji, color, thumb_path
+    `SELECT id, category_id, title, duration_sec, emoji, color, thumb_path, file_path
      FROM video WHERE status = 'ready' ORDER BY created_at`
   ).all();
   return cats
@@ -140,6 +140,8 @@ export function getLibrary(db) {
           id: v.id, title: v.title, duration_sec: v.duration_sec,
           emoji: v.emoji, color: v.color,
           thumbPath: v.thumb_path ? `/media/${v.thumb_path}` : null,
+          // The app streams from here rather than from a copy pushed onto the tablet.
+          videoPath: v.file_path ? `/media/${v.file_path}` : null,
         })),
     }))
     .filter((c) => c.videos.length > 0);

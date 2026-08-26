@@ -8,6 +8,9 @@ const players = {
   wrong: createAudioPlayer(require('./assets/sounds/wrong.mp3')),
   fanfare: createAudioPlayer(require('./assets/sounds/fanfare.mp3')),
   pop: createAudioPlayer(require('./assets/sounds/pop.mp3')),
+  // The tune that greets the main screen, and the noise the star makes when poked.
+  main: createAudioPlayer(require('./assets/sounds/main.mp3')),
+  star: createAudioPlayer(require('./assets/sounds/fanfare.mp3')),
 };
 
 // Spoken lines. Fixed prompts ship as files; question audio arrives as a URL from the content DB,

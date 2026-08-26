@@ -37,6 +37,9 @@ const PUZZLE_IMAGES = {
 
 const QUIZ_BUDDY = require('../assets/characters/bunny.png');
 
+// How long the character stands alone before the bubble and its voice arrive.
+const BUDDY_ALONE_MS = 700;
+
 export function WatchScreen({ source, plan = [], picks = [0, 1, 2], seekTo, onResult, onWatched, quizDone, onQuizAsk, onQuizCorrect, onQuizSkip, onFinish, onBack, onHome, onReport }) {
   const player = useVideoPlayer(source, (instance) => {
     instance.loop = false;
@@ -293,14 +296,24 @@ export function QuizOverlay({ quiz, selected, tries = 0, onAnswer, onRetry, onRe
   const enter = useRef(new Animated.Value(0)).current;
   const [cardBox, setCardBox] = useState({ width: 0, height: 0 });
 
+  // The buddy arrives alone first; the bubble and its voice land together a beat later, so the
+  // child looks at the character before any words appear.
+  const bubble = useRef(new Animated.Value(0)).current;
+  const buddyIn = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
-    // Question audio is authored with the question, so playback is a single URL away.
-    if (quiz.audioUrl) speakUrl(quiz.audioUrl);
-    return () => stopSpeaking();
+    Animated.spring(buddyIn, { toValue: 1, friction: 6, tension: 90, useNativeDriver: true }).start();
+    const t = setTimeout(() => {
+      Animated.spring(bubble, { toValue: 1, friction: 6, tension: 90, useNativeDriver: true }).start();
+      // Question audio is authored with the question, so playback is a single URL away.
+      if (quiz.audioUrl) speakUrl(quiz.audioUrl);
+    }, BUDDY_ALONE_MS);
+    return () => { clearTimeout(t); stopSpeaking(); };
   }, []);
 
   useEffect(() => {
-    Animated.spring(enter, { toValue: 1, friction: 7, tension: 80, useNativeDriver: true }).start();
+    // The card follows the bubble, so the choices are the last thing to appear.
+    Animated.spring(enter, { toValue: 1, friction: 7, tension: 80, delay: BUDDY_ALONE_MS, useNativeDriver: true }).start();
   }, []);
   const enterScale = enter.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1] });
 
@@ -324,9 +337,6 @@ export function QuizOverlay({ quiz, selected, tries = 0, onAnswer, onRetry, onRe
   return (
     <Modal transparent visible animationType="fade" supportedOrientations={['landscape', 'landscape-left', 'landscape-right']} onRequestClose={onResume}>
       <View style={[styles.quizOverlay, { width: win.width, height: win.height }]}>
-        <TouchableOpacity style={styles.ffBtn} onPress={onSkip}>
-          <Text style={styles.ffBtnText}>⏭</Text>
-        </TouchableOpacity>
         <BlurView intensity={28} tint="dark" style={StyleSheet.absoluteFill} pointerEvents="none" />
         {/* 정답 시 캐릭터 등장 자리 (popScale 애니메이션 재사용) */}
         <Animated.View
@@ -347,14 +357,30 @@ export function QuizOverlay({ quiz, selected, tries = 0, onAnswer, onRetry, onRe
             </Svg>
           ) : null}
         {/* Buddy leans on the question bubble, and the options sit on the card below it. */}
-        {selected ? null : (
-          <TouchableOpacity style={styles.dunnoBtn} onPress={onSkip}>
-            <Text style={styles.dunnoText}>모르겠어요</Text>
-          </TouchableOpacity>
-        )}
         <View style={styles.quizPromptRow}>
-          <Image source={QUIZ_BUDDY} style={styles.quizBuddy} resizeMode="contain" />
-          <View style={styles.questionBox}>
+          <Animated.Image
+            source={QUIZ_BUDDY}
+            style={[
+              styles.quizBuddy,
+              {
+                opacity: buddyIn,
+                transform: [{ scale: buddyIn.interpolate({ inputRange: [0, 1], outputRange: [0.6, 1] }) }],
+              },
+            ]}
+            resizeMode="contain"
+          />
+          <Animated.View
+            style={[
+              styles.questionBox,
+              {
+                opacity: bubble,
+                transform: [
+                  { scale: bubble.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) },
+                  { translateX: bubble.interpolate({ inputRange: [0, 1], outputRange: [-24, 0] }) },
+                ],
+              },
+            ]}
+          >
             <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
               <Defs>
                 <LinearGradient id="qRim" x1="0" y1="0" x2="1" y2="0">
@@ -373,7 +399,7 @@ export function QuizOverlay({ quiz, selected, tries = 0, onAnswer, onRetry, onRe
                 ? '앗 다시 생각해보자~!'
                 : quiz.title}
             </Text>
-          </View>
+          </Animated.View>
         </View>
         {selected && correct ? (
           <View style={styles.answerResult}>
@@ -392,6 +418,12 @@ export function QuizOverlay({ quiz, selected, tries = 0, onAnswer, onRetry, onRe
               </TouchableOpacity>
             ))}
           </View>
+        )}
+        {/* The way out sits under the choices: smaller and grey, so it never reads as an answer. */}
+        {selected ? null : (
+          <TouchableOpacity style={[styles.quizOption, styles.dunnoBtn]} onPress={onSkip}>
+            <Text style={[styles.quizOptionText, styles.dunnoText]}>모르겠어요</Text>
+          </TouchableOpacity>
         )}
         <View style={styles.bottomActions}>
           {/* Right answer needs no skip; a second wrong answer ends the question. */}
@@ -551,19 +583,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 14 },
   },
   dunnoBtn: {
+    // Hangs below the card, clear of the choices inside it.
     position: 'absolute',
-    top: -112,
+    bottom: -53,
     alignSelf: 'center',
-    marginLeft: 40,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 999,
+    // Smaller than a real choice, so it reads as the way out rather than an answer.
+    minWidth: 104,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#c3ccdb',
     backgroundColor: '#eef2f8',
     zIndex: 4,
   },
   dunnoText: {
-    fontSize: 12,
-    fontWeight: '800',
+    fontSize: 14,
     color: '#8a97b1',
   },
   quizPromptRow: {
@@ -670,22 +704,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '800',
     color: '#ffffff',
-  },
-  ffBtn: {
-    position: 'absolute',
-    top: 20,
-    right: 24,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    zIndex: 20,
-  },
-  ffBtnText: {
-    fontSize: 22,
-    fontWeight: '900',
-    color: '#171d31',
   },
 });

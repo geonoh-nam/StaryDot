@@ -23,9 +23,13 @@ import { TabletHeader } from './ui/Header';
 import { StaryLogo } from './ui/Logo';
 import { ScreenFade } from './ui/motion';
 import { EvolvePopup } from './screens/Character';
-import { ChildProfileScreen, GuardianSetupScreen, OnboardIntroScreen } from './screens/Onboarding';
+import { ChildProfileScreen, GuardianSetupScreen } from './screens/Onboarding';
+import { OnboardSlides } from './screens/OnboardSlides';
+import { LoadingScreen } from './screens/Loading';
+import { PackageScreen } from './screens/Package';
+import { ByeScreen } from './screens/Bye';
 import { buttons } from './ui/buttons';
-import { MainScreen, SeriesScreen, VideoDetailScreen } from './screens/Browse';
+import { MainScreen, VideoDetailScreen } from './screens/Browse';
 import { OFFLINE_ACTIVITIES } from './data/activities';
 import { ReportScreen } from './screens/Report';
 import ActivityStage from './activities/ActivityStage';
@@ -80,8 +84,8 @@ function toSeries(cat, base) {
       duration: mmss(v.duration_sec),
       color: v.color || art.color,
       still: base && v.thumbPath ? { uri: base + v.thumbPath } : null,
-      // Local copy first: it plays with the laptop off, and never buffers over wifi.
-      source: { uri: `${LOCAL_VIDEO_DIR}${v.id}.mp4` },
+      // Streamed from the content server. The tablet keeps no copy — a build is not a video store.
+      source: base && v.videoPath ? { uri: base + v.videoPath } : { uri: `${LOCAL_VIDEO_DIR}${v.id}.mp4` },
     })),
   };
 }
@@ -238,7 +242,8 @@ export default function App() {
   useEffect(() => {
     // Waits for the saved profile, so a slow read never drops a returning child into onboarding.
     if (!introDone || !restored) return;
-    setScreen(onboarded ? 'main' : 'welcome');
+    // The slides open every launch; where their button leads is what the saved profile decides.
+    setScreen('welcome');
   }, [introDone, restored, onboarded]);
 
   useEffect(() => {
@@ -253,11 +258,14 @@ export default function App() {
       profile: 'welcome',
       guardian: 'profile',
       home: 'main',
-      detail: 'home',
-      watch: 'detail',
+      loading: 'main',
+      package: 'main',
+      detail: 'main',
+      watch: 'main',
       activities: 'main',
       drawing: 'activities',
       report: 'main',
+      bye: 'main',
     };
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
       const target = back[screen];
@@ -356,6 +364,16 @@ export default function App() {
     setScreen('report');
   };
 
+  // Three episodes for today, picked at random from the series that has the most of them. The real
+  // planner (time budget, what was already watched) replaces this once the flow lands.
+  const todayPick = useMemo(() => {
+    const richest = [...series].sort((a, b) => (b.episodes?.length || 0) - (a.episodes?.length || 0))[0];
+    const pool = [...(richest?.episodes || [])];
+    const out = [];
+    while (pool.length && out.length < 3) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+    return out;
+  }, [series, selectedSeries]);
+
   const report = useMemo(
     () => ({
       quiz: log.quiz,
@@ -375,7 +393,7 @@ export default function App() {
         <StatusBar hidden />
         <View style={styles.outer}>
         <View style={styles.tablet}>
-          {screen !== 'intro' && screen !== 'welcome' && screen !== 'profile' && screen !== 'guardian' && screen !== 'main' && (
+          {screen !== 'intro' && screen !== 'welcome' && screen !== 'profile' && screen !== 'guardian' && screen !== 'main' && screen !== 'bye' && (
             <TabletHeader
               rightLabel={screen === 'report' ? '오늘 활동 집계' : '더보기'}
               onHome={() => setScreen('main')}
@@ -386,7 +404,23 @@ export default function App() {
           )}
           <ScreenFade screenKey={screen}>
           {screen === 'intro' && <IntroScreen onDone={() => setIntroDone(true)} logo={<StaryLogo size={54} textColor="#ffffff" />} />}
-          {screen === 'welcome' && <OnboardIntroScreen onNext={() => setScreen('profile')} />}
+          {screen === 'loading' && (
+            <LoadingScreen
+              profile={childProfile}
+              onStart={() => setScreen('package')}
+              onBack={() => setScreen('main')}
+            />
+          )}
+          {screen === 'bye' && <ByeScreen profile={childProfile} onUnlock={() => setScreen('main')} />}
+          {screen === 'package' && (
+            <PackageScreen
+              profile={childProfile}
+              videos={todayPick}
+              onBack={() => setScreen('main')}
+              onStart={() => { const first = todayPick[0]; if (first) { setSelectedVideo(first); startWatching(first); } }}
+            />
+          )}
+          {screen === 'welcome' && <OnboardSlides onNext={() => { playSound('main'); setScreen(onboarded ? 'main' : 'profile'); }} />}
           {screen === 'profile' && (
             <ChildProfileScreen profile={childProfile} onChange={setChildProfile} onNext={() => setScreen('guardian')} />
           )}
@@ -413,7 +447,9 @@ export default function App() {
             <MainScreen
               series={series}
               profile={childProfile}
-              onStart={(v) => { setSelectedSeries(v || null); setScreen('home'); }}
+              onStart={(v) => { setSelectedSeries(v || null); setScreen('loading'); }}
+              // A search hit is one episode, so it goes straight to its own screen.
+              onOpenVideo={(v) => { setSelectedSeries(null); setSelectedVideo(v); setScreen('detail'); }}
               onMenu={(key) => { setSelectedSeries(null); setTab(key); setScreen('home'); }}
               onJump={(key) => { if (key === 'detail' || key === 'watch') setSelectedVideo(series[0]?.episodes?.[0] || LIBRARY[1].videos[0]); setScreen(key); }}
               contentUp={contentUp}
@@ -430,14 +466,7 @@ export default function App() {
               }}
             />
           )}
-          {screen === 'home' && selectedSeries && (
-            <SeriesScreen
-              series={selectedSeries}
-              onBack={() => setScreen('main')}
-              onStart={(v) => { setSelectedVideo(v || null); setScreen('detail'); }}
-            />
-          )}
-          {screen === 'home' && !selectedSeries && (
+          {screen === 'home' && (
             <HomeScreen
               characterImage={characterImage}
               profile={childProfile}
@@ -478,7 +507,9 @@ export default function App() {
             <VideoDetailScreen
               video={selectedVideo}
               series={selectedSeries}
-              onClose={() => setScreen('home')}
+              // Back where it came from: the series it belongs to, or the main screen if a search
+              // opened it directly.
+              onClose={() => setScreen(selectedSeries ? 'home' : 'main')}
               onStart={() => startWatching(selectedVideo)}
             />
           )}

@@ -37,8 +37,13 @@ const SERIES_HERO_W = 330;
 
 const STAR_BUDDY = require('../assets/characters/star-buddy.png');
 
-// How far the star may wander from where it starts: never down onto the card ring.
-const BUDDY_RANGE = { left: -1100, right: 900, up: -90, down: 120 };
+// How far below its resting place the star may be dragged before the cards begin.
+const BUDDY_DROP = 120;
+
+// How much speed a thrown star keeps off a wall, and how fast it coasts to a stop.
+const BUDDY_BOUNCE = 0.55;
+
+const BUDDY_FRICTION = 0.93;
 
 const BUDDY_MENU = [
   { key: 'character', label: '캐릭터', icon: '★' },
@@ -197,7 +202,7 @@ function StarBuddy({ onPress }) {
   }, []);
 
   const tap = () => {
-    playSound('pop');
+    playSound('star');
     Animated.sequence([
       Animated.timing(press, { toValue: 0.9, duration: 80, useNativeDriver: true }),
       Animated.spring(press, { toValue: 1, useNativeDriver: true, speed: 16, bounciness: 14 }),
@@ -224,7 +229,7 @@ function StarBuddy({ onPress }) {
   );
 }
 
-export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, contentUp }) {
+export function MainScreen({ series, profile, onStart, onOpenVideo, onMenu, onJump, onReset, contentUp }) {
   const win = useWindowDimensions();
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -232,21 +237,68 @@ export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, 
   const buddyPos = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   // Where the star was left, so a new drag continues from there rather than snapping back.
   const buddyAt = useRef({ x: 0, y: 0 });
+  // Measured from where the star actually sits, so it can never be thrown off the screen.
+  const buddyRange = useRef({ left: 0, right: 0, up: 0, down: BUDDY_DROP });
+  const buddyRef = useRef(null);
+  const measureBuddy = () => {
+    buddyRef.current?.measureInWindow((x, y, w, h) => {
+      if (!w) return;
+      const restX = x - buddyAt.current.x;
+      const restY = y - buddyAt.current.y;
+      buddyRange.current = {
+        left: -(restX - 8),
+        right: win.width - restX - w - 8,
+        up: -(restY - 8),
+        down: BUDDY_DROP,
+      };
+    });
+  };
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  // Let go mid-swing and the star keeps flying, bouncing off the edges of its band until it
+  // runs out of speed. The frame loop lives in a ref so a re-render never starts a second one.
+  const flight = useRef(null);
+  const fling = (vx, vy) => {
+    if (flight.current) cancelAnimationFrame(flight.current);
+    let dx = vx;
+    let dy = vy;
+    const step = () => {
+      dx *= BUDDY_FRICTION;
+      dy *= BUDDY_FRICTION;
+      let x = buddyAt.current.x + dx;
+      let y = buddyAt.current.y + dy;
+      if (x < buddyRange.current.left || x > buddyRange.current.right) {
+        x = clamp(x, buddyRange.current.left, buddyRange.current.right);
+        dx = -dx * BUDDY_BOUNCE;
+      }
+      if (y < buddyRange.current.up || y > buddyRange.current.down) {
+        y = clamp(y, buddyRange.current.up, buddyRange.current.down);
+        dy = -dy * BUDDY_BOUNCE;
+      }
+      buddyAt.current = { x, y };
+      buddyPos.setValue({ x, y });
+      if (Math.hypot(dx, dy) < 0.4) { flight.current = null; return; }
+      flight.current = requestAnimationFrame(step);
+    };
+    if (Math.hypot(dx, dy) > 1) flight.current = requestAnimationFrame(step);
+  };
+  useEffect(() => () => { if (flight.current) cancelAnimationFrame(flight.current); }, []);
+
   const buddyDrag = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_e, g) => Math.hypot(g.dx, g.dy) > 6,
+      onPanResponderGrant: () => { if (flight.current) { cancelAnimationFrame(flight.current); flight.current = null; } },
       onPanResponderMove: (_e, g) => {
         buddyPos.setValue({
-          x: clamp(buddyAt.current.x + g.dx, BUDDY_RANGE.left, BUDDY_RANGE.right),
-          y: clamp(buddyAt.current.y + g.dy, BUDDY_RANGE.up, BUDDY_RANGE.down),
+          x: clamp(buddyAt.current.x + g.dx, buddyRange.current.left, buddyRange.current.right),
+          y: clamp(buddyAt.current.y + g.dy, buddyRange.current.up, buddyRange.current.down),
         });
       },
       onPanResponderRelease: (_e, g) => {
         buddyAt.current = {
-          x: clamp(buddyAt.current.x + g.dx, BUDDY_RANGE.left, BUDDY_RANGE.right),
-          y: clamp(buddyAt.current.y + g.dy, BUDDY_RANGE.up, BUDDY_RANGE.down),
+          x: clamp(buddyAt.current.x + g.dx, buddyRange.current.left, buddyRange.current.right),
+          y: clamp(buddyAt.current.y + g.dy, buddyRange.current.up, buddyRange.current.down),
         };
+        fling(g.vx * 16, g.vy * 16);
       },
     })
   ).current;
@@ -325,6 +377,8 @@ export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, 
       <Animated.View
         style={[styles.buddyAnchor, { transform: buddyPos.getTranslateTransform() }]}
         collapsable={false}
+        ref={buddyRef}
+        onLayout={measureBuddy}
         {...buddyDrag.panHandlers}
       >
         <StarBuddy onPress={() => toggleMenu(!menuOpen)} />
@@ -358,7 +412,7 @@ export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, 
                   <TouchableOpacity
                     key={v.id}
                     style={styles.buddyHit}
-                    onPress={() => { toggleMenu(false); setQuery(''); playSound('pop'); onStart(v); }}
+                    onPress={() => { toggleMenu(false); setQuery(''); playSound('pop'); (onOpenVideo || onStart)(v); }}
                   >
                     <Text style={styles.buddyHitText} numberOfLines={1}>{v.title}</Text>
                   </TouchableOpacity>

@@ -10,6 +10,9 @@ import ActivityStage from '../activities/ActivityStage';
 const DEBUG_SCREENS = [
   ['intro', '인트로'],
   ['welcome', '온보딩 안내'],
+  ['loading', '로딩(패키지)'],
+  ['package', '오늘의 묶음'],
+  ['bye', '오늘 끝'],
   ['profile', '아이 프로필'],
   ['guardian', '보호자 설정'],
   ['main', '메인'],
