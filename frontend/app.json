@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "Story Dot",
+    "slug": "patti-app",
+    "version": "0.1.0",
+    "orientation": "landscape",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.flyai.patti",
+      "supportsTablet": true,
+      "requireFullScreen": true
+    },
+    "android": {
+      "package": "com.flyai.patti",
+      "resizeableActivity": false,
+      "screenOrientation": "landscape",
+      "supportsTablet": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
+      ]
+    },
+    "scheme": "starryworks",
+    "extra": {
+      "targetDevice": "android-tablet",
+      "eas": {
+        "projectId": "1bbbfae1-4650-4a70-8715-227f29853ce8"
+      }
+    },
+    "plugins": [
+      "expo-audio",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/BnviitLasik.ttf",
+            "./assets/fonts/Pretendard-Regular.otf",
+            "./assets/fonts/Pretendard-SemiBold.otf",
+            "./assets/fonts/Pretendard-Bold.otf"
+          ]
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "아이 프로필 사진을 찍기 위해 카메라를 사용합니다.",
+          "photosPermission": "아이 프로필 사진을 고르기 위해 사진 보관함을 사용합니다."
+        }
+      ]
+    ]
+  }
+}

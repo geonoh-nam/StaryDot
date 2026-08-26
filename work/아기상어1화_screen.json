@@ -1,0 +1,1202 @@
+{
+ "frames": [
+  {
+   "id": "sc001",
+   "t": 24.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000240.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "초록",
+     "파랑",
+     "분홍",
+     "흰색"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0129,
+     "주황": 0.0781,
+     "노랑": 0.0058,
+     "초록": 0.0635,
+     "파랑": 0.648,
+     "보라": 0.0065,
+     "분홍": 0.0956,
+     "갈색": 0.0038,
+     "흰색": 0.0849,
+     "회색": 0.001
+    }
+   }
+  },
+  {
+   "id": "sc002",
+   "t": 84.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000840.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑"
+    ],
+    "absent": [
+     "보라",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0215,
+     "주황": 0.0916,
+     "노랑": 0.0918,
+     "초록": 0.2183,
+     "파랑": 0.5061,
+     "보라": 0.0035,
+     "분홍": 0.0257,
+     "갈색": 0.0075,
+     "검정": 0.0053,
+     "흰색": 0.0262,
+     "회색": 0.0026
+    }
+   }
+  },
+  {
+   "id": "sc003",
+   "t": 180.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_001800.jpg",
+   "palette": {
+    "present": [
+     "노랑",
+     "초록",
+     "파랑",
+     "흰색"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "분홍",
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0031,
+     "주황": 0.0056,
+     "노랑": 0.056,
+     "초록": 0.5667,
+     "파랑": 0.327,
+     "분홍": 0.0005,
+     "갈색": 0.0064,
+     "흰색": 0.034,
+     "회색": 0.0005
+    }
+   }
+  },
+  {
+   "id": "sc004",
+   "t": 240.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_002400.jpg",
+   "palette": {
+    "present": [
+     "초록",
+     "파랑",
+     "보라",
+     "분홍"
+    ],
+    "absent": [
+     "빨강",
+     "주황",
+     "노랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0007,
+     "주황": 0.0015,
+     "노랑": 0.002,
+     "초록": 0.1057,
+     "파랑": 0.4785,
+     "보라": 0.0745,
+     "분홍": 0.3363,
+     "갈색": 0.0002,
+     "흰색": 0.0003,
+     "회색": 0.0003
+    }
+   }
+  },
+  {
+   "id": "sc005",
+   "t": 300.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003000.jpg",
+   "palette": {
+    "present": [
+     "파랑",
+     "보라",
+     "분홍",
+     "검정"
+    ],
+    "absent": [
+     "노랑",
+     "초록",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.008,
+     "주황": 0.0091,
+     "노랑": 0.0022,
+     "초록": 0.0001,
+     "파랑": 0.0448,
+     "보라": 0.6115,
+     "분홍": 0.056,
+     "갈색": 0.0001,
+     "검정": 0.2637,
+     "흰색": 0.0024,
+     "회색": 0.0021
+    }
+   }
+  },
+  {
+   "id": "sc006",
+   "t": 348.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "초록",
+     "파랑",
+     "분홍",
+     "흰색"
+    ],
+    "absent": [
+     "보라",
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0257,
+     "주황": 0.0659,
+     "노랑": 0.0181,
+     "초록": 0.0566,
+     "파랑": 0.6661,
+     "보라": 0.004,
+     "분홍": 0.0538,
+     "갈색": 0.0194,
+     "흰색": 0.0888,
+     "회색": 0.0015
+    }
+   }
+  },
+  {
+   "id": "sc007",
+   "t": 444.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_004440.jpg",
+   "palette": {
+    "present": [
+     "노랑",
+     "초록",
+     "파랑",
+     "보라",
+     "분홍",
+     "흰색"
+    ],
+    "absent": [
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0178,
+     "주황": 0.026,
+     "노랑": 0.1012,
+     "초록": 0.32,
+     "파랑": 0.3352,
+     "보라": 0.0497,
+     "분홍": 0.0729,
+     "갈색": 0.0239,
+     "흰색": 0.0521,
+     "회색": 0.0012
+    }
+   }
+  },
+  {
+   "id": "sc008",
+   "t": 528.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_005280.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "분홍"
+    ],
+    "absent": [
+     "빨강",
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0013,
+     "주황": 0.092,
+     "노랑": 0.0359,
+     "초록": 0.0768,
+     "파랑": 0.6573,
+     "보라": 0.0106,
+     "분홍": 0.1048,
+     "갈색": 0.0055,
+     "흰색": 0.0117,
+     "회색": 0.0039
+    }
+   }
+  }
+ ],
+ "observations": [
+  {
+   "frame_id": "sc001",
+   "objects": [
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 24.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000240.jpg",
+   "absent": [
+    "갈색",
+    "검정",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc002",
+   "objects": [
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 84.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000840.jpg",
+   "absent": [
+    "보라",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc003",
+   "objects": [
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [],
+   "t": 180.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_001800.jpg",
+   "absent": [
+    "검정",
+    "보라",
+    "분홍",
+    "빨강",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc004",
+   "objects": [
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [],
+   "t": 240.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_002400.jpg",
+   "absent": [
+    "갈색",
+    "검정",
+    "노랑",
+    "빨강",
+    "주황",
+    "회색",
+    "흰색"
+   ]
+  },
+  {
+   "frame_id": "sc005",
+   "objects": [
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "물고기",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [],
+   "t": 300.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003000.jpg",
+   "absent": [
+    "갈색",
+    "노랑",
+    "초록",
+    "회색",
+    "흰색"
+   ]
+  },
+  {
+   "frame_id": "sc006",
+   "objects": [
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 348.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "absent": [
+    "검정",
+    "보라",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc007",
+   "objects": [
+    {
+     "name": "글자",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [],
+   "t": 444.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_004440.jpg",
+   "absent": [
+    "검정",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc008",
+   "objects": [
+    {
+     "name": "조개",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 528.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_005280.jpg",
+   "absent": [
+    "검정",
+    "빨강",
+    "회색"
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "frame_id": "sc004",
+   "obj": {
+    "name": "상어",
+    "count": 1,
+    "colors": [
+     "노랑"
+    ],
+    "size": "큼"
+   },
+   "drop": "화면에 없는 색 — 노랑"
+  },
+  {
+   "frame_id": "sc005",
+   "obj": {
+    "name": "상어",
+    "count": 1,
+    "colors": [
+     "초록"
+    ],
+    "size": "보통"
+   },
+   "drop": "화면에 없는 색 — 초록"
+  },
+  {
+   "frame_id": "sc005",
+   "obj": {
+    "name": "상어",
+    "count": 1,
+    "colors": [
+     "노랑"
+    ],
+    "size": "보통"
+   },
+   "drop": "화면에 없는 색 — 노랑"
+  },
+  {
+   "frame_id": "sc006",
+   "obj": {
+    "name": "물풀",
+    "count": 2,
+    "colors": [
+     "보라"
+    ],
+    "size": "큼"
+   },
+   "drop": "화면에 없는 색 — 보라"
+  }
+ ],
+ "facts": [
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0101",
+   "kind": "objcolor",
+   "payload": {
+    "name": "상어",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0101",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp01",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 84.0,
+   "t1": 84.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000840.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0201",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 84.0,
+   "t1": 84.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000840.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0202",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 84.0,
+   "t1": 84.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000840.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp02",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 180.0,
+   "t1": 180.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_001800.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0301",
+   "kind": "objcolor",
+   "payload": {
+    "name": "상어",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "검정",
+     "보라",
+     "분홍",
+     "빨강",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 180.0,
+   "t1": 180.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_001800.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0301",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 240.0,
+   "t1": 240.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_002400.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0401",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 240.0,
+   "t1": 240.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_002400.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0402",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0501",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0502",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0503",
+   "kind": "objcolor",
+   "payload": {
+    "name": "물고기",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "갈색",
+     "노랑",
+     "초록",
+     "회색",
+     "흰색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0503",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 물고기"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003000.jpg",
+   "conf": "medium",
+   "id": "sum05",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "주황색 상어",
+      "n": 1
+     },
+     {
+      "name": "분홍색 상어",
+      "n": 1
+     },
+     {
+      "name": "주황색 물고기",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 348.0,
+   "t1": 348.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0601",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 348.0,
+   "t1": 348.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0602",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 348.0,
+   "t1": 348.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0603",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 348.0,
+   "t1": 348.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0604",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 348.0,
+   "t1": 348.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0605",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 348.0,
+   "t1": 348.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "conf": "medium",
+   "id": "sum06",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "노란 상어",
+      "n": 1
+     },
+     {
+      "name": "파란 상어",
+      "n": 1
+     },
+     {
+      "name": "주황색 상어",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 348.0,
+   "t1": 348.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp06",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 444.0,
+   "t1": 444.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_004440.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0701",
+   "kind": "objcolor",
+   "payload": {
+    "name": "글자",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "검정",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 444.0,
+   "t1": 444.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_004440.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0701",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 글자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_005280.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0801",
+   "kind": "objcolor",
+   "payload": {
+    "name": "조개",
+    "colors": [
+     "초록"
+    ],
+    "absent": [
+     "검정",
+     "빨강",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_005280.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0801",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 조개"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp08",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  }
+ ]
+}

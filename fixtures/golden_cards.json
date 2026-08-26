@@ -1,0 +1,26 @@
+{
+ "_note": "게이트 회귀 픽스처. 생성 결과가 바뀌어도 이 파일은 고정이다. 실제 파이프라인이 만들었던 카드를 그대로 얼려 둔 것 — 특히 '쓱쓱'은 인용 게이트를 통과하고 정답 게이트에만 걸린 실제 사례다.",
+ "evidence": [
+  {"id": "s117", "text": "음... 다른 실이 필요한데", "conf": "medium"},
+  {"id": "s133", "text": "뭘? 너희도 소중한 내 실을 찾아줬잖아.", "conf": "medium"},
+  {"id": "s134", "text": "곰인형은 찢어진 이불을 꿰매기 시작했어요", "conf": "high"},
+  {"id": "s180", "text": "말도 안 돼! 이불이 어떻게 날아!", "conf": "medium"},
+  {"id": "s191", "text": "뽀로로와 크롱은 정말 꿈을 꾼 걸까요?", "conf": "high"}
+ ],
+ "cards": [
+  {"case": "정상 — 조사 분리로 '실이'→'실'", "expect": "grounded",
+   "type": "이야기 이해", "answer": "실", "source_id": "s117", "quote": "다른 실이 필요한데"},
+  {"case": "정상 — 증거에 원문 그대로", "expect": "grounded",
+   "type": "이야기 이해", "answer": "이불", "source_id": "s180", "quote": "이불이 어떻게 날아"},
+  {"case": "정답 조작 — 인용은 진짜, 정답만 지어냄", "expect": "ungrounded",
+   "type": "의성어·의태어", "answer": "쓱쓱", "source_id": "s134", "quote": "꿰매기 시작했어요"},
+  {"case": "배경지식 — 증거에 없는 사물", "expect": "ungrounded",
+   "type": "이야기 이해", "answer": "자동차", "source_id": "s180", "quote": "이불이 어떻게 날아"},
+  {"case": "창작형 — 정답 없음이 정상", "expect": "open_ended",
+   "type": "그림으로 표현", "answer": null, "source_id": "s133", "quote": "소중한 내 실을 찾아줬잖아"},
+  {"case": "창작형(신규 유형)", "expect": "open_ended",
+   "type": "내가 그 자리라면", "answer": null, "source_id": "s180", "quote": "말도 안 돼"},
+  {"case": "창작형(신규 유형)", "expect": "open_ended",
+   "type": "장면 감상", "answer": null, "source_id": "s191", "quote": "정말 꿈을 꾼 걸까요"}
+ ]
+}

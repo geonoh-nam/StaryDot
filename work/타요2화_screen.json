@@ -1,0 +1,1545 @@
+{
+ "frames": [
+  {
+   "id": "sc001",
+   "t": 36.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000360.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.0363,
+     "주황": 0.036,
+     "노랑": 0.1489,
+     "초록": 0.0583,
+     "파랑": 0.404,
+     "보라": 0.0022,
+     "분홍": 0.0024,
+     "갈색": 0.0575,
+     "검정": 0.1871,
+     "흰색": 0.0081,
+     "회색": 0.0592
+    }
+   }
+  },
+  {
+   "id": "sc002",
+   "t": 72.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000720.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.0024,
+     "주황": 0.1714,
+     "노랑": 0.0352,
+     "초록": 0.0434,
+     "파랑": 0.1318,
+     "갈색": 0.1885,
+     "검정": 0.0059,
+     "흰색": 0.2032,
+     "회색": 0.2182
+    }
+   }
+  },
+  {
+   "id": "sc003",
+   "t": 132.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_001320.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.0523,
+     "주황": 0.2781,
+     "노랑": 0.1942,
+     "초록": 0.0908,
+     "파랑": 0.1366,
+     "분홍": 0.002,
+     "갈색": 0.1194,
+     "검정": 0.0102,
+     "흰색": 0.032,
+     "회색": 0.0844
+    }
+   }
+  },
+  {
+   "id": "sc004",
+   "t": 276.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_002760.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "노랑",
+     "초록",
+     "파랑",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.1389,
+     "주황": 0.0232,
+     "노랑": 0.0574,
+     "초록": 0.0328,
+     "파랑": 0.2454,
+     "보라": 0.0005,
+     "분홍": 0.0022,
+     "갈색": 0.0296,
+     "검정": 0.0399,
+     "흰색": 0.0603,
+     "회색": 0.3697
+    }
+   }
+  },
+  {
+   "id": "sc005",
+   "t": 336.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "주황": 0.0832,
+     "노랑": 0.091,
+     "초록": 0.1038,
+     "파랑": 0.1696,
+     "갈색": 0.0463,
+     "검정": 0.0961,
+     "흰색": 0.0416,
+     "회색": 0.3683
+    }
+   }
+  },
+  {
+   "id": "sc006",
+   "t": 372.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "주황": 0.0431,
+     "노랑": 0.056,
+     "초록": 0.1646,
+     "파랑": 0.2522,
+     "갈색": 0.0623,
+     "검정": 0.0612,
+     "흰색": 0.0318,
+     "회색": 0.3289
+    }
+   }
+  },
+  {
+   "id": "sc007",
+   "t": 408.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_004080.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "주황": 0.065,
+     "노랑": 0.0667,
+     "초록": 0.119,
+     "파랑": 0.3706,
+     "갈색": 0.0411,
+     "검정": 0.0803,
+     "흰색": 0.0346,
+     "회색": 0.2227
+    }
+   }
+  },
+  {
+   "id": "sc008",
+   "t": 528.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_005280.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "보라",
+     "분홍",
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "absent": [
+     "빨강"
+    ],
+    "peak": {
+     "빨강": 0.0014,
+     "주황": 0.0541,
+     "노랑": 0.0841,
+     "초록": 0.1457,
+     "파랑": 0.1178,
+     "보라": 0.0539,
+     "분홍": 0.0387,
+     "갈색": 0.0507,
+     "검정": 0.0462,
+     "흰색": 0.0291,
+     "회색": 0.3781
+    }
+   }
+  }
+ ],
+ "observations": [
+  {
+   "frame_id": "sc001",
+   "objects": [
+    {
+     "name": "부스",
+     "count": 3,
+     "colors": [
+      "흰색"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "네모",
+    "동그라미"
+   ],
+   "t": 36.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000360.jpg",
+   "absent": [
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "frame_id": "sc002",
+   "objects": [],
+   "shapes": [
+    "네모"
+   ],
+   "t": 72.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000720.jpg",
+   "absent": [
+    "보라",
+    "분홍",
+    "빨강"
+   ]
+  },
+  {
+   "frame_id": "sc003",
+   "objects": [
+    {
+     "name": "자동차",
+     "count": 1,
+     "colors": [
+      "빨강"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "자동차",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [],
+   "t": 132.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_001320.jpg",
+   "absent": [
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "frame_id": "sc004",
+   "objects": [
+    {
+     "name": "자동차",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [],
+   "t": 276.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_002760.jpg",
+   "absent": [
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "frame_id": "sc005",
+   "objects": [
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "자동차",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "나무",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "상자",
+     "count": 8,
+     "colors": [
+      "파랑"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [
+    "네모",
+    "동그라미"
+   ],
+   "t": 336.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "absent": [
+    "보라",
+    "분홍",
+    "빨강"
+   ]
+  },
+  {
+   "frame_id": "sc006",
+   "objects": [
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "자동차",
+     "count": 2,
+     "colors": [
+      "노랑"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "나무",
+     "count": 2,
+     "colors": [
+      "초록"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "상자",
+     "count": 7,
+     "colors": [
+      "파랑"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "네모",
+    "동그라미"
+   ],
+   "t": 372.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "absent": [
+    "보라",
+    "분홍",
+    "빨강"
+   ]
+  },
+  {
+   "frame_id": "sc007",
+   "objects": [
+    {
+     "name": "자동차",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "네모",
+    "동그라미"
+   ],
+   "t": 408.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_004080.jpg",
+   "absent": [
+    "보라",
+    "분홍",
+    "빨강"
+   ]
+  },
+  {
+   "frame_id": "sc008",
+   "objects": [
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "자동차",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [
+    "네모",
+    "동그라미"
+   ],
+   "t": 528.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_005280.jpg",
+   "absent": [
+    "빨강"
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "frame_id": "sc002",
+   "obj": {
+    "name": "자동차",
+    "count": 1,
+    "colors": [
+     "빨강"
+    ],
+    "size": "보통"
+   },
+   "drop": "화면에 없는 색 — 빨강"
+  }
+ ],
+ "facts": [
+  {
+   "t0": 36.0,
+   "t1": 36.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000360.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "cnt0101",
+   "kind": "count",
+   "payload": {
+    "name": "하얀 부스",
+    "n": 3
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 36.0,
+   "t1": 36.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000360.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "ocl0101",
+   "kind": "objcolor",
+   "payload": {
+    "name": "부스",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 36.0,
+   "t1": 36.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000360.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "who0101",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 부스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 36.0,
+   "t1": 36.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp01",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모",
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 72.0,
+   "t1": 72.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp02",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 132.0,
+   "t1": 132.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_001320.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0301",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 자동차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 132.0,
+   "t1": 132.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_001320.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0302",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 자동차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_002760.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0401",
+   "kind": "objcolor",
+   "payload": {
+    "name": "자동차",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_002760.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0401",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 자동차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0501",
+   "kind": "objcolor",
+   "payload": {
+    "name": "버스",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0501",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0502",
+   "kind": "objcolor",
+   "payload": {
+    "name": "자동차",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0502",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 자동차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0503",
+   "kind": "objcolor",
+   "payload": {
+    "name": "나무",
+    "colors": [
+     "초록"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0503",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 나무"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0504",
+   "kind": "objcolor",
+   "payload": {
+    "name": "상자",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0504",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 상자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "conf": "medium",
+   "id": "sum05",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "파란 버스",
+      "n": 1
+     },
+     {
+      "name": "노란 자동차",
+      "n": 1
+     },
+     {
+      "name": "초록색 나무",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp05",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모",
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0601",
+   "kind": "objcolor",
+   "payload": {
+    "name": "버스",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0601",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "cnt0602",
+   "kind": "count",
+   "payload": {
+    "name": "노란 자동차",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0602",
+   "kind": "objcolor",
+   "payload": {
+    "name": "자동차",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0602",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 자동차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "cnt0603",
+   "kind": "count",
+   "payload": {
+    "name": "초록색 나무",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0603",
+   "kind": "objcolor",
+   "payload": {
+    "name": "나무",
+    "colors": [
+     "초록"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0603",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 나무"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0604",
+   "kind": "objcolor",
+   "payload": {
+    "name": "상자",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0604",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 상자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "id": "sum06",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "파란 버스",
+      "n": 1
+     },
+     {
+      "name": "노란 자동차",
+      "n": 2
+     },
+     {
+      "name": "초록색 나무",
+      "n": 2
+     }
+    ],
+    "total": 5
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp06",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모",
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 408.0,
+   "t1": 408.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_004080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0701",
+   "kind": "objcolor",
+   "payload": {
+    "name": "자동차",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 408.0,
+   "t1": 408.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_004080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0701",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 자동차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 408.0,
+   "t1": 408.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_004080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0702",
+   "kind": "objcolor",
+   "payload": {
+    "name": "버스",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 408.0,
+   "t1": 408.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_004080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0702",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 408.0,
+   "t1": 408.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_004080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp07",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모",
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0801",
+   "kind": "objcolor",
+   "payload": {
+    "name": "버스",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0801",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0802",
+   "kind": "objcolor",
+   "payload": {
+    "name": "자동차",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0802",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 자동차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp08",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모",
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  }
+ ]
+}

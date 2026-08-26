@@ -1,0 +1,189 @@
+{
+ "activities": [
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 상어는 무슨 색인가요?",
+   "fact_id": "ocl0101",
+   "color_index": 0,
+   "t": 24.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000240.jpg",
+   "answer": "노랑",
+   "choices": [
+    "갈색",
+    "검정",
+    "노랑"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "듣기와 말하기 — 그림을 보고 알게 된 것을 말한다",
+   "age": "3세",
+   "prompt": "이 그림에 나온 상어를 찾아보세요.",
+   "fact_id": "who0202",
+   "t": 84.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_000840.jpg",
+   "answer": "분홍색 상어",
+   "choices": [
+    "주황색 상어",
+    "초록색 상어",
+    "분홍색 상어"
+   ]
+  },
+  {
+   "type": "모양 찾기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 주변에서 동그라미 모양을 찾아본다",
+   "age": "3세",
+   "prompt": "이 그림에서 동그라미 모양을 찾아보세요.",
+   "fact_id": "shp06",
+   "t": 348.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "answer": "동그라미",
+   "choices": [
+    "네모",
+    "동그라미",
+    "세모"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 물고기는 무슨 색인가요?",
+   "fact_id": "ocl0503",
+   "color_index": 0,
+   "t": 300.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003000.jpg",
+   "answer": "주황",
+   "choices": [
+    "갈색",
+    "노랑",
+    "주황"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 나눈다",
+   "age": "3세",
+   "prompt": "이 그림을 보고 무엇이 보이는지, 어떤 느낌인지 말해 주세요.",
+   "fact_id": "who0605",
+   "t": 348.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "4세",
+   "prompt": "이 그림에서 글자는 무슨 색인가요?",
+   "fact_id": "ocl0701",
+   "color_index": 0,
+   "t": 444.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_004440.jpg",
+   "answer": "노랑",
+   "choices": [
+    "검정",
+    "회색",
+    "노랑"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "4세",
+   "prompt": "이 그림에서 조개는 무슨 색인가요?",
+   "fact_id": "ocl0801",
+   "color_index": 0,
+   "t": 528.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_005280.jpg",
+   "answer": "초록",
+   "choices": [
+    "초록",
+    "검정",
+    "빨강"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "책과 이야기 즐기기 — 그림에서 본 것을 찾아 말한다",
+   "age": "4세",
+   "prompt": "이 그림에 초록색 조개가 보이나요? 찾아서 손가락으로 짚어 보세요.",
+   "fact_id": "who0801",
+   "t": 528.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_005280.jpg",
+   "answer": "초록색 조개",
+   "choices": [
+    "주황색 물고기",
+    "초록색 조개",
+    "주황색 상어"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 장면을 보고 느낀 것을 자유롭게 말한다",
+   "age": "4세",
+   "prompt": "이 그림을 보면 어떤 느낌이 드나요? 무엇이 보이는지 말해 주세요.",
+   "fact_id": "who0701",
+   "t": 444.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_004440.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "그림으로 표현",
+   "domain": "예술경험",
+   "curriculum": "창의적으로 표현하기 — 본 것을 그림으로 나타낸다",
+   "age": "4세",
+   "prompt": "이 그림에서 마음에 드는 것을 하나 골라 그려 보세요.",
+   "fact_id": "ocl0801",
+   "t": 528.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_005280.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 주황색 상어 1마리와 분홍색 상어 1마리, 주황색 물고기 1마리가 있어요. 모두 몇 마리일까요?",
+   "fact_id": "sum05",
+   "t": 300.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003000.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "3",
+    "4"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 노란 상어 1마리와 파란 상어 1마리, 주황색 상어 1마리가 있어요. 모두 몇 마리일까요?",
+   "fact_id": "sum06",
+   "t": 348.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어1화_003480.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "4",
+    "3"
+   ]
+  }
+ ],
+ "dropped": []
+}

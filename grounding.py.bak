@@ -1,0 +1,472 @@
+"""정답(answer)이 증거에서 실제로 도출되는지 대조한다.
+
+activities.py 의 게이트는 `quote` 만 전사본과 대조한다. 그래서 이런 카드가 빠져나갔다.
+
+    {"type":"의성어·의태어","answer":"쓱쓱","quote":"꿰매기 시작했어요"}
+
+인용은 전사본에 실재한다 → 게이트 통과. 그러나 "쓱쓱" 은 증거 어디에도 없다.
+생성자가 지어냈고, 아무도 안 봤다. 인용을 검사하는 것과 정답을 검사하는 것은 다른 일이다.
+
+    카드 ──► ① answer 가 비어 있는가
+             │   ├─ 예 + 창작형 유형(그림·자유 그리기 …) ─► open_ended  (정상)
+             │   └─ 예 + 그 외 유형             ─────────► ungrounded (형식 오류)
+             └─ 아니오 ─► ② 정답의 내용 형태소가 증거에 있는가
+                          ├─ 예 ─► grounded
+                          └─ 아니오 ─► ungrounded  (폐기 대상)
+
+한국어 형태소 분석기는 외부 패키지다. 여기서는 못 쓴다(표준 라이브러리 전용).
+대신 **조사·어미 접미사 목록으로 근사**한다. "실" 과 "실이", "이불" 과 "이불을" 을
+같은 것으로 보되, 접미사를 벗겨 만든 한 글자짜리 부스러기는 매칭에 쓰지 않는다.
+근사이므로 완벽하지 않다 — 놓치는 쪽(ungrounded 오판)으로 기울여 두었다.
+이 모듈은 품질을 올리는 도구가 아니라 최악을 막는 관문이다.
+
+주의: 카드 자신의 `quote` 는 증거로 쓰지 않는다. quote 가 위조된 카드(실제로 있다:
+s191 "친구들이 모여 있어요")가 자기 위조 인용으로 자기 정답을 정당화하게 되기 때문이다.
+증거는 반드시 plan 의 `interrupts[].evidence` 처럼 밖에서 넣어 준다.
+"""
+from __future__ import annotations
+
+import json
+import re
+import sys
+import unicodedata
+from pathlib import Path
+
+ROOT = Path(__file__).parent
+
+# 내용 토큰 중 몇 %가 증거에서 확인돼야 grounded 로 볼 것인가.
+# 한 단어 정답("실","쓱쓱")은 사실상 1/1 을 요구하고,
+# 문장형 정답("곰인형이 이불을 꿰매 주었어요")은 일부 어미 차이를 허용한다.
+GROUNDED_RATIO = 0.6
+
+# 정답이 없는 게 정상인 유형. 유형 문자열에 이 조각이 들어 있으면 창작형으로 본다.
+CREATIVE_HINTS = ("그림", "그리", "감상", "창작", "상상", "자유",
+                  "만들기", "표현", "노래", "율동", "놀이", "꾸미",
+                  # 누리과정 기반 활동 유형 (2026-08 확장). 정답이 없는 것이 정상이다.
+                  "내가 그 자리라면", "이어질 말", "장면 감상", "응원", "이야기해")
+
+# 오답이 증거에 있는 게 정상인 유형. 문장 배열은 보기 전부가 줄거리에서 나온다.
+ORDERING_HINTS = ("배열", "순서", "정렬", "차례")
+
+# 한글·숫자·라틴 문자 덩어리만 토큰으로 뽑는다. 구두점과 "..." 은 자동으로 떨어진다.
+_TOKEN_RE = re.compile(r"[가-힣]+|[0-9]+|[A-Za-z]+")
+_PUNCT_RE = re.compile(r"[^\w\s가-힣]+")
+
+# 접미사를 두 등급으로 나눈다. 벗겨서 한 글자가 남았을 때 그걸 믿을지가 갈리기 때문이다.
+#
+#   강한 접미사 = 조사·복수. "실이"→"실", "말도"→"말" 처럼 한 글자 명사를 정직하게 남긴다.
+#   약한 접미사 = 어미·명사형. "바다"의 "다"는 어미가 아니라 명사의 일부다.
+#                 이걸 벗기면 "바" 라는 부스러기가 생기고, 우연히 다른 말과 맞는다.
+#
+# 그래서 한 글자 매칭은 강한 접미사에서 나온 것만 인정한다(_token_grounded 참조).
+_STRONG_SUFFIXES = (
+    # 복수 + 조사 결합형
+    "들에게", "들이라", "들과", "들의", "들은", "들이", "들을", "들도", "들만", "들",
+    # 조사
+    "으로서", "으로써", "이라고", "이라는", "이라도", "이라면", "에게서", "한테서",
+    "으로는", "에서는", "에게는", "로서", "로써", "라고", "라는", "라도", "에게",
+    "한테", "께서", "에서", "이나", "이랑", "하고", "까지", "부터", "조차", "마저",
+    "밖에", "처럼", "같이", "보다", "대로", "만큼", "든지", "이든", "이란", "이야",
+    "이여", "마다", "커녕", "으로", "에는", "에도",
+    "은", "는", "이", "가", "을", "를", "의", "에", "와", "과", "도", "만",
+    "로", "랑", "께", "엔",
+)
+_WEAK_SUFFIXES = (
+    # 어미·명사형·호격. 명사의 일부일 수 있어서 한 글자 결과는 믿지 않는다.
+    "습니다", "았어요", "었어요", "했어요", "이에요", "네요", "군요", "지요",
+    "해요", "예요", "어요", "아요", "이며", "이고", "이다", "죠", "요",
+    "기", "음", "임", "함", "됨", "다", "자", "지", "게", "니", "냐", "까",
+    "고", "서", "며", "야", "아", "여", "나",
+)
+_ALL_SUFFIXES = _STRONG_SUFFIXES + _WEAK_SUFFIXES
+
+# 정답 쪽에서 걸러 낼 기능어. 이게 매칭에 끼면 아무 문장이나 근거가 된다.
+_STOPWORDS = frozenset("""
+음 어 아 오 와 우와 야 에 그 이 저 것 거 게 수 등 좀 잘 더 또 다 안 못
+나 너 내 네 우리 너희 저희 그것 이것 저것 여기 거기 저기 뭐 뭘 무엇 누구
+어디 언제 왜 어떻게 정말 진짜 그런데 그리고 하지만 그래서 그러나 및 혹시
+있어요 있어 없어 해요 하는 되는 같은 있는 없는 어떤 무슨 그런 이런 저런
+""".split())
+
+# 아라비아 숫자 ↔ 한자어/고유어 수사. "4" 와 "네 명" 을 같은 것으로 본다.
+_NUMERALS = {
+    "1": ("일", "하나", "한"), "2": ("이", "둘", "두"), "3": ("삼", "셋", "세"),
+    "4": ("사", "넷", "네"), "5": ("오", "다섯"), "6": ("육", "여섯"),
+    "7": ("칠", "일곱"), "8": ("팔", "여덟"), "9": ("구", "아홉"), "10": ("십", "열"),
+}
+_NUMERALS_REV = {w: d for d, words in _NUMERALS.items() for w in words}
+
+
+# ── 정규화 · 토큰화 ──────────────────────────────────────────────────────────
+
+def normalize(text: str) -> str:
+    """NFC 정규화 + 구두점 제거 + 공백 정리. 대조는 전부 이 위에서 한다."""
+    text = unicodedata.normalize("NFC", str(text))
+    text = _PUNCT_RE.sub(" ", text)
+    return re.sub(r"\s+", " ", text).strip().lower()
+
+
+def tokens(text: str) -> list[str]:
+    """한글/숫자/라틴 덩어리만 뽑는다."""
+    return _TOKEN_RE.findall(normalize(text))
+
+
+def _numeral_forms(token: str) -> set[str]:
+    out = set()
+    if token in _NUMERALS:
+        out.update(_NUMERALS[token])
+    if token in _NUMERALS_REV:
+        out.add(_NUMERALS_REV[token])
+    return out
+
+
+def variants(token: str, strong_only: bool = False) -> set[str]:
+    """토큰 하나에서 나올 수 있는 표면형 집합.
+
+    원형 + 접미사를 벗긴 어간(2단계까지) + 수사 대응형.
+    어간을 하나로 확정하지 않고 집합으로 두는 이유: 잘못 벗겨도 원형이 남아 있어
+    "바다"를 "바"로 확정해 버리는 사고가 안 난다.
+
+    strong_only=True 면 조사·복수 접미사만 벗긴다. 한 글자 매칭에 쓸 신뢰 집합이다.
+    """
+    suffixes = _STRONG_SUFFIXES if strong_only else _ALL_SUFFIXES
+    out = {token}
+    frontier = {token}
+    for _ in range(2):
+        nxt = set()
+        for t in frontier:
+            for suf in suffixes:
+                if len(t) > len(suf) and t.endswith(suf):
+                    stem = t[: -len(suf)]
+                    if stem and stem not in out:
+                        nxt.add(stem)
+        if not nxt:
+            break
+        out |= nxt
+        frontier = nxt
+    for t in list(out):
+        out |= _numeral_forms(t)  # 수사 대응은 명시적 표라 항상 신뢰한다
+    return out
+
+
+def _as_texts(evidence) -> list[str]:
+    """증거를 문자열 리스트로 받는다. plan 의 dict 세그먼트도, 생 문자열도 받는다."""
+    if evidence is None:
+        return []
+    if isinstance(evidence, str):
+        return [evidence]
+    out = []
+    for seg in evidence:
+        if isinstance(seg, str):
+            out.append(seg)
+        elif isinstance(seg, dict):
+            t = seg.get("text") or seg.get("canonical_text") or ""
+            if t:
+                out.append(t)
+    return out
+
+
+def evidence_variants(evidence, strong_only: bool = False) -> set[str]:
+    """증거 전체에서 나올 수 있는 표면형을 한 덩어리로 모은다."""
+    out: set[str] = set()
+    for text in _as_texts(evidence):
+        for tok in tokens(text):
+            out |= variants(tok, strong_only)
+    return out
+
+
+def _token_grounded(token: str, ev_all: set[str], ev_strong: set[str]) -> bool:
+    """토큰 하나가 증거에 있는가.
+
+    두 글자 이상이 맞으면 그대로 인정한다. 한 글자는 양쪽 모두 조사·복수만 벗겨
+    나온 것일 때만 인정한다 — "실을"→"실" 은 받고, "불고기"→"불" 은 막는다.
+    """
+    ans_all = variants(token)
+    hit = ans_all & ev_all
+    if any(len(v) >= 2 for v in hit):
+        return True
+    short = {v for v in hit if len(v) == 1}
+    if not short:
+        return False
+    return bool(short & variants(token, strong_only=True) & ev_strong)
+
+
+def content_tokens(text: str) -> list[str]:
+    """기능어를 뺀 내용 토큰. 판정의 분모가 된다."""
+    return [t for t in tokens(text) if t not in _STOPWORDS]
+
+
+# ── 판정 ────────────────────────────────────────────────────────────────────
+
+def _is_creative(card_type: str) -> bool:
+    t = str(card_type or "")
+    return any(h in t for h in CREATIVE_HINTS)
+
+
+def _is_ordering(card_type: str) -> bool:
+    t = str(card_type or "")
+    return any(h in t for h in ORDERING_HINTS)
+
+
+def _grounding_score(answer: str, evidence) -> tuple[float, list[str], list[str]]:
+    """(비율, 확인된 토큰, 못 찾은 토큰). 내용 토큰이 없으면 비율 -1."""
+    ev_all = evidence_variants(evidence)
+    if not ev_all:
+        return -1.0, [], []
+    content = content_tokens(answer)
+    if not content:
+        return -1.0, [], []
+    ev_strong = evidence_variants(evidence, strong_only=True)
+    hit = [t for t in content if _token_grounded(t, ev_all, ev_strong)]
+    miss = [t for t in content if t not in hit]
+    return len(hit) / len(content), hit, miss
+
+
+def check_answer(card: dict, evidence_segments) -> tuple[str, str]:
+    """정답이 증거에서 도출 가능한지 판정한다.
+
+    Args:
+        card: 최소한 `answer`, `type` 을 가진 활동 카드.
+        evidence_segments: 문자열 리스트 / plan 의 `interrupts[].evidence` dict 리스트 /
+            문자열 하나. 카드의 `quote` 는 여기 넣지 않는다(모듈 docstring 참조).
+
+    Returns:
+        (verdict, reason) — verdict 는 "grounded" | "open_ended" | "ungrounded".
+    """
+    ctype = card.get("type", "")
+    raw = card.get("answer", None)
+    answer = "" if raw is None else str(raw).strip()
+
+    if not answer:
+        if _is_creative(ctype):
+            return "open_ended", f"창작형({ctype}) · 정답 없음이 정상"
+        return "ungrounded", f"정답 없음인데 창작형 유형이 아님: {ctype!r}"
+
+    texts = _as_texts(evidence_segments)
+    if not texts:
+        return "ungrounded", "증거 세그먼트가 비어 있음"
+
+    # 정답이 증거에 통째로 박혀 있으면 그것으로 끝. (한 글자는 우연 일치가 잦아 제외)
+    norm_answer = normalize(answer)
+    if len(norm_answer) >= 2:
+        for text in texts:
+            if norm_answer in normalize(text):
+                return "grounded", f"증거에 원문 그대로 있음: {answer!r}"
+
+    ratio, hit, miss = _grounding_score(answer, texts)
+    if ratio < 0:
+        return "ungrounded", f"판정 가능한 내용 형태소가 없음: {answer!r}"
+
+    detail = f"내용 형태소 {len(hit)}/{len(hit) + len(miss)} 확인"
+    if ratio >= GROUNDED_RATIO:
+        return "grounded", f"{detail} (확인: {', '.join(hit)})"
+
+    note = f"{detail} · 증거에 없음: {', '.join(miss)}"
+    if "의성어" in str(ctype) or "의태어" in str(ctype):
+        note += " — 의성어·의태어는 대사 전사본에 거의 안 남는다. 생성자가 지어낸 쪽을 의심할 것"
+    return "ungrounded", note
+
+
+def check_distractors(card: dict, evidence) -> list[str]:
+    """증거에 버젓이 있는 오답 선택지를 돌려준다.
+
+    오답이 증거에 있으면 아이 입장에서 그것도 맞는 답으로 보인다. 문제가 모호해진다.
+    단, 문장 배열처럼 보기 전부가 줄거리에서 나오는 유형은 그게 정상이므로 건너뛴다.
+    """
+    choices = card.get("choices") or []
+    if not choices or _is_ordering(card.get("type", "")):
+        return []
+
+    raw = card.get("answer", None)
+    answer = "" if raw is None else normalize(str(raw))
+    texts = _as_texts(evidence)
+    if not texts:
+        return []
+
+    bad = []
+    for choice in choices:
+        c = str(choice).strip()
+        if not c or normalize(c) == answer:
+            continue
+        norm_c = normalize(c)
+        if len(norm_c) >= 2 and any(norm_c in normalize(t) for t in texts):
+            bad.append(c)
+            continue
+        ratio, _, _ = _grounding_score(c, texts)
+        if ratio >= GROUNDED_RATIO:
+            bad.append(c)
+    return bad
+
+
+def check_card(card: dict, evidence) -> tuple[str, str, list[str]]:
+    """정답 판정과 오답 점검을 한 번에. 통합할 때 이것만 부르면 된다."""
+    verdict, reason = check_answer(card, evidence)
+    return verdict, reason, check_distractors(card, evidence)
+
+
+# ── plan/cards 연결 ─────────────────────────────────────────────────────────
+
+def evidence_for_slot(plan: dict, slot: dict) -> list[dict]:
+    """슬롯에 대응하는 interrupt 의 증거를 찾는다.
+
+    cards 의 slot["t"] 는 interrupt["act"]["t1"] 과 같고 interrupt["t"] 와는 몇 초 어긋난다
+    (뽀로로: slot 455.88 ↔ interrupt 453.38). act.t1 을 먼저 보고, 없으면 가장 가까운 것.
+    """
+    interrupts = plan.get("interrupts", [])
+    if not interrupts:
+        return []
+    t = slot["t"]
+    for i in interrupts:
+        if abs(i.get("act", {}).get("t1", -1e9) - t) < 0.5:
+            return i.get("evidence", [])
+    nearest = min(interrupts, key=lambda i: abs(i["t"] - t))
+    return nearest.get("evidence", [])
+
+
+def run(plan_path: Path, cards_path: Path) -> list[tuple]:
+    """(slot_t, card, verdict, reason, bad_distractors) 리스트."""
+    plan = json.loads(Path(plan_path).read_text(encoding="utf-8"))
+    cards = json.loads(Path(cards_path).read_text(encoding="utf-8"))
+    out = []
+    for slot in cards["slots"]:
+        ev = evidence_for_slot(plan, slot)
+        for card in slot["activities"]:
+            verdict, reason, bad = check_card(card, ev)
+            out.append((slot["t"], card, verdict, reason, bad))
+    return out
+
+
+# ── 자체검사 ────────────────────────────────────────────────────────────────
+
+def selftest_units():
+    """게이트가 무동작이 아님을 증명한다. 지어낸 정답은 반드시 걸려야 한다."""
+    n = 0
+
+    # 1. 지어낸 의성어 — 인용은 실재하지만 정답은 증거 어디에도 없다
+    card = {"type": "의성어·의태어", "answer": "쓱쓱",
+            "choices": ["쓱쓱", "쿵쿵", "펄럭펄럭"], "quote": "꿰매기 시작했어요"}
+    v, why = check_answer(card, ["곰인형은 찢어진 이불을 꿰매기 시작했어요"])
+    assert v == "ungrounded", f"지어낸 의성어를 통과시켰다: {v} / {why}"
+    n += 1
+
+    # 2. 조사가 붙은 형태를 잡아야 한다 — "실" vs "실이"
+    v, why = check_answer({"type": "연관성 카드 퀴즈", "answer": "실"},
+                          ["음... 다른 실이 필요한데"])
+    assert v == "grounded", f"조사 붙은 정답을 막았다: {v} / {why}"
+    n += 1
+
+    # 3. "이불" vs "이불이"
+    v, why = check_answer({"type": "연관성 카드 퀴즈", "answer": "이불"},
+                          ["말도 안 돼! 이불이 어떻게 날아!"])
+    assert v == "grounded", f"조사 붙은 정답을 막았다: {v} / {why}"
+    n += 1
+
+    # 4. 창작형은 정답이 없는 게 정상
+    v, why = check_answer({"type": "그림 감상문", "answer": None, "choices": []}, [])
+    assert v == "open_ended", f"창작형을 폐기했다: {v} / {why}"
+    n += 1
+
+    # 5. 증거와 무관한 정답
+    v, why = check_answer({"type": "연관성 카드 퀴즈", "answer": "자동차"},
+                          ["이불이 어떻게 날아"])
+    assert v == "ungrounded", f"무관한 정답을 통과시켰다: {v} / {why}"
+    n += 1
+
+    # 6. 정답 없음 + 창작형 아님 = 형식 오류
+    v, why = check_answer({"type": "연관성 카드 퀴즈", "answer": None}, ["아무 말"])
+    assert v == "ungrounded" and "창작형" in why, f"{v} / {why}"
+    n += 1
+
+    # 7. 증거가 비면 근거가 없는 것이다
+    v, why = check_answer({"type": "연관성 카드 퀴즈", "answer": "실"}, [])
+    assert v == "ungrounded", f"증거 없이 통과시켰다: {v} / {why}"
+    n += 1
+
+    # 8. 문장형 정답 — 어미가 달라도 내용 형태소가 겹치면 통과
+    v, why = check_answer(
+        {"type": "문장 배열", "answer": "곰인형이 이불을 꿰매 주었어요"},
+        ["곰인형은 찢어진 이불을 꿰매기 시작했어요"])
+    assert v == "grounded", f"어미 차이로 문장형을 막았다: {v} / {why}"
+    n += 1
+
+    # 9. plan 형식(dict 세그먼트)도 그대로 받는다
+    v, _ = check_answer({"type": "연관성 카드 퀴즈", "answer": "실"},
+                        [{"id": "s117", "text": "음... 다른 실이 필요한데", "conf": "medium"}])
+    assert v == "grounded", "dict 세그먼트를 못 읽었다"
+    n += 1
+
+    # 10. 한 글자 부스러기로 우연히 맞으면 안 된다 ("바다" → "바" ↛ "바를")
+    v, _ = check_answer({"type": "연관성 카드 퀴즈", "answer": "바다"}, ["바를 잡았어"])
+    assert v == "ungrounded", "접미사 부스러기 매칭이 통과했다"
+    n += 1
+
+    # 10b. 증거 쪽 부스러기도 막는다 ("불고기" → "불" 로 "불" 을 정당화하면 안 된다)
+    v, _ = check_answer({"type": "연관성 카드 퀴즈", "answer": "불"}, ["불고기를 구웠어요"])
+    assert v == "ungrounded", "증거 쪽 부스러기 매칭이 통과했다"
+    n += 1
+
+    # 10c. 반대로 조사가 붙은 한 글자 명사는 정답이 어절 안에 있어도 잡아야 한다
+    assert _token_grounded("실을", evidence_variants(["우와, 내 실! 고마워."]),
+                           evidence_variants(["우와, 내 실! 고마워."], strong_only=True)), \
+        "'실을' 이 증거의 '실' 과 안 이어졌다"
+    n += 1
+
+    # 11. 숫자 ↔ 수사
+    v, _ = check_answer({"type": "개수 세기", "answer": "4"}, ["친구가 네 명 있어요"])
+    assert v == "grounded", "숫자와 수사를 못 이었다"
+    v, _ = check_answer({"type": "개수 세기", "answer": "4"}, ["이불이 어떻게 날아"])
+    assert v == "ungrounded", "증거 없는 개수를 통과시켰다"
+    n += 2
+
+    # 12. 오답이 증거에 버젓이 있으면 잡아낸다
+    bad = check_distractors(
+        {"type": "연관성 카드 퀴즈", "answer": "실", "choices": ["실", "이불", "우산"]},
+        ["음... 다른 실이 필요한데", "어, 저기 우리 이불이 찢어졌는데"])
+    assert bad == ["이불"], f"모호한 오답을 못 잡았다: {bad}"
+    n += 1
+
+    # 13. 깨끗한 오답은 건드리지 않는다
+    bad = check_distractors(
+        {"type": "연관성 카드 퀴즈", "answer": "실", "choices": ["실", "우산", "신발"]},
+        ["음... 다른 실이 필요한데"])
+    assert bad == [], f"멀쩡한 오답을 잡았다: {bad}"
+    n += 1
+
+    # 14. 문장 배열은 보기 전부가 줄거리에서 나온다 — 건너뛴다
+    bad = check_distractors(
+        {"type": "문장 배열", "answer": "곰인형이 이불을 꿰매 주었어요",
+         "choices": ["곰인형이 실을 잃어버렸어요", "뽀로로가 실을 찾아 주었어요",
+                     "곰인형이 이불을 꿰매 주었어요"]},
+        ["곰인형은 찢어진 이불을 꿰매기 시작했어요", "우와, 내 실! 고마워."])
+    assert bad == [], f"배열형에서 오답을 잡았다: {bad}"
+    n += 1
+
+    print(f"근거 대조 자체검사 {n}/{n} 통과")
+
+
+def selftest_golden(path: Path = None):
+    """고정 픽스처로 게이트 회귀를 검사한다.
+
+    이전 버전은 `work/*_cards.json` 을 읽어 '쓱쓱' 카드를 찾았다. 그런데 그 파일은
+    생성기가 다시 돌 때마다 바뀌므로, 카드가 사라지자 **테스트가 깨졌다**.
+    회귀 테스트가 재생성되는 데이터에 의존하면 안 된다. 실제로 관측됐던 케이스를
+    fixtures/golden_cards.json 에 얼려 두고 그것만 본다.
+    """
+    path = path or (Path(__file__).parent / "fixtures" / "golden_cards.json")
+    data = json.loads(path.read_text())
+    ev = data["evidence"]
+    fails = []
+    print(f"\n{'case':<38} {'기대':<11} {'실제':<11}")
+    print("-" * 64)
+    for c in data["cards"]:
+        got, reason = check_answer(c, ev)
+        ok = got == c["expect"]
+        fails += [] if ok else [(c["case"], c["expect"], got, reason)]
+        print(f"{c['case'][:37]:<38} {c['expect']:<11} {got:<11} {'✓' if ok else '✗'}")
+    assert not fails, "골든셋 불일치:\n" + "\n".join(
+        f"  {c}: {e} 기대, {g} 나옴 ({r})" for c, e, g, r in fails)
+    print(f"\n골든셋 {len(data['cards'])}/{len(data['cards'])} 통과")
+
+if __name__ == "__main__":
+    selftest_units()
+    selftest_golden()

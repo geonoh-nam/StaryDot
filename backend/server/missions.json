@@ -1,0 +1,21 @@
+[
+  { "id": "m-tp-color",  "characterIds": ["teenieping"], "title": "오늘의 색깔 찾기", "description": "집 안에서 분홍색 물건 세 가지를 찾아 가족에게 보여 주세요." },
+  { "id": "m-tp-heart",  "characterIds": ["teenieping"], "title": "마음 전하기",     "description": "오늘 고마웠던 사람에게 '고마워'라고 직접 말해 보세요." },
+  { "id": "m-tp-dress",  "characterIds": ["teenieping"], "title": "나만의 옷 고르기", "description": "내일 입고 싶은 옷을 스스로 골라 걸어 두세요." },
+
+  { "id": "m-ty-count",  "characterIds": ["tayo"], "title": "자동차 세어 보기", "description": "창밖이나 산책길에서 자동차를 다섯 대까지 세어 보세요." },
+  { "id": "m-ty-park",   "characterIds": ["tayo"], "title": "주차장 만들기",   "description": "블록이나 상자로 자동차 주차장을 만들어 보세요." },
+  { "id": "m-ty-signal", "characterIds": ["tayo"], "title": "신호등 놀이",     "description": "빨강에 멈추고 초록에 걷는 놀이를 가족과 해 보세요." },
+
+  { "id": "m-br-shape",  "characterIds": ["bread"], "title": "빵 모양 만들기",   "description": "점토나 종이로 좋아하는 빵 모양을 만들어 보세요." },
+  { "id": "m-br-help",   "characterIds": ["bread"], "title": "한 가지 도와주기", "description": "밥상 차리기를 한 가지 도와 드리세요. 수저 놓기도 좋아요." },
+  { "id": "m-br-smell",  "characterIds": ["bread"], "title": "냄새 맞히기",     "description": "눈을 감고 부엌에서 나는 냄새가 무엇인지 맞혀 보세요." },
+
+  { "id": "m-sh-family", "characterIds": ["shark"], "title": "우리 가족 그리기", "description": "아기상어 가족처럼 우리 가족을 그려 보세요." },
+  { "id": "m-sh-swim",   "characterIds": ["shark"], "title": "헤엄치기 흉내",   "description": "바닥에 누워 헤엄치는 동작을 열 번 해 보세요." },
+  { "id": "m-sh-blue",   "characterIds": ["shark"], "title": "파란 것 모으기",   "description": "집 안에서 파란색 물건을 모아 한 줄로 놓아 보세요." },
+
+  { "id": "m-po-snow",   "characterIds": ["pororo"], "title": "친구에게 전화하기", "description": "보고 싶은 친구나 할머니께 전화해 오늘 있었던 일을 말해 보세요." },
+  { "id": "m-po-play",   "characterIds": ["pororo"], "title": "밖에서 놀기",     "description": "밖에 나가 열 걸음 걷고 다섯 번 뛰어 보세요." },
+  { "id": "m-po-share",  "characterIds": ["pororo"], "title": "나눠 주기",       "description": "간식을 하나 골라 가족과 반씩 나눠 먹어 보세요." }
+]

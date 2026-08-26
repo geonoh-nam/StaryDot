@@ -1,0 +1,191 @@
+{
+ "activities": [
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 나비는 무슨 색인가요?",
+   "fact_id": "ocl0801",
+   "color_index": 0,
+   "t": 600.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_006000.jpg",
+   "answer": "노랑",
+   "choices": [
+    "노랑",
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "책과 이야기 즐기기 — 그림을 보고 무엇이 나오는지 말한다",
+   "age": "3세",
+   "prompt": "이 그림에 나온 것은 무엇인가요?",
+   "fact_id": "who0201",
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "answer": "하얀 곰",
+   "choices": [
+    "노란 로봇",
+    "하얀 곰",
+    "회색 돌"
+   ]
+  },
+  {
+   "type": "모양 찾기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 주변에서 모양을 찾아본다",
+   "age": "3세",
+   "prompt": "이 그림에서 네모를 찾아보세요.",
+   "fact_id": "shp05",
+   "t": 300.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_003000.jpg",
+   "answer": "네모",
+   "choices": [
+    "네모",
+    "세모",
+    "별"
+   ]
+  },
+  {
+   "type": "크기 비교",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 크기를 비교해 본다",
+   "age": "3세",
+   "prompt": "이 그림에서 노란 나비와 회색 돌 중에 어느 것이 더 큰가요?",
+   "fact_id": "siz08",
+   "t": 600.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_006000.jpg",
+   "answer": "노란 나비",
+   "choices": [
+    "노란 나비",
+    "회색 돌"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 그림을 보고 느낌을 자유롭게 말한다",
+   "age": "3세",
+   "prompt": "이 그림을 보고 무엇이 보이는지 이야기해 보세요. 어떤 느낌이 드나요?",
+   "fact_id": "who0601",
+   "t": 360.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_003600.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "4세",
+   "prompt": "이 그림에서 바위는 무슨 색인가요?",
+   "fact_id": "ocl0101",
+   "color_index": 0,
+   "t": 24.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000240.jpg",
+   "answer": "회색",
+   "choices": [
+    "보라",
+    "분홍",
+    "회색"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 나눈다",
+   "age": "4세",
+   "prompt": "이 그림을 보고 어떤 느낌이 드는지 말해 보세요.",
+   "fact_id": "who0202",
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "가장 좋았던 장면",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 좋아하는 장면을 고르고 이유를 말한다",
+   "age": "4세",
+   "prompt": "그림 중에서 가장 마음에 드는 장면을 골라 보세요. 왜 골랐는지도 말해 주세요.",
+   "fact_id": "who0401",
+   "t": 252.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_002520.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "그림으로 표현",
+   "domain": "예술경험",
+   "curriculum": "창의적으로 표현하기 — 미술 재료로 자유롭게 표현한다",
+   "age": "4세",
+   "prompt": "이 그림에 나온 회색 바위를 종이에 그려 보세요.",
+   "fact_id": "who0101",
+   "t": 24.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000240.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "5세",
+   "prompt": "이 그림에서 통나무는 무슨 색인가요?",
+   "fact_id": "ocl0203",
+   "color_index": 0,
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "answer": "갈색",
+   "choices": [
+    "분홍",
+    "빨강",
+    "갈색"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 나눈다",
+   "age": "5세",
+   "prompt": "이 그림에 갈색 통나무가 보여요. 어떤 느낌이 드는지 말해 주세요.",
+   "fact_id": "who0203",
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "그림으로 표현",
+   "domain": "예술경험",
+   "curriculum": "창의적으로 표현하기 — 다양한 미술 재료로 자신의 생각을 표현한다",
+   "age": "5세",
+   "prompt": "이 그림 속 갈색 통나무를 따라 그려 보세요.",
+   "fact_id": "who0203",
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 하얀 곰 1마리와 회색 바위 1개, 갈색 통나무 1개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum02",
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "3",
+    "4"
+   ]
+  }
+ ],
+ "dropped": []
+}

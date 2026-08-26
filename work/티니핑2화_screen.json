@@ -1,0 +1,1213 @@
+{
+ "frames": [
+  {
+   "id": "sc001",
+   "t": 12.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_000120.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "파랑",
+     "보라",
+     "분홍",
+     "흰색"
+    ],
+    "absent": [
+     "초록",
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0226,
+     "주황": 0.0856,
+     "노랑": 0.0515,
+     "초록": 0.0031,
+     "파랑": 0.2483,
+     "보라": 0.1899,
+     "분홍": 0.3377,
+     "갈색": 0.0011,
+     "흰색": 0.0586,
+     "회색": 0.0016
+    }
+   }
+  },
+  {
+   "id": "sc002",
+   "t": 72.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_000720.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "흰색",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0036,
+     "주황": 0.0582,
+     "노랑": 0.1572,
+     "초록": 0.422,
+     "파랑": 0.0527,
+     "보라": 0.0036,
+     "분홍": 0.0089,
+     "갈색": 0.1501,
+     "검정": 0.1426,
+     "흰색": 0.0001,
+     "회색": 0.0011
+    }
+   }
+  },
+  {
+   "id": "sc003",
+   "t": 120.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_001200.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "분홍",
+     "검정"
+    ],
+    "absent": [],
+    "peak": {
+     "빨강": 0.0176,
+     "주황": 0.4338,
+     "노랑": 0.0983,
+     "초록": 0.1788,
+     "파랑": 0.0488,
+     "보라": 0.0082,
+     "분홍": 0.0892,
+     "갈색": 0.0175,
+     "검정": 0.0675,
+     "흰색": 0.0294,
+     "회색": 0.0109
+    }
+   }
+  },
+  {
+   "id": "sc004",
+   "t": 168.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_001680.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "분홍",
+     "갈색",
+     "검정",
+     "흰색"
+    ],
+    "absent": [],
+    "peak": {
+     "빨강": 0.0059,
+     "주황": 0.1837,
+     "노랑": 0.0484,
+     "초록": 0.327,
+     "파랑": 0.0809,
+     "보라": 0.02,
+     "분홍": 0.0603,
+     "갈색": 0.062,
+     "검정": 0.1195,
+     "흰색": 0.0727,
+     "회색": 0.0196
+    }
+   }
+  },
+  {
+   "id": "sc005",
+   "t": 204.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_002040.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "초록",
+     "파랑",
+     "분홍",
+     "갈색",
+     "검정",
+     "흰색"
+    ],
+    "absent": [],
+    "peak": {
+     "빨강": 0.1379,
+     "주황": 0.0615,
+     "노랑": 0.0294,
+     "초록": 0.1478,
+     "파랑": 0.1095,
+     "보라": 0.0194,
+     "분홍": 0.2926,
+     "갈색": 0.0395,
+     "검정": 0.0774,
+     "흰색": 0.0658,
+     "회색": 0.0192
+    }
+   }
+  },
+  {
+   "id": "sc006",
+   "t": 396.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_003960.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "노랑",
+     "초록",
+     "파랑",
+     "분홍",
+     "갈색",
+     "흰색"
+    ],
+    "absent": [
+     "검정"
+    ],
+    "peak": {
+     "빨강": 0.0393,
+     "주황": 0.0181,
+     "노랑": 0.0314,
+     "초록": 0.1646,
+     "파랑": 0.2554,
+     "보라": 0.0103,
+     "분홍": 0.3736,
+     "갈색": 0.0407,
+     "검정": 0.0016,
+     "흰색": 0.0508,
+     "회색": 0.0142
+    }
+   }
+  },
+  {
+   "id": "sc007",
+   "t": 492.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "파랑",
+     "분홍",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "검정"
+    ],
+    "peak": {
+     "빨강": 0.0734,
+     "주황": 0.1076,
+     "노랑": 0.0082,
+     "초록": 0.028,
+     "파랑": 0.1117,
+     "보라": 0.0283,
+     "분홍": 0.1487,
+     "갈색": 0.1527,
+     "검정": 0.0035,
+     "흰색": 0.1578,
+     "회색": 0.1802
+    }
+   }
+  },
+  {
+   "id": "sc008",
+   "t": 528.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "초록",
+     "파랑",
+     "분홍",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "검정"
+    ],
+    "peak": {
+     "빨강": 0.0488,
+     "주황": 0.0241,
+     "노랑": 0.0156,
+     "초록": 0.3139,
+     "파랑": 0.1143,
+     "보라": 0.017,
+     "분홍": 0.1539,
+     "갈색": 0.1021,
+     "검정": 0.0033,
+     "흰색": 0.0626,
+     "회색": 0.1444
+    }
+   }
+  }
+ ],
+ "observations": [
+  {
+   "frame_id": "sc001",
+   "objects": [],
+   "shapes": [
+    "하트",
+    "별"
+   ],
+   "t": 12.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_000120.jpg",
+   "absent": [
+    "갈색",
+    "검정",
+    "초록",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc002",
+   "objects": [
+    {
+     "name": "사진",
+     "count": 9,
+     "colors": [
+      "분홍"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미",
+    "하트"
+   ],
+   "t": 72.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_000720.jpg",
+   "absent": [
+    "보라",
+    "빨강",
+    "회색",
+    "흰색"
+   ]
+  },
+  {
+   "frame_id": "sc004",
+   "objects": [],
+   "shapes": [
+    "하트"
+   ],
+   "t": 168.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_001680.jpg",
+   "absent": []
+  },
+  {
+   "frame_id": "sc005",
+   "objects": [
+    {
+     "name": "캐릭터",
+     "count": 1,
+     "colors": [
+      "흰색"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "세모"
+   ],
+   "t": 204.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_002040.jpg",
+   "absent": []
+  },
+  {
+   "frame_id": "sc006",
+   "objects": [
+    {
+     "name": "나무",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "가방",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [],
+   "t": 396.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_003960.jpg",
+   "absent": [
+    "검정"
+   ]
+  },
+  {
+   "frame_id": "sc007",
+   "objects": [
+    {
+     "name": "사다리",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "탁자",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "케이크",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "별",
+     "count": 4,
+     "colors": [
+      "노랑"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미",
+    "네모",
+    "별"
+   ],
+   "t": 492.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "absent": [
+    "검정"
+   ]
+  },
+  {
+   "frame_id": "sc008",
+   "objects": [
+    {
+     "name": "캐릭터",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "나무",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "꽃",
+     "count": 4,
+     "colors": [
+      "흰색"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 528.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "absent": [
+    "검정"
+   ]
+  }
+ ],
+ "dropped": [],
+ "facts": [
+  {
+   "t0": 12.0,
+   "t1": 12.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_000120.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp01",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "하트",
+     "별"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 72.0,
+   "t1": 72.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_000720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0201",
+   "kind": "objcolor",
+   "payload": {
+    "name": "사진",
+    "colors": [
+     "분홍"
+    ],
+    "absent": [
+     "보라",
+     "빨강",
+     "회색",
+     "흰색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 72.0,
+   "t1": 72.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_000720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0201",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 사진"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 72.0,
+   "t1": 72.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_000720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp02",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "하트"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 168.0,
+   "t1": 168.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_001680.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp03",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "하트"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 204.0,
+   "t1": 204.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_002040.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp04",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "세모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 396.0,
+   "t1": 396.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_003960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0501",
+   "kind": "objcolor",
+   "payload": {
+    "name": "나무",
+    "colors": [
+     "초록"
+    ],
+    "absent": [
+     "검정"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 396.0,
+   "t1": 396.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_003960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0501",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 나무"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 396.0,
+   "t1": 396.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_003960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0502",
+   "kind": "objcolor",
+   "payload": {
+    "name": "가방",
+    "colors": [
+     "분홍"
+    ],
+    "absent": [
+     "검정"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 396.0,
+   "t1": 396.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_003960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0502",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 가방"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0601",
+   "kind": "objcolor",
+   "payload": {
+    "name": "사다리",
+    "colors": [
+     "초록"
+    ],
+    "absent": [
+     "검정"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0601",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 사다리"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0602",
+   "kind": "objcolor",
+   "payload": {
+    "name": "탁자",
+    "colors": [
+     "분홍"
+    ],
+    "absent": [
+     "검정"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0602",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 탁자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0603",
+   "kind": "objcolor",
+   "payload": {
+    "name": "케이크",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "검정"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0603",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 케이크"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0604",
+   "kind": "count",
+   "payload": {
+    "name": "노란 별",
+    "n": 4
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0604",
+   "kind": "objcolor",
+   "payload": {
+    "name": "별",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "검정"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0604",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 별"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "id": "sum06",
+   "kind": "sum",
+   "age_min": 7,
+   "payload": {
+    "parts": [
+     {
+      "name": "초록색 사다리",
+      "n": 1
+     },
+     {
+      "name": "분홍색 탁자",
+      "n": 1
+     },
+     {
+      "name": "노란 별",
+      "n": 4
+     }
+    ],
+    "total": 6
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "id": "dif06",
+   "kind": "diff",
+   "age_min": 7,
+   "payload": {
+    "more": {
+     "name": "노란 별",
+     "n": 4
+    },
+    "less": {
+     "name": "초록색 사다리",
+     "n": 1
+    },
+    "diff": 3
+   },
+   "afford": [
+    "수 가르기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp06",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "네모",
+     "별"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0702",
+   "kind": "objcolor",
+   "payload": {
+    "name": "나무",
+    "colors": [
+     "초록"
+    ],
+    "absent": [
+     "검정"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0702",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 나무"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0703",
+   "kind": "count",
+   "payload": {
+    "name": "하얀 꽃",
+    "n": 4
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0703",
+   "kind": "objcolor",
+   "payload": {
+    "name": "꽃",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "검정"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0703",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 꽃"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "siz07",
+   "kind": "size",
+   "payload": {
+    "big": "초록색 나무",
+    "small": "하얀 꽃"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "conf": "medium",
+   "id": "sum07",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "초록색 나무",
+      "n": 1
+     },
+     {
+      "name": "하얀 꽃",
+      "n": 4
+     }
+    ],
+    "total": 5
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "conf": "medium",
+   "id": "dif07",
+   "kind": "diff",
+   "age_min": 7,
+   "payload": {
+    "more": {
+     "name": "하얀 꽃",
+     "n": 4
+    },
+    "less": {
+     "name": "초록색 나무",
+     "n": 1
+    },
+    "diff": 3
+   },
+   "afford": [
+    "수 가르기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp07",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  }
+ ]
+}

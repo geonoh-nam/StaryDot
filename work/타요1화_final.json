@@ -1,0 +1,295 @@
+{
+ "activities": [
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 버스는 무슨 색인가요?",
+   "fact_id": "ocl0101",
+   "color_index": 0,
+   "t": 108.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "answer": "파랑",
+   "choices": [
+    "보라",
+    "분홍",
+    "파랑"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 수량에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에 빨간 차가 몇 대 있나요?",
+   "fact_id": "cnt0301",
+   "t": 240.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002400.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "4",
+    "3"
+   ]
+  },
+  {
+   "type": "모양 찾기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 주변에서 모양을 찾아본다",
+   "age": "3세",
+   "prompt": "이 그림에서 네모를 찾아보세요.",
+   "fact_id": "shp04",
+   "t": 276.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "answer": "네모",
+   "choices": [
+    "동그라미",
+    "세모",
+    "네모"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "읽기와 쓰기에 관심 가지기 — 그림을 보고 무엇인지 안다",
+   "age": "3세",
+   "prompt": "이 그림에 노란 버스가 보이나요?",
+   "fact_id": "who0203",
+   "t": 156.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001560.jpg",
+   "answer": "노란 버스",
+   "choices": [
+    "노란 버스",
+    "노란 기둥",
+    "노란 자동차"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 나눈다",
+   "age": "3세",
+   "prompt": "이 그림에서 무엇이 보이나요? 마음에 드는 것을 말해 주세요.",
+   "fact_id": "who0501",
+   "t": 312.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_003120.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "탐구과정 즐기기 — 물체의 수를 세어 본다",
+   "age": "4세",
+   "prompt": "이 그림에 빨간 트럭이 몇 대 있나요?",
+   "fact_id": "cnt0103",
+   "t": 108.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "answer": "2",
+   "choices": [
+    "1",
+    "3",
+    "2"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "책과 이야기 즐기기 — 이야기에 나온 대상을 찾아본다",
+   "age": "4세",
+   "prompt": "이 그림에서 초록색 트럭을 찾아보세요.",
+   "fact_id": "who0102",
+   "t": 108.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "answer": "초록색 트럭",
+   "choices": [
+    "노란 버스",
+    "초록색 트럭",
+    "노란 자동차"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "책과 이야기 즐기기 — 이야기에 나온 대상을 찾아본다",
+   "age": "4세",
+   "prompt": "이 그림에서 빨간 트럭을 찾아보세요.",
+   "fact_id": "who0103",
+   "t": 108.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "answer": "빨간 트럭",
+   "choices": [
+    "노란 자동차",
+    "빨간 버스",
+    "빨간 트럭"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 장면을 보고 느낀 점을 이야기한다",
+   "age": "4세",
+   "prompt": "이 그림을 보고 무엇이 보이는지 이야기해 주세요.",
+   "fact_id": "who0102",
+   "t": 108.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "탐구과정 즐기기 — 물체의 수량에 관심을 가지고 세어 본다",
+   "age": "5세",
+   "prompt": "이 그림에 노란 기둥이 몇 개 있나요? 하나씩 세어 보세요.",
+   "fact_id": "cnt0405",
+   "t": 276.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "answer": "4",
+   "choices": [
+    "3",
+    "4",
+    "5"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "5세",
+   "prompt": "이 그림에서 기둥은 무슨 색인가요?",
+   "fact_id": "ocl0405",
+   "color_index": 0,
+   "t": 276.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "answer": "노랑",
+   "choices": [
+    "노랑",
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "책과 이야기 즐기기 — 그림에서 본 것을 말로 표현한다",
+   "age": "5세",
+   "prompt": "이 그림에서 노란 기둥을 찾아 손가락으로 짚어 보세요.",
+   "fact_id": "who0405",
+   "t": 276.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "answer": "노란 기둥",
+   "choices": [
+    "빨간 차",
+    "노란 기둥",
+    "빨간 트럭"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 장면을 보고 느낀 점을 자유롭게 말한다",
+   "age": "5세",
+   "prompt": "이 그림을 보면 어떤 느낌이 드나요? 무엇이 보이는지 이야기해 주세요.",
+   "fact_id": "who0405",
+   "t": 276.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "그림으로 표현",
+   "domain": "예술경험",
+   "curriculum": "창의적으로 표현하기 — 본 것을 그림으로 나타낸다",
+   "age": "5세",
+   "prompt": "이 그림에서 본 노란 기둥을 종이에 그려 보세요.",
+   "fact_id": "ocl0405",
+   "t": 276.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 파란 버스 1대와 초록색 트럭 1대, 빨간 트럭 2대가 있어요. 모두 몇 대일까요?",
+   "fact_id": "sum01",
+   "t": 108.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "answer": "4",
+   "choices": [
+    "4",
+    "3",
+    "5"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 세 수의 덧셈, 수 모으기",
+   "age": "6세",
+   "prompt": "이 그림에 초록색 버스 1대와 파란 버스 1대, 노란 버스 1대가 있어요. 버스는 모두 몇 대일까요?",
+   "fact_id": "sum02",
+   "t": 156.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001560.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "3",
+    "4"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 노란 자동차 1대와 빨간 자동차 1대, 파란 버스 1대가 있어요. 모두 몇 대일까요?",
+   "fact_id": "sum06",
+   "t": 420.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_004200.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "4",
+    "3"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 세 수의 모으기와 한 자리 수의 덧셈",
+   "age": "7세",
+   "prompt": "이 그림에 빨간 버스 1대와 노란 버스 1대, 노란 기둥 4개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum04",
+   "t": 276.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "answer": "6",
+   "choices": [
+    "6",
+    "5",
+    "7"
+   ]
+  },
+  {
+   "type": "수 가르기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 한 자리 수의 뺄셈, 수량의 차이 알아보기",
+   "age": "7세",
+   "prompt": "이 그림에 노란 기둥 4개와 빨간 버스 1대가 있어요. 노란 기둥이 몇 개 더 많을까요?",
+   "fact_id": "dif04",
+   "t": 276.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "4",
+    "3"
+   ]
+  }
+ ],
+ "dropped": []
+}

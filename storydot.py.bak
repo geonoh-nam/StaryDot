@@ -1,0 +1,674 @@
+"""스토리닷 — 아동 애니메이션에서 활동 개입지점과 근거를 뽑는 파이프라인.
+
+아이가 만화를 보다가 "방해받았다"고 느끼지 않는 순간에만 멈추고, 방금 본 내용에
+근거가 있는 활동(퀴즈·그리기)만 낸다. 근거 없는 활동은 만들지 않고 버린다.
+
+    영상 ──┬── 오디오 ──┬── small  -mc 0    기준 타임라인 (환각 9.1%)
+           │            └── turbo + VAD     교차검증 앵커 (환각 0%, 저재현율)
+           │                    │
+           │                    ▼
+           │        정본: 시간축 세그먼트 + 안정 ID, NFC 1회
+           │        신뢰도  high   사전 검증 + 내용 있음
+           │                medium 앵커 일치 또는 앵커 미커버(판단 보류)
+           │                low    앵커가 다뤘는데 어긋남
+           │                quarantine 환각 탐지 적발
+           │                    │
+           │       ┌────────────┴────────────┐
+           │       ▼                         ▼
+           │  act 경계 탐색             하드규칙 6개
+           │  1 내레이션 종결           · 몰입 전 금지  · 엔딩 이후 금지
+           │  2 beats.py 다중신호       · 발화 재개 3s  · 최소 간격
+           │  3 균등 분할               · 격리 인접 금지 · 근거 5건 이상
+           │                                  │
+           └── 화면 ── motion.py ─────────────┤  컷≠동작 분리, 샷 크기
+                       visual.py ─────────────┤  프레임 + 결정적 색 팔레트
+                                              ▼
+                                    개입지점 + 증거번들
+                                              │
+                                    activities.py  ← 인용 대조
+                                    grounding.py   ← 정답 근거 검사
+                                              ▼
+                                    activity_plan.json  (재생 시 LLM 0회)
+
+설계 판단은 전부 실측에 근거한다. 무엇이 왜 뒤집혔는지는 docs/PIPELINE_PLAN.md 부록 B.
+"""
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+import sys
+import unicodedata
+from collections import Counter
+from pathlib import Path
+
+import beats
+import motion
+import visual
+
+ROOT = Path(__file__).parent
+MODELS = ROOT / "models"
+
+# ── 상수 ────────────────────────────────────────────────────────────────────
+SR = 16000
+# 감탄사·호응어. 내용 토큰이 아니므로 퀴즈 근거가 될 수 없다.
+FILLER = {
+    "어", "응", "와", "우와", "아", "네", "음", "야", "자", "엄마", "아빠",
+    "안녕", "고마워", "괜찮아", "맞아", "그래", "잠깐만", "어때", "뭘", "뭐",
+    "이야", "히히", "하하", "으악", "아니", "왜", "저기", "그럼", "정말",
+}
+# 한국어 서술형 종결. 내레이터는 이 어미로 문장을 닫는다.
+NARRATION = re.compile(r"(습니다|했어요|하고 있어요|있어요|었어요|네요|대요|거예요|걸까요)[.?!\s]*$")
+
+
+def nfc(s: str) -> str:
+    return unicodedata.normalize("NFC", s)
+
+
+# ── 한글 자모 유사도 ─────────────────────────────────────────────────────────
+CHO = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"
+JUNG = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ"
+JONG = "_ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ"
+
+
+def jamo(word: str) -> str:
+    """한글 음절을 초·중·종성으로 분해. 유사도 비교의 기본 단위."""
+    out = []
+    for ch in word:
+        c = ord(ch) - 0xAC00
+        if 0 <= c < 11172:
+            out += [CHO[c // 588], JUNG[(c % 588) // 28], JONG[c % 28]]
+        else:
+            out.append(ch)
+    return "".join(out)
+
+
+def _lev(a: str, b: str) -> int:
+    if len(a) < len(b):
+        a, b = b, a
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]
+
+
+def similarity(a: str, b: str) -> float:
+    """자모 수준 정규화 유사도 0~1. '크롱'과 '크랑'은 0.89, '크롱'과 '이불'은 0."""
+    ja, jb = jamo(a), jamo(b)
+    if not ja or not jb:
+        return 0.0
+    return 1.0 - _lev(ja, jb) / max(len(ja), len(jb))
+
+
+# ── 인제스트 ────────────────────────────────────────────────────────────────
+def probe_duration(video: Path) -> float:
+    out = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+         "-of", "csv=p=0", str(video)],
+        capture_output=True, text=True, check=True).stdout.strip()
+    return float(out)
+
+
+def extract_audio(video: Path, wav: Path) -> Path:
+    if wav.exists():
+        return wav
+    wav.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", str(video),
+         "-vn", "-ac", "1", "-ar", str(SR), str(wav), "-y"], check=True)
+    return wav
+
+
+def transcribe(wav: Path, model: str, out_stem: Path, vad: bool = False,
+               no_context: bool = True, lang: str = "ko") -> list[dict]:
+    """whisper.cpp 1회 실행. 결과 JSON이 있으면 재사용한다 (쿼터·시간 절약)."""
+    js = out_stem.with_suffix(".json")
+    if not js.exists():
+        cmd = ["whisper-cli", "-m", str(MODELS / model), "-f", str(wav),
+               "-l", lang, "-oj", "-of", str(out_stem)]
+        if no_context:
+            cmd += ["-mc", "0"]
+        if vad:
+            cmd += ["--vad", "--vad-model", str(MODELS / "ggml-silero-v5.1.2.bin")]
+        subprocess.run(cmd, capture_output=True, check=True)
+    return read_whisper_json(js)
+
+
+def read_whisper_json(path: Path) -> list[dict]:
+    """whisper.cpp의 JSON은 유효한 UTF-8이 아니다 (환각으로 잘린 멀티바이트).
+    실측: `0xeb ... invalid continuation byte`. replace로 읽고 U+FFFD가 남은
+    세그먼트는 뒤에서 격리한다. 파이프라인을 세우지 않으면서 신호도 얻는다."""
+    raw = path.read_bytes()
+    data = json.loads(raw.decode("utf-8", "replace"))
+    segs = []
+    for s in data.get("transcription", []):
+        o = s.get("offsets") or {}
+        t0, t1 = o.get("from", 0) / 1000, o.get("to", 0) / 1000
+        segs.append({"t0": t0, "t1": max(t1, t0), "text": nfc(s.get("text", "").strip())})
+    return [s for s in segs if s["text"]]
+
+
+# ── 환각 탐지 ───────────────────────────────────────────────────────────────
+def hallucinated(text: str, dur: float) -> bool:
+    """실측 골든셋 기준: turbo 기본 13건 적발, turbo+VAD 0건 (거짓양성 없음)."""
+    if "�" in text:
+        return True
+    toks = re.findall(r"[가-힣]+", text)
+    if not toks:
+        return False
+    if dur <= 0.01:                                    # 타임스탬프 붕괴
+        return True
+    top = Counter(toks).most_common(1)[0][1]
+    if top >= 5 and top / len(toks) > 0.6:             # 반복 루프
+        return True
+    return len(text) / dur > 12                        # 물리적으로 불가능한 발화속도
+
+
+def norm(t: str) -> str:
+    return re.sub(r"[^가-힣0-9]", "", t)
+
+
+def overlaps(a0, a1, b0, b1) -> bool:
+    return a0 < b1 and b0 < a1
+
+
+# ── 등장인물 이름 자동 수렴 ──────────────────────────────────────────────────
+COMMON = {
+    "이불", "친구", "우리", "하늘", "정말", "다시", "지금", "오늘", "내일",
+    "이제", "저기", "여기", "거기", "그거", "이거", "무슨", "어디", "누구",
+    "생각", "시작", "가자", "빨리", "조금", "많이", "제발", "그냥", "진짜",
+}
+
+
+PARTICLES = ("이랑", "에게", "한테", "와", "과", "는", "은", "이", "가", "를",
+             "을", "에", "도", "랑", "야", "아", "의", "만", "요")
+
+
+def stem(w: str) -> str:
+    """조사를 떼어 어간만 남긴다. '뽀로로와' → '뽀로로'.
+
+    이걸 안 하면 정상 곡용형이 오인식 변이로 묶여서, 치환 결과가
+    '뽀로로와' → '뽀로뽀로' 같은 쓰레기가 된다 (실측)."""
+    for p in PARTICLES:
+        if len(w) - len(p) >= 2 and w.endswith(p):
+            return w[: -len(p)]
+    return w
+
+
+def discover_name_clusters(segs: list[dict], min_count: int = 6,
+                           thresh: float = 0.72) -> list[list[str]]:
+    """자모 유사도로 이름 변이형 후보를 묶는다. **대표형은 고르지 않는다.**
+
+    빈도로 대표형을 자동 선택하면 안 된다 (실측):
+        크랑 ← {클랑, 크롱}
+    ASR이 크롱을 크랑으로 자주 잘못 듣기 때문에 오답이 최빈형이 된다.
+    자동 확정은 정답을 오답으로 덮어쓴다. 군집만 제안하고 확정은 사람이 한다.
+    """
+    freq = Counter()
+    for s in segs:
+        for t in re.findall(r"[가-힣]{2,5}", s["text"]):
+            t = stem(t)
+            if len(t) >= 2 and t not in FILLER and t not in COMMON:
+                freq[t] += 1
+    cands = [w for w, n in freq.most_common(60) if n >= min_count]
+
+    clusters: list[list[str]] = []
+    for w in cands:
+        for cl in clusters:
+            if similarity(w, cl[0]) >= thresh:
+                cl.append(w)
+                break
+        else:
+            clusters.append([w])
+    return [sorted(cl, key=lambda w: -freq[w]) for cl in clusters if len(cl) >= 2]
+
+
+def load_series(path: Path, clusters: list[list[str]]) -> tuple[dict, list[list[str]]]:
+    """시리즈 설정을 읽고, 새 군집은 미확정 제안으로 덧붙인다.
+
+    반환 (확정된 이름맵, 미확정 군집). 미확정은 **치환하지 않는다** —
+    잘못된 대표형으로 정본을 오염시키느니 아무것도 안 하는 게 낫다.
+    """
+    cfg = json.loads(path.read_text()) if path.exists() else {"confirmed": {}, "proposed": []}
+    confirmed = cfg.get("confirmed", {})
+    phrases = [tuple(x) for x in cfg.get("phrases", [])]
+    known = set(confirmed) | {v for vs in confirmed.values() for v in vs}
+    pending = [cl for cl in clusters if not (set(cl) & known)]
+
+    cfg["proposed"] = pending
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(cfg, ensure_ascii=False, indent=1))
+    return confirmed, pending, phrases
+
+
+def apply_names(text: str, names: dict[str, list[str]],
+                phrases: list[tuple] = ()) -> tuple[str, bool]:
+    """구(phrase) 교정을 먼저, 이름 치환을 나중에. 구가 더 긴 문맥을 보므로 안전하다."""
+    hit = False
+    for bad, good in phrases:
+        if bad in text:
+            text, hit = text.replace(bad, good), True
+    for canon, variants in names.items():
+        for v in variants:
+            if v in text:
+                text, hit = text.replace(v, canon), True
+    return text, hit
+
+
+# ── 내용성 ──────────────────────────────────────────────────────────────────
+ANNOTATION = re.compile(r"^[\s\-]*[(\[（].*[)\]）][\s.]*$")
+
+
+def informative(text: str, names: set[str]) -> bool:
+    """이름·감탄사를 걷어내고 내용 토큰이 2종 이상 남는가.
+
+    이걸 안 걸면 '크롱! 크롱!' 같은 옹알이가 최고 신뢰도 근거로 올라온다
+    (실행 중 실제로 발생. high 70건 중 60건이 이름 반복이었다)."""
+    # whisper가 다는 음향 주석 "(끝나는 소리)" "(웃음)" 은 대사가 아니다.
+    if ANNOTATION.match(text):
+        return False
+    bare = re.sub(r"[(\[（][^)\]）]*[)\]）]", "", text)
+    toks = [t for t in re.findall(r"[가-힣]+", bare)
+            if t not in FILLER and t not in names]
+    return len(set(toks)) >= 2
+
+
+def songlike(text: str) -> bool:
+    """주제가·삽입곡 판별. 가사는 같은 토큰이 짧은 간격으로 되풀이된다."""
+    toks = re.findall(r"[가-힣]+", text)
+    if len(toks) < 4:
+        return False
+    return Counter(toks).most_common(1)[0][1] / len(toks) >= 0.5
+
+
+# ── 정본 구축 ───────────────────────────────────────────────────────────────
+def build_canonical(base: list[dict], anchors: list[list[dict]],
+                    names: dict[str, list[str]], phrases=()) -> list[dict]:
+    canon = []
+    for i, s in enumerate(base):
+        dur, text, src = s["t1"] - s["t0"], s["text"], "base"
+
+        if hallucinated(text, dur):
+            repl = None
+            for k, anc in enumerate(anchors):
+                for c in anc:
+                    if overlaps(s["t0"], s["t1"], c["t0"], c["t1"]) and \
+                            not hallucinated(c["text"], c["t1"] - c["t0"]):
+                        repl = (c["text"], f"anchor{k}")
+                        break
+                if repl:
+                    break
+            if repl is None:
+                canon.append({"id": f"s{i:03d}", "t0": s["t0"], "t1": s["t1"],
+                              "text": text, "conf": "quarantine", "src": "base"})
+                continue
+            text, src = repl
+
+        # 앵커가 이 구간을 '다뤘는가'와 '동의하는가'를 분리한다.
+        #
+        # VAD 앵커는 환각이 0%지만 재현율이 낮아 실제 대사의 약 30%를 통째로
+        # 버린다(실측). 앵커가 말이 없는 것을 반박으로 취급하면 대부분이 low로
+        # 떨어진다 — 5편 교차실행에서 티니핑 167개 중 medium이 3개까지 붕괴했다.
+        # 침묵은 반증이 아니다. 겹칠 때만 판정하고, 안 겹치면 판단을 보류한다.
+        covered = agree = False
+        for anc in anchors:
+            for c in anc:
+                if not overlaps(s["t0"], s["t1"], c["t0"], c["t1"]):
+                    continue
+                a, b = norm(text), norm(c["text"])
+                if not (a and b):
+                    continue
+                covered = True
+                if a in b or b in a or similarity(a[:12], b[:12]) >= 0.6:
+                    agree = True
+                    break
+            if agree:
+                break
+
+        fixed, name_hit = apply_names(text, names, phrases)
+        nameset = set(names) | {v for vs in names.values() for v in vs}
+        # ASR 합의는 medium 상한. 세 패스가 같은 오답('날씨 있겠어')으로 수렴한
+        # 사례가 실측됐다. high는 이름 검증 + 실제 내용이 함께 있을 때만 준다.
+        #
+        # 앵커가 없으면(단일 패스) 교차일치를 물을 수 없다. 그때 전부 low로
+        # 떨어뜨리면 근거가 0건이 되어 파이프라인이 아무것도 못 내놓는다.
+        # 환각 탐지는 통과했으므로 medium으로 두되 unverified 표시를 남긴다.
+        if name_hit and informative(fixed, nameset):
+            conf = "high"          # 사전 검증 + 내용 있음
+        elif covered and not agree:
+            conf = "low"           # 앵커가 다뤘는데 어긋남 = 진짜 반증
+        else:
+            conf = "medium"        # 일치했거나, 앵커가 안 다뤄 판단 보류
+        canon.append({"id": f"s{i:03d}", "t0": s["t0"], "t1": s["t1"],
+                      "text": fixed, "conf": conf, "src": src,
+                      "verified": bool(agree)})
+    return canon
+
+
+# ── act 분할 ────────────────────────────────────────────────────────────────
+def find_ending(canon: list[dict]) -> tuple[float, str]:
+    """본편 끝 = 엔딩 주제가 시작 직전.
+
+    공백 크기로 찾으면 안 된다 (뽀로로에서 2회 실패):
+      '600초 이후 첫 1.5초 공백' → 10:06  (짧은 숨을 오인)
+      '후반 1/3 최대 공백'       →  9:33  (밤→아침 전환이 10초로 최대)
+      실제 경계 11:05의 공백은 7초. 최대가 아니다.
+    """
+    if not canon:
+        return 0.0, "empty"
+    tail = canon[-1]["t1"]
+
+    # 1순위: 뒤쪽에 이어지는 '노래 구간'의 시작. 주제가는 가사가 되풀이된다.
+    #
+    # 판정을 songlike() 로만 한다. '내용 없음'까지 노래로 치면 안 된다 —
+    # 브레드에서 짧은 말다툼("줘! 주라고!", "싫다고!")을 주제가로 보고 본편을
+    # 8:20 에 잘랐다. 그 뒤로 2분 30초 분량의 진짜 대사가 남아 있었다.
+    # 그리고 노래 구간은 충분히 길어야 한다. 두 줄짜리 후렴은 엔딩이 아니다.
+    run_start, run_len = None, 0
+    for i in range(len(canon) - 1, -1, -1):
+        if songlike(canon[i]["text"]):
+            run_start, run_len = canon[i]["t0"], run_len + 1
+        elif run_start is not None:
+            break
+    if run_start is not None and run_len >= 4 and run_start > tail * 0.75:
+        return run_start, "song-block"
+
+    # 2순위: 마지막 내레이션 이후 첫 3초 공백. 화자가 멈추면 이야기가 끝난 것.
+    narr = [s for s in canon if NARRATION.search(s["text"])]
+    if narr:
+        lb = narr[-1]["t1"]
+        for i in range(len(canon) - 1):
+            if canon[i]["t1"] >= lb and canon[i + 1]["t0"] - canon[i]["t1"] >= 3.0:
+                return canon[i]["t1"], "narration+gap"
+        return lb, "last-narration"
+    return tail, "tail"
+
+
+def find_acts(canon: list[dict], end: float, min_act: float) -> tuple[list[dict], str]:
+    """act 경계를 3단 폴백으로 찾는다. 작품마다 화법이 다르기 때문이다."""
+    inside = [s for s in canon if s["t1"] <= end and s["conf"] != "quarantine"]
+
+    # 1순위 — 내레이션 종결. 이야기의 장(章) 전환이라 의미가 있다.
+    narr = [s for s in inside if NARRATION.search(s["text"]) and len(s["text"]) > 8]
+    if len(narr) >= 3:
+        return _cut(narr, end, min_act, lambda b: b["text"]), "narration"
+
+    # 2순위 — 다중 신호 경계 점수 (beats.py). 내레이터가 없는 작품용.
+    #
+    # 처음엔 '최장 발화공백' 하나로 잘랐다. 그랬더니 경계가 "그냥 누가 말을 멈춘
+    # 자리"라 라벨이 `(무음 전환 바범이 훌륭다!)` 같은 게 나왔다 — 무엇이 끝났는지
+    # 알 수 없어 퀴즈 근거로 못 쓴다. beats.py 는 화제 전환·종결성·장면 관용구를
+    # 같이 본다. 실측(브레드)에서 화제 전환이 지배 신호였고(평균 0.210, 4곳 중
+    # 3곳 1위) 무음 공백은 0.140 에 그쳤다. 내가 1순위로 쓰던 신호가 보조였다.
+    scored = beats.find_acts_scored(inside, end, min_act)
+    if len(scored) >= 3:
+        return scored, "beats"
+
+    # 3순위 — 균등 분할. 대사 자체가 희박하면 이것밖에 없다. 신뢰도 낮음을 명시.
+    n = max(2, int((end) // max(min_act * 2, 90)))
+    step = end / n
+    acts = [{"t0": i * step, "t1": (i + 1) * step, "beat": "(균등 분할)", "beat_id": None}
+            for i in range(n)]
+    return acts, "uniform"
+
+
+def _cut(marks, end, min_act, label):  # 파라미터명이 모듈 beats 를 가리면 안 된다
+    acts, prev = [], 0.0
+    for b in marks:
+        if b["t1"] - prev > min_act and b["t1"] <= end:
+            acts.append({"t0": prev, "t1": b["t1"], "beat": label(b), "beat_id": b["id"]})
+            prev = b["t1"]
+    if end - prev > min_act:
+        acts.append({"t0": prev, "t1": end, "beat": "(마지막 장)", "beat_id": None})
+    return acts
+
+
+# ── 개입지점 ────────────────────────────────────────────────────────────────
+def params(duration: float) -> dict:
+    """파라미터를 길이에 맞춰 스케일한다. 12분 고정값은 5분/25분에서 깨진다."""
+    return {
+        "min_start": max(75.0, duration * 0.12),   # 초반은 몰입이 먼저다
+        "min_gap": max(110.0, duration / 5.0),     # 활동 사이 최소 간격
+        "max_activities": 1 if duration < 240 else (2 if duration < 420 else
+                                                    (3 if duration < 700 else 4)),
+        "min_act": max(35.0, duration / 16.0),
+        "speech_pad": 3.0,                         # 페이드아웃할 시간
+        "min_evidence": 5,                         # 이보다 적으면 지어내게 된다
+    }
+
+
+RECALL_WINDOW = 100.0   # 아이가 방금 본 것으로 기억하는 범위
+
+
+def evidence(canon, act, names: set[str], at: float | None = None) -> list[dict]:
+    """개입 직전 RECALL_WINDOW 초 안의 근거만 쓴다.
+
+    act 전체를 근거로 삼으면 3분 전 장면으로 문제를 내게 된다(실측: 7:35 개입에
+    4:37 대사가 근거로 붙었다). 유아는 그만큼 거슬러 기억하지 못한다.
+    """
+    hi = act["t1"] if at is None else at
+    lo = max(act["t0"], hi - RECALL_WINDOW)
+    return [s for s in canon
+            if s["conf"] in ("high", "medium")
+            and informative(s["text"], names)
+            and not songlike(s["text"])
+            and overlaps(lo, hi, s["t0"], s["t1"])]
+
+
+def snap_back(t: float, canon, end: float, pad: float, look: float = 25.0):
+    """발화 여유가 모자라면 조금 앞의 더 큰 공백으로 당긴다.
+
+    여유 2.0초라고 후보를 버리면 대사가 촘촘한 작품에서 개입지점이 전멸한다
+    (아기상어에서 4건 중 3건이 이 규칙으로 기각됐다). 경계는 옮기면 된다.
+    """
+    best, best_gap = None, pad
+    for i in range(len(canon) - 1):
+        b = canon[i]["t1"]
+        if not (t - look <= b <= t):
+            continue
+        gap = canon[i + 1]["t0"] - b
+        if gap >= best_gap:
+            best, best_gap = b, gap
+    return (best, best_gap) if best is not None else (None, 0.0)
+
+
+def interrupt_points(canon, acts, end, P, names: set[str]):
+    cands, rejected = [], []
+    for a in acts:
+        t = a["t1"]
+        if t < P["min_start"]:
+            rejected.append((t, f"몰입 전 구간 (<{P['min_start']:.0f}s)"))
+            continue
+        if t > end:
+            rejected.append((t, "엔딩 주제가 이후"))
+            continue
+        nxt = min((s["t0"] for s in canon if s["t0"] > t), default=end)
+        gap, snapped = nxt - t, False
+        if gap < P["speech_pad"]:
+            alt, alt_gap = snap_back(t, canon, end, P["speech_pad"])
+            if alt is None:
+                rejected.append((t, f"발화 재개까지 {gap:.1f}s, 스냅 실패"))
+                continue
+            t, gap, snapped = alt, alt_gap, True
+        if any(s["conf"] == "quarantine" and overlaps(t - 1, t + 1, s["t0"], s["t1"])
+               for s in canon):
+            rejected.append((t, "격리 스팬 인접"))
+            continue
+        ev = evidence(canon, a, names, at=t)
+        if len(ev) < P["min_evidence"]:
+            rejected.append((t, f"사용가능 증거 {len(ev)}건 < {P['min_evidence']}"))
+            continue
+        cands.append({"t": t, "act": a, "gap": round(gap, 2),
+                      "n_ev": len(ev), "snapped": snapped})
+
+    chosen, last = [], -1e9
+    for c in sorted(cands, key=lambda c: c["t"]):
+        if c["t"] - last >= P["min_gap"]:
+            chosen.append(c)
+            last = c["t"]
+    return cands, chosen[:P["max_activities"]], rejected
+
+
+CLOSEUP_REL = 0.62   # 작품 평균 디테일 대비 이 아래면 클로즈업으로 본다
+
+
+def detail_baseline(video: Path, duration: float, n: int = 9) -> float:
+    """이 작품의 '보통 화면'이 얼마나 촘촘한지 중앙값으로 잡는다.
+
+    절대 임계값(tv < 10 = 클로즈업)은 3D 렌더링 작품에서 뽑은 값이라
+    평면 2D 작화에서 무너진다. 아기상어는 벡터 아트라 화면 전체가 단순해서
+    **모든 장면이 클로즈업으로 읽혔고 개입지점이 전멸했다.**
+    장면 검출 임계값을 고정했다가 어두운 구간에서 19배 틀렸던 것과 같은 실수다.
+    작품 안에서 상대적으로 판단해야 한다.
+    """
+    vals = []
+    for i in range(1, n + 1):
+        try:
+            tv, _ = motion.scale_stats(video, duration * i / (n + 1))
+            vals.append(tv)
+        except Exception:
+            continue
+    if not vals:
+        return 12.0
+    vals.sort()
+    return vals[len(vals) // 2]
+
+
+def mmss(t: float) -> str:
+    return f"{int(t // 60)}:{t % 60:05.2f}"
+
+
+# ── 실행 ────────────────────────────────────────────────────────────────────
+def series_key(name: str) -> str:
+    """'티니핑1화' → '티니핑'. 사전은 회차가 아니라 시리즈 단위로 재사용된다."""
+    return re.sub(r"\s*\d+\s*화.*$", "", name).strip() or name
+
+
+def analyze(video: Path, workdir: Path, full: bool = True) -> dict:
+    key = video.stem
+    duration = probe_duration(video)
+    wav = extract_audio(video, workdir / f"{key}.wav")
+
+    base = transcribe(wav, "ggml-small.bin", workdir / f"{key}_small")
+    anchors = []
+    if full:
+        anchors.append(transcribe(wav, "ggml-large-v3-turbo.bin",
+                                  workdir / f"{key}_vad", vad=True))
+
+    clusters = discover_name_clusters(base)
+    names, pending, phrases = load_series(ROOT / "series" / f"{series_key(key)}.json", clusters)
+    canon = build_canonical(base, anchors, names, phrases)
+    nameset = set(names) | {v for vs in names.values() for v in vs} | \
+        {w for cl in pending for w in cl}          # 미확정도 내용성 판정에선 이름 취급
+
+    end, end_why = find_ending(canon)
+    P = params(duration)
+    acts, act_src = find_acts(canon, end, P["min_act"])
+    cands, chosen, rejected = interrupt_points(canon, acts, end, P, nameset)
+
+    # 시각 정착 — 오디오가 고른 지점을 화면이 실제로 앉은 순간으로 옮긴다.
+    #
+    # 오디오는 "이야기가 한 단락 끝났다"를 알려주지만 카메라가 그때 멈춰 있는지는
+    # 말해 주지 않는다. 실측 9개 지점 중 3개가 동작 한복판이었다 (바느질 클로즈업·
+    # 점프·기차 주행). motion.py 는 두 가지를 더 본다.
+    #   · 컷 ≠ 동작 — 컷 직후는 새 샷이 앉은 자리라 오히려 멈추기 좋다
+    #   · 샷 크기  — 화면이 안 움직여도 화면 전체가 하나의 대상이면 멈추기 나쁘다
+    baseline_tv = detail_baseline(video, duration)
+    settled = []
+    for c in chosen:
+        pause = motion.best_pause(video, c["t"])
+        if pause["kind"] == "none":
+            rejected.append((c["t"], f"멈출 자리 없음 — {pause['why']}"))
+            continue
+        tv, _flat = motion.scale_stats(video, pause["t"])
+        scale = "closeup" if tv < baseline_tv * CLOSEUP_REL else (
+            "wide" if tv > baseline_tv * 1.15 else "medium")
+        if scale == "closeup":
+            # 수치는 조용해도 익스트림 클로즈업은 동작 한복판이다.
+            # 뽀로로 7:35 바느질 장면이 이 경우로, 움직임 5.6 으로 통과했었다.
+            rejected.append((c["t"], f"클로즈업 (디테일 {tv:.1f} < 기준 {baseline_tv:.1f})"))
+            continue
+        c.update(t=pause["t"], pause_score=round(pause["score"], 2),
+                 pause_kind=pause["kind"], shot=scale, why=pause["why"])
+        settled.append(c)
+    chosen = settled
+
+    # 시각 증거 — 대사만으로는 개수·색깔 퀴즈를 만들 수 없다. 생성자가 없는
+    # 대사를 지어내는 걸 실제로 관측했다. 프레임과 결정적 색 팔레트를 같이 넘긴다.
+    for c in chosen:
+        try:
+            frames = visual.extract_evidence_frames(video, c["t"], span=20.0, n=4,
+                                                    out_dir=workdir / "shots")
+            c["frames"] = frames
+            c["colors"] = visual.frame_facts(frames[-1:])   # 개입 순간 화면만
+        except Exception as exc:
+            c["frames"], c["colors"] = [], {"error": str(exc)}
+
+    return {
+        "video": str(video), "duration": duration, "params": P,
+        "names": names, "canonical": canon,
+        "end": end, "end_source": end_why,
+        "acts": acts, "act_source": act_src,
+        "interrupts": [{
+            "id": f"i{k:02d}", "t": c["t"], "gap": c["gap"],
+            "pause": {"score": c.get("pause_score"), "kind": c.get("pause_kind"),
+                      "shot": c.get("shot"), "why": c.get("why")},
+            "frames": c.get("frames", []), "colors": c.get("colors", {}),
+            "act": {"t0": c["act"]["t0"], "t1": c["act"]["t1"], "beat": c["act"]["beat"]},
+            "snapped": c.get("snapped", False),
+            "evidence": [{"id": e["id"], "t0": e["t0"], "t1": e["t1"],
+                          "text": e["text"], "conf": e["conf"]}
+                         for e in evidence(canon, c["act"], nameset, at=c["t"])],
+        } for k, c in enumerate(chosen)],
+        "rejected": [{"t": t, "why": w} for t, w in rejected],
+    }
+
+
+def report(r: dict) -> None:
+    c = Counter(s["conf"] for s in r["canonical"])
+    print(f"\n{'='*74}\n{Path(r['video']).stem}   {r['duration']:.0f}s")
+    print(f"세그먼트 {len(r['canonical'])}  high {c['high']} medium {c['medium']} "
+          f"low {c['low']} quarantine {c['quarantine']}")
+    if r["names"]:
+        print("이름 자동수렴: " + " · ".join(
+            f"{k} ← {'/'.join(v)}" for k, v in list(r["names"].items())[:6]))
+    else:
+        print("이름 자동수렴: (없음)")
+    print(f"본편 끝 {mmss(r['end'])} [{r['end_source']}]  |  "
+          f"act {len(r['acts'])}개 [{r['act_source']}]  |  "
+          f"최대활동 {r['params']['max_activities']}")
+    print(f"\n채택 개입지점 {len(r['interrupts'])}")
+    for it in r["interrupts"]:
+        pz = it.get("pause") or {}
+        print(f"  ★ {mmss(it['t'])}  여유 {it['gap']}s  증거 {len(it['evidence'])}건"
+              f"{'  [스냅]' if it.get('snapped') else ''}"
+              f"  화면 {pz.get('kind')}/{pz.get('shot')} {pz.get('score')}"
+              f"  프레임 {len(it.get('frames') or [])}장"
+              f"  | {it['act']['beat'][:40]}")
+        cl = (it.get("colors") or {}).get("colors") or []
+        if cl:
+            print(f"       색(정답가능) {' · '.join(cl[:6])}")
+        for e in it["evidence"][:3]:
+            print(f"       [{e['conf'][:4]}] {mmss(e['t0'])} {e['text'][:52]}")
+    if r["rejected"]:
+        print("기각:")
+        for x in r["rejected"]:
+            print(f"  ✗ {mmss(x['t'])}  {x['why']}")
+
+
+if __name__ == "__main__":
+    args = [a for a in sys.argv[1:] if not a.startswith("-")]
+    fast = "--fast" in sys.argv
+    work = ROOT / "work"
+    for v in args:
+        p = Path(v).expanduser()
+        try:
+            r = analyze(p, work, full=not fast)
+            report(r)
+            (work / f"{p.stem}_plan.json").write_text(
+                json.dumps(r, ensure_ascii=False, indent=1))
+        except Exception as exc:
+            print(f"\n[실패] {p.name}: {type(exc).__name__}: {exc}")

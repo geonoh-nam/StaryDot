@@ -1,0 +1,191 @@
+{
+ "activities": [
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 나무는 무슨 색인가요?",
+   "fact_id": "ocl0302",
+   "color_index": 0,
+   "t": 216.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "answer": "분홍",
+   "choices": [
+    "빨강",
+    "주황",
+    "분홍"
+   ]
+  },
+  {
+   "type": "모양 찾기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 주변에서 모양을 찾아보고 구별한다",
+   "age": "3세",
+   "prompt": "이 그림에서 하트 모양을 찾아보세요.",
+   "fact_id": "shp05",
+   "t": 384.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_003840.jpg",
+   "answer": "하트",
+   "choices": [
+    "하트",
+    "동그라미",
+    "네모"
+   ]
+  },
+  {
+   "type": "크기 비교",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 크기를 비교해 본다",
+   "age": "3세",
+   "prompt": "이 그림에서 보라색 문과 분홍색 가방 중에 더 큰 것은 무엇인가요?",
+   "fact_id": "siz03",
+   "t": 216.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "answer": "보라색 문",
+   "choices": [
+    "보라색 문",
+    "분홍색 가방"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "듣기와 말하기 — 그림을 보고 무엇이 있는지 말한다",
+   "age": "3세",
+   "prompt": "이 그림에 보이는 것은 무엇인가요?",
+   "fact_id": "who0202",
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "answer": "초록색 상자",
+   "choices": [
+    "분홍색 가방",
+    "분홍색 나무",
+    "초록색 상자"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 장면을 보고 느낀 것을 자유롭게 말한다",
+   "age": "3세",
+   "prompt": "이 그림을 보고 무엇이 보이는지, 어떤 느낌이 드는지 말해 보세요.",
+   "fact_id": "who0203",
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "4세",
+   "prompt": "이 그림에서 왕관은 무슨 색인가요?",
+   "fact_id": "ocl0201",
+   "color_index": 0,
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "answer": "노랑",
+   "choices": [
+    "노랑",
+    "빨강",
+    "주황"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 수를 세어 본다",
+   "age": "4세",
+   "prompt": "이 그림에 노란 왕관이 몇 개 있나요?",
+   "fact_id": "cnt0201",
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "answer": "2",
+   "choices": [
+    "1",
+    "2",
+    "3"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 사물의 색에 관심을 가진다",
+   "age": "4세",
+   "prompt": "이 그림에서 열차는 무슨 색인가요?",
+   "fact_id": "ocl0801",
+   "color_index": 0,
+   "t": 696.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_006960.jpg",
+   "answer": "분홍",
+   "choices": [
+    "분홍",
+    "초록",
+    "빨강"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "읽기와 쓰기에 관심 가지기 — 그림에서 알고 있는 것을 찾아본다",
+   "age": "4세",
+   "prompt": "이 그림에 노란 목걸이가 보이나요? 어디에 있는지 찾아보세요.",
+   "fact_id": "who0405",
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_003360.jpg",
+   "answer": "노란 목걸이",
+   "choices": [
+    "초록색 상자",
+    "노란 목걸이",
+    "노란 왕관"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 말한다",
+   "age": "4세",
+   "prompt": "이 그림을 보고 어떤 느낌이 드는지 말해 보세요.",
+   "fact_id": "who0801",
+   "t": 696.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_006960.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 노란 왕관 2개와 초록색 상자 1개, 분홍색 상자 1개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum02",
+   "t": 96.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "answer": "4",
+   "choices": [
+    "3",
+    "4",
+    "5"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 보라색 문 1개와 분홍색 나무 1개, 분홍색 가방 1개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum03",
+   "t": 216.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "4",
+    "3"
+   ]
+  }
+ ],
+ "dropped": []
+}

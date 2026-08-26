@@ -1,0 +1,1151 @@
+{
+ "frames": [
+  {
+   "id": "sc001",
+   "t": 12.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000120.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "파랑",
+     "보라",
+     "분홍",
+     "흰색"
+    ],
+    "absent": [
+     "초록",
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0226,
+     "주황": 0.0856,
+     "노랑": 0.0515,
+     "초록": 0.0031,
+     "파랑": 0.2483,
+     "보라": 0.1899,
+     "분홍": 0.3377,
+     "갈색": 0.0011,
+     "흰색": 0.0586,
+     "회색": 0.0016
+    }
+   }
+  },
+  {
+   "id": "sc002",
+   "t": 96.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "노랑",
+     "초록",
+     "파랑",
+     "분홍",
+     "갈색",
+     "회색"
+    ],
+    "absent": [],
+    "peak": {
+     "빨강": 0.0888,
+     "주황": 0.0217,
+     "노랑": 0.0344,
+     "초록": 0.0503,
+     "파랑": 0.0941,
+     "보라": 0.0246,
+     "분홍": 0.1985,
+     "갈색": 0.2899,
+     "검정": 0.0132,
+     "흰색": 0.013,
+     "회색": 0.1714
+    }
+   }
+  },
+  {
+   "id": "sc003",
+   "t": 216.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "초록",
+     "보라",
+     "분홍",
+     "갈색",
+     "검정",
+     "흰색"
+    ],
+    "absent": [],
+    "peak": {
+     "빨강": 0.0765,
+     "주황": 0.0833,
+     "노랑": 0.0256,
+     "초록": 0.0906,
+     "파랑": 0.0126,
+     "보라": 0.252,
+     "분홍": 0.0979,
+     "갈색": 0.2372,
+     "검정": 0.0345,
+     "흰색": 0.0625,
+     "회색": 0.0273
+    }
+   }
+  },
+  {
+   "id": "sc004",
+   "t": 336.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_003360.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "분홍",
+     "갈색"
+    ],
+    "absent": [
+     "검정"
+    ],
+    "peak": {
+     "빨강": 0.3358,
+     "주황": 0.1916,
+     "노랑": 0.0428,
+     "초록": 0.0442,
+     "파랑": 0.1277,
+     "보라": 0.0117,
+     "분홍": 0.1441,
+     "갈색": 0.0862,
+     "검정": 0.001,
+     "흰색": 0.0093,
+     "회색": 0.0056
+    }
+   }
+  },
+  {
+   "id": "sc005",
+   "t": 384.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_003840.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "파랑",
+     "분홍",
+     "갈색",
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "검정"
+    ],
+    "peak": {
+     "빨강": 0.2138,
+     "주황": 0.1889,
+     "노랑": 0.0375,
+     "초록": 0.0163,
+     "파랑": 0.0981,
+     "보라": 0.0033,
+     "분홍": 0.2021,
+     "갈색": 0.1751,
+     "검정": 0.0016,
+     "흰색": 0.01,
+     "회색": 0.0533
+    }
+   }
+  },
+  {
+   "id": "sc006",
+   "t": 540.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_005400.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "분홍",
+     "갈색"
+    ],
+    "absent": [],
+    "peak": {
+     "빨강": 0.2025,
+     "주황": 0.2555,
+     "노랑": 0.0518,
+     "초록": 0.0357,
+     "파랑": 0.0594,
+     "보라": 0.015,
+     "분홍": 0.2492,
+     "갈색": 0.08,
+     "검정": 0.0073,
+     "흰색": 0.0163,
+     "회색": 0.0275
+    }
+   }
+  },
+  {
+   "id": "sc007",
+   "t": 636.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_006360.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "분홍",
+     "갈색",
+     "검정",
+     "흰색"
+    ],
+    "absent": [
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.0178,
+     "주황": 0.0678,
+     "노랑": 0.0506,
+     "초록": 0.2397,
+     "파랑": 0.1016,
+     "보라": 0.0031,
+     "분홍": 0.0864,
+     "갈색": 0.1125,
+     "검정": 0.2426,
+     "흰색": 0.0506,
+     "회색": 0.0273
+    }
+   }
+  },
+  {
+   "id": "sc008",
+   "t": 696.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_006960.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "파랑",
+     "보라",
+     "분홍",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "초록"
+    ],
+    "peak": {
+     "빨강": 0.1863,
+     "주황": 0.0055,
+     "노랑": 0.018,
+     "파랑": 0.0511,
+     "보라": 0.037,
+     "분홍": 0.1911,
+     "갈색": 0.1077,
+     "검정": 0.0315,
+     "흰색": 0.0737,
+     "회색": 0.2981
+    }
+   }
+  }
+ ],
+ "observations": [
+  {
+   "frame_id": "sc001",
+   "objects": [
+    {
+     "name": "문",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "동그라미",
+    "하트"
+   ],
+   "t": 12.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000120.jpg",
+   "absent": [
+    "갈색",
+    "검정",
+    "초록",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc002",
+   "objects": [
+    {
+     "name": "왕관",
+     "count": 2,
+     "colors": [
+      "노랑"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "상자",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "상자",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미",
+    "하트"
+   ],
+   "t": 96.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "absent": []
+  },
+  {
+   "frame_id": "sc003",
+   "objects": [
+    {
+     "name": "문",
+     "count": 1,
+     "colors": [
+      "보라"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "나무",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "가방",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "동물",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 216.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "absent": []
+  },
+  {
+   "frame_id": "sc004",
+   "objects": [
+    {
+     "name": "동물",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "동물",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "동물",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "동물",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "목걸이",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 336.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_003360.jpg",
+   "absent": [
+    "검정"
+   ]
+  },
+  {
+   "frame_id": "sc005",
+   "objects": [
+    {
+     "name": "인물",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "하트"
+   ],
+   "t": 384.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_003840.jpg",
+   "absent": [
+    "검정",
+    "보라"
+   ]
+  },
+  {
+   "frame_id": "sc006",
+   "objects": [
+    {
+     "name": "인물",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "인물",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "인물",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [
+    "하트"
+   ],
+   "t": 540.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_005400.jpg",
+   "absent": []
+  },
+  {
+   "frame_id": "sc007",
+   "objects": [
+    {
+     "name": "인물",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "인물",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [],
+   "t": 636.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_006360.jpg",
+   "absent": [
+    "보라"
+   ]
+  },
+  {
+   "frame_id": "sc008",
+   "objects": [
+    {
+     "name": "열차",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [],
+   "t": 696.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_006960.jpg",
+   "absent": [
+    "초록"
+   ]
+  }
+ ],
+ "dropped": [],
+ "facts": [
+  {
+   "t0": 12.0,
+   "t1": 12.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000120.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0101",
+   "kind": "objcolor",
+   "payload": {
+    "name": "문",
+    "colors": [
+     "분홍"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "초록",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 12.0,
+   "t1": 12.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000120.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0101",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 문"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 12.0,
+   "t1": 12.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000120.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp01",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "하트"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0201",
+   "kind": "count",
+   "payload": {
+    "name": "노란 왕관",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0201",
+   "kind": "objcolor",
+   "payload": {
+    "name": "왕관",
+    "colors": [
+     "노랑"
+    ],
+    "absent": []
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0201",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 왕관"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0202",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 상자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0203",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 상자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "conf": "medium",
+   "id": "sum02",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "노란 왕관",
+      "n": 2
+     },
+     {
+      "name": "초록색 상자",
+      "n": 1
+     },
+     {
+      "name": "분홍색 상자",
+      "n": 1
+     }
+    ],
+    "total": 4
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_000960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp02",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "하트"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0301",
+   "kind": "objcolor",
+   "payload": {
+    "name": "문",
+    "colors": [
+     "보라"
+    ],
+    "absent": []
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0301",
+   "kind": "presence",
+   "payload": {
+    "name": "보라색 문"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0302",
+   "kind": "objcolor",
+   "payload": {
+    "name": "나무",
+    "colors": [
+     "분홍"
+    ],
+    "absent": []
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0302",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 나무"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0303",
+   "kind": "objcolor",
+   "payload": {
+    "name": "가방",
+    "colors": [
+     "분홍"
+    ],
+    "absent": []
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0303",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 가방"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "siz03",
+   "kind": "size",
+   "payload": {
+    "big": "보라색 문",
+    "small": "분홍색 가방"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "conf": "medium",
+   "id": "sum03",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "보라색 문",
+      "n": 1
+     },
+     {
+      "name": "분홍색 나무",
+      "n": 1
+     },
+     {
+      "name": "분홍색 가방",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp03",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_003360.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0405",
+   "kind": "objcolor",
+   "payload": {
+    "name": "목걸이",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "검정"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_003360.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0405",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 목걸이"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp04",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 384.0,
+   "t1": 384.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_003840.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp05",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "하트"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 540.0,
+   "t1": 540.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_005400.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp06",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "하트"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 696.0,
+   "t1": 696.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_006960.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0801",
+   "kind": "objcolor",
+   "payload": {
+    "name": "열차",
+    "colors": [
+     "분홍"
+    ],
+    "absent": [
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 696.0,
+   "t1": 696.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑1화_006960.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0801",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 열차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  }
+ ]
+}

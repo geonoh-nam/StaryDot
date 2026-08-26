@@ -1,0 +1,2448 @@
+{
+ "frames": [
+  {
+   "id": "sc001",
+   "t": 24.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000240.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "검정"
+    ],
+    "peak": {
+     "빨강": 0.1925,
+     "주황": 0.2155,
+     "노랑": 0.0405,
+     "초록": 0.0469,
+     "파랑": 0.1326,
+     "보라": 0.0007,
+     "분홍": 0.0015,
+     "갈색": 0.1076,
+     "검정": 0.003,
+     "흰색": 0.1482,
+     "회색": 0.111
+    }
+   }
+  },
+  {
+   "id": "sc002",
+   "t": 60.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000600.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "파랑",
+     "분홍",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "초록",
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.0738,
+     "주황": 0.0621,
+     "노랑": 0.0125,
+     "초록": 0.0046,
+     "파랑": 0.0421,
+     "보라": 0.0025,
+     "분홍": 0.0425,
+     "갈색": 0.3742,
+     "검정": 0.1402,
+     "흰색": 0.0533,
+     "회색": 0.1923
+    }
+   }
+  },
+  {
+   "id": "sc003",
+   "t": 216.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002160.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "파랑",
+     "보라",
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "absent": [
+     "노랑",
+     "초록",
+     "흰색"
+    ],
+    "peak": {
+     "빨강": 0.0706,
+     "주황": 0.1058,
+     "노랑": 0.0014,
+     "초록": 0.0001,
+     "파랑": 0.1026,
+     "보라": 0.049,
+     "분홍": 0.0244,
+     "갈색": 0.281,
+     "검정": 0.1789,
+     "흰색": 0.0027,
+     "회색": 0.1833
+    }
+   }
+  },
+  {
+   "id": "sc004",
+   "t": 288.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "파랑",
+     "보라",
+     "분홍",
+     "갈색",
+     "흰색"
+    ],
+    "absent": [],
+    "peak": {
+     "빨강": 0.1181,
+     "주황": 0.1289,
+     "노랑": 0.0101,
+     "초록": 0.018,
+     "파랑": 0.3969,
+     "보라": 0.0819,
+     "분홍": 0.069,
+     "갈색": 0.094,
+     "검정": 0.027,
+     "흰색": 0.0301,
+     "회색": 0.026
+    }
+   }
+  },
+  {
+   "id": "sc005",
+   "t": 372.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "초록",
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.0618,
+     "주황": 0.2877,
+     "노랑": 0.0457,
+     "초록": 0.0026,
+     "파랑": 0.1884,
+     "보라": 0.0048,
+     "분홍": 0.0143,
+     "갈색": 0.1028,
+     "검정": 0.0812,
+     "흰색": 0.1377,
+     "회색": 0.0731
+    }
+   }
+  },
+  {
+   "id": "sc006",
+   "t": 420.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "초록",
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.0495,
+     "주황": 0.0964,
+     "노랑": 0.0207,
+     "초록": 0.0037,
+     "파랑": 0.3982,
+     "분홍": 0.0076,
+     "갈색": 0.0502,
+     "검정": 0.0343,
+     "흰색": 0.1525,
+     "회색": 0.187
+    }
+   }
+  },
+  {
+   "id": "sc007",
+   "t": 492.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "파랑",
+     "분홍",
+     "갈색",
+     "회색"
+    ],
+    "absent": [
+     "초록",
+     "검정"
+    ],
+    "peak": {
+     "빨강": 0.0428,
+     "주황": 0.1484,
+     "노랑": 0.0592,
+     "초록": 0.0039,
+     "파랑": 0.23,
+     "보라": 0.0074,
+     "분홍": 0.0358,
+     "갈색": 0.3896,
+     "검정": 0.0037,
+     "흰색": 0.0217,
+     "회색": 0.0574
+    }
+   }
+  },
+  {
+   "id": "sc008",
+   "t": 564.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "초록",
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.034,
+     "주황": 0.3428,
+     "노랑": 0.0052,
+     "초록": 0.0024,
+     "파랑": 0.0596,
+     "보라": 0.0002,
+     "분홍": 0.0072,
+     "갈색": 0.3146,
+     "검정": 0.0986,
+     "흰색": 0.0671,
+     "회색": 0.0685
+    }
+   }
+  }
+ ],
+ "observations": [
+  {
+   "frame_id": "sc001",
+   "objects": [
+    {
+     "name": "우유팩 캐릭터",
+     "count": 1,
+     "colors": [
+      "흰색"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "손",
+     "count": 2,
+     "colors": [
+      "파랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "문",
+     "count": 1,
+     "colors": [
+      "빨강"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "동그라미",
+    "네모"
+   ],
+   "t": 24.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000240.jpg",
+   "absent": [
+    "검정",
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "frame_id": "sc002",
+   "objects": [
+    {
+     "name": "우유팩 캐릭터",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "손",
+     "count": 2,
+     "colors": [
+      "분홍"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "액자",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [
+    "동그라미",
+    "네모"
+   ],
+   "t": 60.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000600.jpg",
+   "absent": [
+    "보라",
+    "초록"
+   ]
+  },
+  {
+   "frame_id": "sc003",
+   "objects": [
+    {
+     "name": "식빵 캐릭터",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "가위",
+     "count": 1,
+     "colors": [
+      "회색"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "넥타이",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "네모"
+   ],
+   "t": 216.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002160.jpg",
+   "absent": [
+    "노랑",
+    "초록",
+    "흰색"
+   ]
+  },
+  {
+   "frame_id": "sc004",
+   "objects": [
+    {
+     "name": "화분 캐릭터",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "잎",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "소파",
+     "count": 1,
+     "colors": [
+      "빨강"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "문",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "액자",
+     "count": 3,
+     "colors": [
+      "갈색"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미",
+    "네모"
+   ],
+   "t": 288.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "absent": []
+  },
+  {
+   "frame_id": "sc005",
+   "objects": [
+    {
+     "name": "빵",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "조명",
+     "count": 2,
+     "colors": [
+      "흰색"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "의자",
+     "count": 1,
+     "colors": [
+      "빨강"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 372.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "absent": [
+    "보라",
+    "초록"
+   ]
+  },
+  {
+   "frame_id": "sc006",
+   "objects": [
+    {
+     "name": "캐릭터",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "안경",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "손",
+     "count": 2,
+     "colors": [
+      "갈색"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "팔",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "네모",
+    "동그라미"
+   ],
+   "t": 420.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "absent": [
+    "보라",
+    "초록"
+   ]
+  },
+  {
+   "frame_id": "sc007",
+   "objects": [
+    {
+     "name": "캐릭터",
+     "count": 2,
+     "colors": [
+      "노랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "종이",
+     "count": 1,
+     "colors": [
+      "흰색"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "건물",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "건물",
+     "count": 1,
+     "colors": [
+      "보라"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "차양",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "네모"
+   ],
+   "t": 492.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "absent": [
+    "검정",
+    "초록"
+   ]
+  },
+  {
+   "frame_id": "sc008",
+   "objects": [
+    {
+     "name": "빵",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "머핀",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "파이",
+     "count": 2,
+     "colors": [
+      "노랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "우유팩",
+     "count": 1,
+     "colors": [
+      "흰색"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [
+    "네모",
+    "동그라미"
+   ],
+   "t": 564.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "absent": [
+    "보라",
+    "초록"
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "frame_id": "sc001",
+   "obj": {
+    "name": "가위 그림",
+    "count": 1,
+    "colors": [
+     "검정"
+    ],
+    "size": "작음"
+   },
+   "drop": "화면에 없는 색 — 검정"
+  },
+  {
+   "frame_id": "sc003",
+   "obj": {
+    "name": "트로피",
+    "count": 2,
+    "colors": [
+     "노랑"
+    ],
+    "size": "작음"
+   },
+   "drop": "화면에 없는 색 — 노랑"
+  }
+ ],
+ "facts": [
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "cnt0102",
+   "kind": "count",
+   "payload": {
+    "name": "파란 손",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0102",
+   "kind": "objcolor",
+   "payload": {
+    "name": "손",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "검정",
+     "보라",
+     "분홍"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0102",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 손"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0103",
+   "kind": "objcolor",
+   "payload": {
+    "name": "문",
+    "colors": [
+     "빨강"
+    ],
+    "absent": [
+     "검정",
+     "보라",
+     "분홍"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0103",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 문"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000240.jpg",
+   "conf": "medium",
+   "id": "sum01",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "파란 손",
+      "n": 2
+     },
+     {
+      "name": "빨간 문",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp01",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "cnt0202",
+   "kind": "count",
+   "payload": {
+    "name": "분홍색 손",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0202",
+   "kind": "objcolor",
+   "payload": {
+    "name": "손",
+    "colors": [
+     "분홍"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0202",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 손"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000600.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "ocl0203",
+   "kind": "objcolor",
+   "payload": {
+    "name": "액자",
+    "colors": [
+     "갈색"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000600.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "who0203",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 액자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000600.jpg",
+   "conf": "medium",
+   "id": "sum02",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "분홍색 손",
+      "n": 2
+     },
+     {
+      "name": "갈색 액자",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_000600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp02",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0302",
+   "kind": "objcolor",
+   "payload": {
+    "name": "가위",
+    "colors": [
+     "회색"
+    ],
+    "absent": [
+     "노랑",
+     "초록",
+     "흰색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0302",
+   "kind": "presence",
+   "payload": {
+    "name": "회색 가위"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0303",
+   "kind": "objcolor",
+   "payload": {
+    "name": "넥타이",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "노랑",
+     "초록",
+     "흰색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0303",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 넥타이"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002160.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp03",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0402",
+   "kind": "objcolor",
+   "payload": {
+    "name": "잎",
+    "colors": [
+     "초록"
+    ],
+    "absent": []
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0402",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 잎"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0403",
+   "kind": "objcolor",
+   "payload": {
+    "name": "소파",
+    "colors": [
+     "빨강"
+    ],
+    "absent": []
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0403",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 소파"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0404",
+   "kind": "objcolor",
+   "payload": {
+    "name": "문",
+    "colors": [
+     "노랑"
+    ],
+    "absent": []
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0404",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 문"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "cnt0405",
+   "kind": "count",
+   "payload": {
+    "name": "갈색 액자",
+    "n": 3
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "ocl0405",
+   "kind": "objcolor",
+   "payload": {
+    "name": "액자",
+    "colors": [
+     "갈색"
+    ],
+    "absent": []
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "who0405",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 액자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "siz04",
+   "kind": "size",
+   "payload": {
+    "big": "빨간 소파",
+    "small": "갈색 액자"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "id": "sum04",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "초록색 잎",
+      "n": 1
+     },
+     {
+      "name": "빨간 소파",
+      "n": 1
+     },
+     {
+      "name": "갈색 액자",
+      "n": 3
+     }
+    ],
+    "total": 5
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "id": "dif04",
+   "kind": "diff",
+   "age_min": 7,
+   "payload": {
+    "more": {
+     "name": "갈색 액자",
+     "n": 3
+    },
+    "less": {
+     "name": "초록색 잎",
+     "n": 1
+    },
+    "diff": 2
+   },
+   "afford": [
+    "수 가르기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 288.0,
+   "t1": 288.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_002880.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp04",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0501",
+   "kind": "objcolor",
+   "payload": {
+    "name": "빵",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0501",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 빵"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0502",
+   "kind": "count",
+   "payload": {
+    "name": "하얀 조명",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0502",
+   "kind": "objcolor",
+   "payload": {
+    "name": "조명",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0502",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 조명"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0503",
+   "kind": "objcolor",
+   "payload": {
+    "name": "의자",
+    "colors": [
+     "빨강"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0503",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 의자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "siz05",
+   "kind": "size",
+   "payload": {
+    "big": "주황색 빵",
+    "small": "하얀 조명"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "conf": "medium",
+   "id": "sum05",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "주황색 빵",
+      "n": 1
+     },
+     {
+      "name": "하얀 조명",
+      "n": 2
+     },
+     {
+      "name": "빨간 의자",
+      "n": 1
+     }
+    ],
+    "total": 4
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 372.0,
+   "t1": 372.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_003720.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp05",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0602",
+   "kind": "objcolor",
+   "payload": {
+    "name": "안경",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0602",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 안경"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "cnt0603",
+   "kind": "count",
+   "payload": {
+    "name": "갈색 손",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0603",
+   "kind": "objcolor",
+   "payload": {
+    "name": "손",
+    "colors": [
+     "갈색"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0603",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 손"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0604",
+   "kind": "objcolor",
+   "payload": {
+    "name": "팔",
+    "colors": [
+     "갈색"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0604",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 팔"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "siz06",
+   "kind": "size",
+   "payload": {
+    "big": "갈색 팔",
+    "small": "주황색 안경"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "conf": "medium",
+   "id": "sum06",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "주황색 안경",
+      "n": 1
+     },
+     {
+      "name": "갈색 손",
+      "n": 2
+     },
+     {
+      "name": "갈색 팔",
+      "n": 1
+     }
+    ],
+    "total": 4
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp06",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모",
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0702",
+   "kind": "objcolor",
+   "payload": {
+    "name": "종이",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "검정",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0702",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 종이"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "who0703",
+   "kind": "presence",
+   "payload": {
+    "name": "분홍색 건물"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "who0704",
+   "kind": "presence",
+   "payload": {
+    "name": "보라색 건물"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "ocl0705",
+   "kind": "objcolor",
+   "payload": {
+    "name": "차양",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "검정",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "who0705",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 차양"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "siz07",
+   "kind": "size",
+   "payload": {
+    "big": "분홍색 건물",
+    "small": "하얀 종이"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "conf": "medium",
+   "id": "sum07",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "하얀 종이",
+      "n": 1
+     },
+     {
+      "name": "분홍색 건물",
+      "n": 1
+     },
+     {
+      "name": "보라색 건물",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 492.0,
+   "t1": 492.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_004920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp07",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0801",
+   "kind": "objcolor",
+   "payload": {
+    "name": "빵",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0801",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 빵"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0802",
+   "kind": "objcolor",
+   "payload": {
+    "name": "머핀",
+    "colors": [
+     "갈색"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0802",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 머핀"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0803",
+   "kind": "count",
+   "payload": {
+    "name": "노란 파이",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0803",
+   "kind": "objcolor",
+   "payload": {
+    "name": "파이",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0803",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 파이"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0804",
+   "kind": "objcolor",
+   "payload": {
+    "name": "우유팩",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0804",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 우유팩"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "id": "sum08",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "주황색 빵",
+      "n": 1
+     },
+     {
+      "name": "갈색 머핀",
+      "n": 1
+     },
+     {
+      "name": "노란 파이",
+      "n": 2
+     }
+    ],
+    "total": 4
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드1화_005640.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp08",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모",
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  }
+ ]
+}

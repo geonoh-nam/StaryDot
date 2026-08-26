@@ -1,0 +1,1412 @@
+{
+ "frames": [
+  {
+   "id": "sc001",
+   "t": 12.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_000120.jpg",
+   "palette": {
+    "present": [
+     "초록",
+     "파랑",
+     "흰색"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0046,
+     "주황": 0.0289,
+     "노랑": 0.0125,
+     "초록": 0.0315,
+     "파랑": 0.8619,
+     "보라": 0.0015,
+     "분홍": 0.0202,
+     "갈색": 0.0044,
+     "검정": 0.0001,
+     "흰색": 0.0336,
+     "회색": 0.0009
+    }
+   }
+  },
+  {
+   "id": "sc002",
+   "t": 60.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_000600.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "초록",
+     "파랑",
+     "흰색"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0097,
+     "주황": 0.0407,
+     "노랑": 0.0216,
+     "초록": 0.8289,
+     "파랑": 0.0429,
+     "보라": 0.0005,
+     "분홍": 0.0014,
+     "갈색": 0.0034,
+     "검정": 0.0002,
+     "흰색": 0.0498,
+     "회색": 0.001
+    }
+   }
+  },
+  {
+   "id": "sc003",
+   "t": 108.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001080.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "파랑",
+     "분홍"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0059,
+     "주황": 0.0884,
+     "노랑": 0.0054,
+     "초록": 0.0079,
+     "파랑": 0.7924,
+     "보라": 0.0206,
+     "분홍": 0.074,
+     "갈색": 0.0041,
+     "흰색": 0.0003,
+     "회색": 0.0009
+    }
+   }
+  },
+  {
+   "id": "sc004",
+   "t": 192.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "초록",
+     "파랑",
+     "흰색"
+    ],
+    "absent": [
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0071,
+     "주황": 0.0344,
+     "노랑": 0.0241,
+     "초록": 0.0993,
+     "파랑": 0.7644,
+     "보라": 0.0073,
+     "분홍": 0.0171,
+     "갈색": 0.0058,
+     "검정": 0.0001,
+     "흰색": 0.0373,
+     "회색": 0.0031
+    }
+   }
+  },
+  {
+   "id": "sc005",
+   "t": 228.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_002280.jpg",
+   "palette": {
+    "present": [
+     "노랑",
+     "초록",
+     "파랑",
+     "흰색"
+    ],
+    "absent": [
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0137,
+     "주황": 0.0237,
+     "노랑": 0.093,
+     "초록": 0.0857,
+     "파랑": 0.7027,
+     "보라": 0.0077,
+     "분홍": 0.02,
+     "갈색": 0.0094,
+     "흰색": 0.0395,
+     "회색": 0.0047
+    }
+   }
+  },
+  {
+   "id": "sc006",
+   "t": 408.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004080.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "파랑",
+     "보라",
+     "흰색"
+    ],
+    "absent": [
+     "초록",
+     "검정"
+    ],
+    "peak": {
+     "빨강": 0.0263,
+     "주황": 0.3154,
+     "노랑": 0.0831,
+     "초록": 0.0034,
+     "파랑": 0.3226,
+     "보라": 0.1469,
+     "분홍": 0.0239,
+     "갈색": 0.0218,
+     "검정": 0.0031,
+     "흰색": 0.0473,
+     "회색": 0.0062
+    }
+   }
+  },
+  {
+   "id": "sc007",
+   "t": 480.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "파랑",
+     "분홍",
+     "흰색"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0023,
+     "주황": 0.0372,
+     "노랑": 0.0059,
+     "초록": 0.0052,
+     "파랑": 0.8356,
+     "보라": 0.0024,
+     "분홍": 0.0384,
+     "갈색": 0.0003,
+     "흰색": 0.0702,
+     "회색": 0.0025
+    }
+   }
+  },
+  {
+   "id": "sc008",
+   "t": 564.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_005640.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "보라",
+     "분홍"
+    ],
+    "absent": [
+     "빨강",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "peak": {
+     "빨강": 0.0046,
+     "주황": 0.0316,
+     "노랑": 0.0445,
+     "초록": 0.7409,
+     "파랑": 0.0036,
+     "보라": 0.1134,
+     "분홍": 0.0533,
+     "갈색": 0.0038,
+     "흰색": 0.0023,
+     "회색": 0.0022
+    }
+   }
+  }
+ ],
+ "observations": [
+  {
+   "frame_id": "sc002",
+   "objects": [
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "물고기",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [],
+   "t": 60.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_000600.jpg",
+   "absent": [
+    "갈색",
+    "검정",
+    "보라",
+    "분홍",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc003",
+   "objects": [
+    {
+     "name": "집",
+     "count": 1,
+     "colors": [
+      "보라"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "물고기",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [],
+   "t": 108.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001080.jpg",
+   "absent": [
+    "갈색",
+    "검정",
+    "회색",
+    "흰색"
+   ]
+  },
+  {
+   "frame_id": "sc004",
+   "objects": [
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "물고기",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "선인장",
+     "count": 2,
+     "colors": [
+      "초록"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 192.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "absent": [
+    "검정",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc005",
+   "objects": [
+    {
+     "name": "칫솔",
+     "count": 3,
+     "colors": [
+      "파랑"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "세모"
+   ],
+   "t": 228.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_002280.jpg",
+   "absent": [
+    "검정",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc006",
+   "objects": [
+    {
+     "name": "산호",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [],
+   "t": 408.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004080.jpg",
+   "absent": [
+    "검정",
+    "초록"
+   ]
+  },
+  {
+   "frame_id": "sc007",
+   "objects": [
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "거품",
+     "count": 1,
+     "colors": [
+      "흰색"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "칫솔",
+     "count": 2,
+     "colors": [
+      "파랑"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [],
+   "t": 480.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "absent": [
+    "갈색",
+    "검정",
+    "보라",
+    "빨강",
+    "회색"
+   ]
+  },
+  {
+   "frame_id": "sc008",
+   "objects": [
+    {
+     "name": "상어",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [],
+   "t": 564.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_005640.jpg",
+   "absent": [
+    "갈색",
+    "검정",
+    "빨강",
+    "파랑",
+    "회색",
+    "흰색"
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "frame_id": "sc002",
+   "obj": {
+    "name": "상어",
+    "count": 1,
+    "colors": [
+     "분홍"
+    ],
+    "size": "큼"
+   },
+   "drop": "화면에 없는 색 — 분홍"
+  },
+  {
+   "frame_id": "sc008",
+   "obj": {
+    "name": "거품",
+    "count": 1,
+    "colors": [
+     "흰색"
+    ],
+    "size": "보통"
+   },
+   "drop": "화면에 없는 색 — 흰색"
+  },
+  {
+   "frame_id": "sc008",
+   "obj": {
+    "name": "칫솔",
+    "count": 2,
+    "colors": [
+     "파랑"
+    ],
+    "size": "작음"
+   },
+   "drop": "화면에 없는 색 — 파랑"
+  }
+ ],
+ "facts": [
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_000600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0101",
+   "kind": "objcolor",
+   "payload": {
+    "name": "상어",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "보라",
+     "분홍",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_000600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0101",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_000600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0102",
+   "kind": "objcolor",
+   "payload": {
+    "name": "물고기",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "보라",
+     "분홍",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_000600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0102",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 물고기"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 60.0,
+   "t1": 60.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_000600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "siz01",
+   "kind": "size",
+   "payload": {
+    "big": "파란 상어",
+    "small": "주황색 물고기"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0201",
+   "kind": "objcolor",
+   "payload": {
+    "name": "집",
+    "colors": [
+     "보라"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "회색",
+     "흰색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0201",
+   "kind": "presence",
+   "payload": {
+    "name": "보라색 집"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0202",
+   "kind": "objcolor",
+   "payload": {
+    "name": "물고기",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "회색",
+     "흰색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0202",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 물고기"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 192.0,
+   "t1": 192.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0301",
+   "kind": "objcolor",
+   "payload": {
+    "name": "상어",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "검정",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 192.0,
+   "t1": 192.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0301",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 192.0,
+   "t1": 192.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0302",
+   "kind": "objcolor",
+   "payload": {
+    "name": "물고기",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "검정",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 192.0,
+   "t1": 192.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0302",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 물고기"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 192.0,
+   "t1": 192.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0303",
+   "kind": "count",
+   "payload": {
+    "name": "초록색 선인장",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 192.0,
+   "t1": 192.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0303",
+   "kind": "objcolor",
+   "payload": {
+    "name": "선인장",
+    "colors": [
+     "초록"
+    ],
+    "absent": [
+     "검정",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 192.0,
+   "t1": 192.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0303",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 선인장"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 192.0,
+   "t1": 192.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "siz03",
+   "kind": "size",
+   "payload": {
+    "big": "노란 상어",
+    "small": "초록색 선인장"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 192.0,
+   "t1": 192.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "conf": "medium",
+   "id": "sum03",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "노란 상어",
+      "n": 1
+     },
+     {
+      "name": "주황색 물고기",
+      "n": 1
+     },
+     {
+      "name": "초록색 선인장",
+      "n": 2
+     }
+    ],
+    "total": 4
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 192.0,
+   "t1": 192.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp03",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 228.0,
+   "t1": 228.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_002280.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0401",
+   "kind": "count",
+   "payload": {
+    "name": "파란 칫솔",
+    "n": 3
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 228.0,
+   "t1": 228.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_002280.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0401",
+   "kind": "objcolor",
+   "payload": {
+    "name": "칫솔",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "검정",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 228.0,
+   "t1": 228.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_002280.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0401",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 칫솔"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 228.0,
+   "t1": 228.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_002280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp04",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "세모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 408.0,
+   "t1": 408.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004080.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "ocl0501",
+   "kind": "objcolor",
+   "payload": {
+    "name": "산호",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "검정",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 408.0,
+   "t1": 408.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004080.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "who0501",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 산호"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 480.0,
+   "t1": 480.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0601",
+   "kind": "objcolor",
+   "payload": {
+    "name": "상어",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "보라",
+     "빨강",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 480.0,
+   "t1": 480.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0601",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 480.0,
+   "t1": 480.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "ocl0602",
+   "kind": "objcolor",
+   "payload": {
+    "name": "거품",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "보라",
+     "빨강",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 480.0,
+   "t1": 480.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "who0602",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 거품"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 480.0,
+   "t1": 480.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0603",
+   "kind": "count",
+   "payload": {
+    "name": "파란 칫솔",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 480.0,
+   "t1": 480.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0603",
+   "kind": "objcolor",
+   "payload": {
+    "name": "칫솔",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "보라",
+     "빨강",
+     "회색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 480.0,
+   "t1": 480.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0603",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 칫솔"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 480.0,
+   "t1": 480.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "siz06",
+   "kind": "size",
+   "payload": {
+    "big": "주황색 상어",
+    "small": "파란 칫솔"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 480.0,
+   "t1": 480.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "conf": "medium",
+   "id": "sum06",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "주황색 상어",
+      "n": 1
+     },
+     {
+      "name": "하얀 거품",
+      "n": 1
+     },
+     {
+      "name": "파란 칫솔",
+      "n": 2
+     }
+    ],
+    "total": 4
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_005640.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0701",
+   "kind": "objcolor",
+   "payload": {
+    "name": "상어",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "갈색",
+     "검정",
+     "빨강",
+     "파랑",
+     "회색",
+     "흰색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 564.0,
+   "t1": 564.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_005640.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0701",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 상어"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  }
+ ]
+}

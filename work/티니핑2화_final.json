@@ -1,0 +1,225 @@
+{
+ "activities": [
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 나무는 무슨 색인가요?",
+   "fact_id": "ocl0501",
+   "color_index": 0,
+   "t": 396.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_003960.jpg",
+   "answer": "초록",
+   "choices": [
+    "초록",
+    "검정",
+    "빨강"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 케이크는 무슨 색인가요?",
+   "fact_id": "ocl0603",
+   "color_index": 0,
+   "t": 492.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "answer": "노랑",
+   "choices": [
+    "노랑",
+    "검정",
+    "빨강"
+   ]
+  },
+  {
+   "type": "모양 찾기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 모양에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 세모를 찾아보세요.",
+   "fact_id": "shp04",
+   "t": 204.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_002040.jpg",
+   "answer": "세모",
+   "choices": [
+    "동그라미",
+    "네모",
+    "세모"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "읽기와 쓰기에 관심 가지기 — 그림을 보고 무엇인지 말한다",
+   "age": "3세",
+   "prompt": "이 그림에 보이는 것은 무엇인가요?",
+   "fact_id": "who0502",
+   "t": 396.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_003960.jpg",
+   "answer": "분홍색 가방",
+   "choices": [
+    "하얀 꽃",
+    "노란 별",
+    "분홍색 가방"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 말한다",
+   "age": "3세",
+   "prompt": "이 그림을 보고 무엇이 보이는지 말해 보세요.",
+   "fact_id": "who0703",
+   "t": 528.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "4세",
+   "prompt": "이 그림에서 사다리는 무슨 색인가요?",
+   "fact_id": "ocl0601",
+   "color_index": 0,
+   "t": 492.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "answer": "초록",
+   "choices": [
+    "검정",
+    "초록",
+    "빨강"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "4세",
+   "prompt": "이 그림에서 탁자는 무슨 색인가요?",
+   "fact_id": "ocl0602",
+   "color_index": 0,
+   "t": 492.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "answer": "분홍",
+   "choices": [
+    "검정",
+    "빨강",
+    "분홍"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체를 세어 수량을 알아본다",
+   "age": "4세",
+   "prompt": "이 그림에 노란 별이 몇 개 있나요?",
+   "fact_id": "cnt0604",
+   "t": 492.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "answer": "4",
+   "choices": [
+    "3",
+    "5",
+    "4"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체를 세어 수량을 알아본다",
+   "age": "4세",
+   "prompt": "이 그림에 하얀 꽃이 몇 송이 있나요?",
+   "fact_id": "cnt0703",
+   "t": 528.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "answer": "4",
+   "choices": [
+    "3",
+    "5",
+    "4"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 말한다",
+   "age": "4세",
+   "prompt": "이 그림을 보고 무엇이 보이는지, 어떤 느낌이 드는지 말해 주세요.",
+   "fact_id": "who0602",
+   "t": 492.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 초록색 나무 1그루와 하얀 꽃 4송이가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum07",
+   "t": 528.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "answer": "5",
+   "choices": [
+    "5",
+    "4",
+    "6"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "7세",
+   "prompt": "이 그림에 초록색 사다리 1개와 분홍색 탁자 1개, 노란 별 4개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum06",
+   "t": 492.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "answer": "6",
+   "choices": [
+    "5",
+    "7",
+    "6"
+   ]
+  },
+  {
+   "type": "수 가르기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 한 자리 수의 뺄셈, 수량의 차이 알아보기",
+   "age": "7세",
+   "prompt": "이 그림에 노란 별 4개와 초록색 사다리 1개가 있어요. 노란 별이 몇 개 더 많을까요?",
+   "fact_id": "dif06",
+   "t": 492.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_004920.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "3",
+    "4"
+   ]
+  },
+  {
+   "type": "수 가르기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 한 자리 수의 뺄셈, 수량의 차이 알아보기",
+   "age": "7세",
+   "prompt": "이 그림에 하얀 꽃 4개와 초록색 나무 1개가 있어요. 하얀 꽃이 몇 개 더 많을까요?",
+   "fact_id": "dif07",
+   "t": 528.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/티니핑2화_005280.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "4",
+    "3"
+   ]
+  }
+ ],
+ "dropped": []
+}

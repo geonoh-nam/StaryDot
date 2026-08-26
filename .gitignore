@@ -1,8 +1,38 @@
+work/*.wav
+work/shots/
+shots/
+models/
+probe/
 __pycache__/
-*.pyc
-.pytest_cache/
+
+# 의존성
+node_modules/
+.expo/
+.ruff_cache/
 .DS_Store
-out_agents/
-out/
-*_frames/
-.env
+
+# 영상 원본·추출물 — 저작물이고 용량도 크다
+backend/server/media/
+backend/server/inbox/
+
+# 로컬 상태 (아이 프로필 등 개인정보 포함)
+*.db
+*.db-journal
+work/*.log
+
+# 빌드 산출물
+frontend/ios/build/
+frontend/android/build/
+frontend/android/.gradle/
+
+# 상용 만화의 대사 전사본·화면 스틸은 공개하지 않는다.
+# 산출물(_final.json)과 관찰 재료(_screen.json)만 남긴다 — 영상이 있으면 다시 만들어진다.
+work/*_plan.json
+work/*_vad.json
+work/*_small.json
+work/*_facts.json
+work/*_cards.json
+work/*_raw.json
+work/*_v2.json
+work/ladder*/
+docs/verify/

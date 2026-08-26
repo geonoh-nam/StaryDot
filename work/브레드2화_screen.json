@@ -1,0 +1,2041 @@
+{
+ "frames": [
+  {
+   "id": "sc001",
+   "t": 24.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "분홍",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "노랑",
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.1644,
+     "주황": 0.1202,
+     "노랑": 0.0028,
+     "초록": 0.0129,
+     "파랑": 0.0187,
+     "보라": 0.0015,
+     "분홍": 0.0824,
+     "갈색": 0.3819,
+     "검정": 0.0118,
+     "흰색": 0.0802,
+     "회색": 0.1232
+    }
+   }
+  },
+  {
+   "id": "sc002",
+   "t": 96.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000960.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "분홍",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.0663,
+     "주황": 0.0363,
+     "노랑": 0.0719,
+     "초록": 0.0636,
+     "파랑": 0.1254,
+     "보라": 0.0012,
+     "분홍": 0.0306,
+     "갈색": 0.1513,
+     "검정": 0.0829,
+     "흰색": 0.1845,
+     "회색": 0.186
+    }
+   }
+  },
+  {
+   "id": "sc003",
+   "t": 156.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_001560.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "파랑",
+     "갈색",
+     "흰색"
+    ],
+    "absent": [
+     "보라",
+     "검정"
+    ],
+    "peak": {
+     "빨강": 0.0481,
+     "주황": 0.0906,
+     "노랑": 0.2973,
+     "초록": 0.0197,
+     "파랑": 0.1488,
+     "분홍": 0.0144,
+     "갈색": 0.2849,
+     "검정": 0.0008,
+     "흰색": 0.072,
+     "회색": 0.0233
+    }
+   }
+  },
+  {
+   "id": "sc004",
+   "t": 216.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_002160.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "초록",
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.1328,
+     "주황": 0.2241,
+     "노랑": 0.0308,
+     "초록": 0.0005,
+     "파랑": 0.0168,
+     "보라": 0.0022,
+     "분홍": 0.0037,
+     "갈색": 0.1934,
+     "검정": 0.0145,
+     "흰색": 0.0949,
+     "회색": 0.2862
+    }
+   }
+  },
+  {
+   "id": "sc005",
+   "t": 300.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "초록",
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.0358,
+     "주황": 0.1459,
+     "노랑": 0.0378,
+     "초록": 0.0007,
+     "파랑": 0.0505,
+     "분홍": 0.0043,
+     "갈색": 0.352,
+     "검정": 0.0665,
+     "흰색": 0.0844,
+     "회색": 0.2221
+    }
+   }
+  },
+  {
+   "id": "sc006",
+   "t": 336.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "파랑",
+     "분홍",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.1155,
+     "주황": 0.1031,
+     "노랑": 0.1306,
+     "초록": 0.0237,
+     "파랑": 0.0358,
+     "보라": 0.0024,
+     "분홍": 0.0709,
+     "갈색": 0.2882,
+     "검정": 0.0167,
+     "흰색": 0.0667,
+     "회색": 0.1465
+    }
+   }
+  },
+  {
+   "id": "sc007",
+   "t": 468.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "초록",
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.045,
+     "주황": 0.1867,
+     "노랑": 0.0061,
+     "초록": 0.0043,
+     "파랑": 0.0396,
+     "보라": 0.0013,
+     "분홍": 0.0052,
+     "갈색": 0.4107,
+     "검정": 0.0426,
+     "흰색": 0.0795,
+     "회색": 0.1788
+    }
+   }
+  },
+  {
+   "id": "sc008",
+   "t": 636.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_006360.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "보라",
+     "분홍",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "초록",
+     "파랑",
+     "검정"
+    ],
+    "peak": {
+     "빨강": 0.0452,
+     "주황": 0.3395,
+     "노랑": 0.0622,
+     "파랑": 0.0048,
+     "보라": 0.1447,
+     "분홍": 0.0495,
+     "갈색": 0.2684,
+     "검정": 0.0001,
+     "흰색": 0.0418,
+     "회색": 0.0437
+    }
+   }
+  }
+ ],
+ "observations": [
+  {
+   "frame_id": "sc001",
+   "objects": [
+    {
+     "name": "딸기",
+     "count": 2,
+     "colors": [
+      "빨강"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "크림",
+     "count": 1,
+     "colors": [
+      "흰색"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "문",
+     "count": 1,
+     "colors": [
+      "빨강"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "창문",
+     "count": 2,
+     "colors": [
+      "갈색"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [
+    "네모"
+   ],
+   "t": 24.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "absent": [
+    "노랑",
+    "보라"
+   ]
+  },
+  {
+   "frame_id": "sc002",
+   "objects": [
+    {
+     "name": "캐릭터",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "캐릭터",
+     "count": 1,
+     "colors": [
+      "분홍"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "동물얼굴",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "소파",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [
+    "동그라미",
+    "세모"
+   ],
+   "t": 96.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000960.jpg",
+   "absent": [
+    "보라"
+   ]
+  },
+  {
+   "frame_id": "sc003",
+   "objects": [
+    {
+     "name": "얼굴캐릭터",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "휴대폰",
+     "count": 1,
+     "colors": [
+      "회색"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "쓰레기통",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [],
+   "t": 156.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_001560.jpg",
+   "absent": [
+    "검정",
+    "보라"
+   ]
+  },
+  {
+   "frame_id": "sc004",
+   "objects": [
+    {
+     "name": "로봇캐릭터",
+     "count": 1,
+     "colors": [
+      "흰색"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "캐릭터",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "트로피",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 216.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_002160.jpg",
+   "absent": [
+    "보라",
+    "분홍",
+    "초록"
+   ]
+  },
+  {
+   "frame_id": "sc005",
+   "objects": [
+    {
+     "name": "창살",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "등불",
+     "count": 2,
+     "colors": [
+      "주황"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "세모"
+   ],
+   "t": 300.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "absent": [
+    "보라",
+    "분홍",
+    "초록"
+   ]
+  },
+  {
+   "frame_id": "sc006",
+   "objects": [
+    {
+     "name": "선반",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "병",
+     "count": 4,
+     "colors": [
+      "흰색"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "그릇",
+     "count": 2,
+     "colors": [
+      "파랑"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "액자",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "소파",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "주전자",
+     "count": 1,
+     "colors": [
+      "흰색"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "네모",
+    "동그라미"
+   ],
+   "t": 336.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "absent": [
+    "보라"
+   ]
+  },
+  {
+   "frame_id": "sc007",
+   "objects": [
+    {
+     "name": "창살",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "등불",
+     "count": 1,
+     "colors": [
+      "주황"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "종이",
+     "count": 1,
+     "colors": [
+      "흰색"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "세모",
+    "네모"
+   ],
+   "t": 468.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "absent": [
+    "보라",
+    "초록"
+   ]
+  },
+  {
+   "frame_id": "sc008",
+   "objects": [
+    {
+     "name": "구슬 장식",
+     "count": 5,
+     "colors": [
+      "흰색"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "구슬 장식",
+     "count": 3,
+     "colors": [
+      "분홍"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 636.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_006360.jpg",
+   "absent": [
+    "검정",
+    "초록",
+    "파랑"
+   ]
+  }
+ ],
+ "dropped": [],
+ "facts": [
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "cnt0101",
+   "kind": "count",
+   "payload": {
+    "name": "빨간 딸기",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0101",
+   "kind": "objcolor",
+   "payload": {
+    "name": "딸기",
+    "colors": [
+     "빨강"
+    ],
+    "absent": [
+     "노랑",
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0101",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 딸기"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0102",
+   "kind": "objcolor",
+   "payload": {
+    "name": "크림",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "노랑",
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0102",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 크림"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0103",
+   "kind": "objcolor",
+   "payload": {
+    "name": "문",
+    "colors": [
+     "빨강"
+    ],
+    "absent": [
+     "노랑",
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0103",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 문"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "cnt0104",
+   "kind": "count",
+   "payload": {
+    "name": "갈색 창문",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0104",
+   "kind": "objcolor",
+   "payload": {
+    "name": "창문",
+    "colors": [
+     "갈색"
+    ],
+    "absent": [
+     "노랑",
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0104",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 창문"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "id": "sum01",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "빨간 딸기",
+      "n": 2
+     },
+     {
+      "name": "하얀 크림",
+      "n": 1
+     },
+     {
+      "name": "갈색 창문",
+      "n": 2
+     }
+    ],
+    "total": 5
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp01",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000960.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0204",
+   "kind": "objcolor",
+   "payload": {
+    "name": "소파",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000960.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0204",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 소파"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp02",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "세모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 156.0,
+   "t1": 156.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_001560.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0302",
+   "kind": "objcolor",
+   "payload": {
+    "name": "휴대폰",
+    "colors": [
+     "회색"
+    ],
+    "absent": [
+     "검정",
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 156.0,
+   "t1": 156.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_001560.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0302",
+   "kind": "presence",
+   "payload": {
+    "name": "회색 휴대폰"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 156.0,
+   "t1": 156.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_001560.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0303",
+   "kind": "objcolor",
+   "payload": {
+    "name": "쓰레기통",
+    "colors": [
+     "초록"
+    ],
+    "absent": [
+     "검정",
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 156.0,
+   "t1": 156.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_001560.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0303",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 쓰레기통"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_002160.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "ocl0403",
+   "kind": "objcolor",
+   "payload": {
+    "name": "트로피",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_002160.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "who0403",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 트로피"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 216.0,
+   "t1": 216.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_002160.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp04",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "ocl0501",
+   "kind": "objcolor",
+   "payload": {
+    "name": "창살",
+    "colors": [
+     "갈색"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "who0501",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 창살"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0502",
+   "kind": "count",
+   "payload": {
+    "name": "주황색 등불",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0502",
+   "kind": "objcolor",
+   "payload": {
+    "name": "등불",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0502",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 등불"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "siz05",
+   "kind": "size",
+   "payload": {
+    "big": "갈색 창살",
+    "small": "주황색 등불"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "conf": "medium",
+   "id": "sum05",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "갈색 창살",
+      "n": 1
+     },
+     {
+      "name": "주황색 등불",
+      "n": 2
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp05",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "세모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0601",
+   "kind": "objcolor",
+   "payload": {
+    "name": "선반",
+    "colors": [
+     "갈색"
+    ],
+    "absent": [
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0601",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 선반"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0602",
+   "kind": "count",
+   "payload": {
+    "name": "하얀 병",
+    "n": 4
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0602",
+   "kind": "objcolor",
+   "payload": {
+    "name": "병",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0602",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 병"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "cnt0603",
+   "kind": "count",
+   "payload": {
+    "name": "파란 그릇",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0603",
+   "kind": "objcolor",
+   "payload": {
+    "name": "그릇",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0603",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 그릇"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "ocl0604",
+   "kind": "objcolor",
+   "payload": {
+    "name": "액자",
+    "colors": [
+     "갈색"
+    ],
+    "absent": [
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "who0604",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 액자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0605",
+   "kind": "objcolor",
+   "payload": {
+    "name": "소파",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0605",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 소파"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0606",
+   "kind": "objcolor",
+   "payload": {
+    "name": "주전자",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0606",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 주전자"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "siz06",
+   "kind": "size",
+   "payload": {
+    "big": "갈색 선반",
+    "small": "하얀 병"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "id": "sum06",
+   "kind": "sum",
+   "age_min": 7,
+   "payload": {
+    "parts": [
+     {
+      "name": "갈색 선반",
+      "n": 1
+     },
+     {
+      "name": "하얀 병",
+      "n": 4
+     },
+     {
+      "name": "파란 그릇",
+      "n": 2
+     }
+    ],
+    "total": 7
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "id": "dif06",
+   "kind": "diff",
+   "age_min": 7,
+   "payload": {
+    "more": {
+     "name": "하얀 병",
+     "n": 4
+    },
+    "less": {
+     "name": "갈색 선반",
+     "n": 1
+    },
+    "diff": 3
+   },
+   "afford": [
+    "수 가르기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 336.0,
+   "t1": 336.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp06",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모",
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 468.0,
+   "t1": 468.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "ocl0701",
+   "kind": "objcolor",
+   "payload": {
+    "name": "창살",
+    "colors": [
+     "갈색"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 468.0,
+   "t1": 468.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "who0701",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 창살"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 468.0,
+   "t1": 468.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0702",
+   "kind": "objcolor",
+   "payload": {
+    "name": "등불",
+    "colors": [
+     "주황"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 468.0,
+   "t1": 468.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0702",
+   "kind": "presence",
+   "payload": {
+    "name": "주황색 등불"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 468.0,
+   "t1": 468.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0703",
+   "kind": "objcolor",
+   "payload": {
+    "name": "종이",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "보라",
+     "초록"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 468.0,
+   "t1": 468.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0703",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 종이"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 468.0,
+   "t1": 468.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "conf": "medium",
+   "age_min": 6,
+   "id": "siz07",
+   "kind": "size",
+   "payload": {
+    "big": "갈색 창살",
+    "small": "주황색 등불"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 468.0,
+   "t1": 468.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "conf": "medium",
+   "id": "sum07",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "갈색 창살",
+      "n": 1
+     },
+     {
+      "name": "주황색 등불",
+      "n": 1
+     },
+     {
+      "name": "하얀 종이",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 468.0,
+   "t1": 468.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp07",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "세모",
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 636.0,
+   "t1": 636.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_006360.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp08",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  }
+ ]
+}

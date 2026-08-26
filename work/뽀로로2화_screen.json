@@ -1,0 +1,1104 @@
+{
+ "frames": [
+  {
+   "id": "sc001",
+   "t": 24.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000240.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "분홍",
+     "흰색"
+    ],
+    "peak": {
+     "주황": 0.0626,
+     "노랑": 0.2748,
+     "초록": 0.3007,
+     "파랑": 0.0476,
+     "갈색": 0.0345,
+     "검정": 0.2562,
+     "흰색": 0.005,
+     "회색": 0.0186
+    }
+   }
+  },
+  {
+   "id": "sc002",
+   "t": 96.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "palette": {
+    "present": [
+     "노랑",
+     "초록",
+     "파랑",
+     "보라",
+     "갈색",
+     "검정"
+    ],
+    "absent": [
+     "빨강",
+     "주황",
+     "분홍"
+    ],
+    "peak": {
+     "주황": 0.0039,
+     "노랑": 0.0301,
+     "초록": 0.6207,
+     "파랑": 0.1797,
+     "보라": 0.0607,
+     "갈색": 0.0353,
+     "검정": 0.0355,
+     "흰색": 0.02,
+     "회색": 0.0143
+    }
+   }
+  },
+  {
+   "id": "sc003",
+   "t": 144.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_001440.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "노랑",
+     "초록",
+     "파랑",
+     "보라",
+     "갈색",
+     "검정"
+    ],
+    "absent": [
+     "주황"
+    ],
+    "peak": {
+     "빨강": 0.0495,
+     "주황": 0.0021,
+     "노랑": 0.136,
+     "초록": 0.3173,
+     "파랑": 0.1031,
+     "보라": 0.0395,
+     "분홍": 0.0208,
+     "갈색": 0.2327,
+     "검정": 0.0808,
+     "흰색": 0.0058,
+     "회색": 0.0125
+    }
+   }
+  },
+  {
+   "id": "sc004",
+   "t": 252.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_002520.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "초록",
+     "파랑",
+     "보라",
+     "분홍",
+     "갈색"
+    ],
+    "absent": [],
+    "peak": {
+     "빨강": 0.0857,
+     "주황": 0.0142,
+     "노랑": 0.0201,
+     "초록": 0.2382,
+     "파랑": 0.2309,
+     "보라": 0.1507,
+     "분홍": 0.1861,
+     "갈색": 0.0419,
+     "검정": 0.0165,
+     "흰색": 0.0054,
+     "회색": 0.0103
+    }
+   }
+  },
+  {
+   "id": "sc005",
+   "t": 300.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_003000.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "주황": 0.1354,
+     "노랑": 0.2163,
+     "초록": 0.3241,
+     "파랑": 0.1311,
+     "갈색": 0.0435,
+     "검정": 0.0632,
+     "흰색": 0.0334,
+     "회색": 0.0531
+    }
+   }
+  },
+  {
+   "id": "sc006",
+   "t": 360.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_003600.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "노랑",
+     "초록",
+     "파랑",
+     "보라",
+     "분홍",
+     "갈색",
+     "검정"
+    ],
+    "absent": [],
+    "peak": {
+     "빨강": 0.0458,
+     "주황": 0.0292,
+     "노랑": 0.0572,
+     "초록": 0.2531,
+     "파랑": 0.2975,
+     "보라": 0.097,
+     "분홍": 0.1252,
+     "갈색": 0.0341,
+     "검정": 0.0354,
+     "흰색": 0.0122,
+     "회색": 0.0133
+    }
+   }
+  },
+  {
+   "id": "sc007",
+   "t": 528.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_005280.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "흰색"
+    ],
+    "peak": {
+     "빨강": 0.0039,
+     "주황": 0.1284,
+     "노랑": 0.0361,
+     "초록": 0.5893,
+     "파랑": 0.0539,
+     "분홍": 0.0061,
+     "갈색": 0.1326,
+     "검정": 0.0341,
+     "흰색": 0.0001,
+     "회색": 0.0155
+    }
+   }
+  },
+  {
+   "id": "sc008",
+   "t": 600.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_006000.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색"
+    ],
+    "absent": [
+     "빨강",
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.0012,
+     "주황": 0.2078,
+     "노랑": 0.0051,
+     "초록": 0.1479,
+     "파랑": 0.0604,
+     "갈색": 0.0762,
+     "검정": 0.4295,
+     "흰색": 0.0448,
+     "회색": 0.0271
+    }
+   }
+  }
+ ],
+ "observations": [
+  {
+   "frame_id": "sc001",
+   "objects": [
+    {
+     "name": "바위",
+     "count": 1,
+     "colors": [
+      "회색"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 24.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000240.jpg",
+   "absent": [
+    "보라",
+    "분홍",
+    "빨강",
+    "흰색"
+   ]
+  },
+  {
+   "frame_id": "sc002",
+   "objects": [
+    {
+     "name": "곰",
+     "count": 1,
+     "colors": [
+      "흰색"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "바위",
+     "count": 1,
+     "colors": [
+      "회색"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "통나무",
+     "count": 1,
+     "colors": [
+      "갈색"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 96.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "absent": [
+    "분홍",
+    "빨강",
+    "주황"
+   ]
+  },
+  {
+   "frame_id": "sc003",
+   "objects": [],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 144.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_001440.jpg",
+   "absent": [
+    "주황"
+   ]
+  },
+  {
+   "frame_id": "sc004",
+   "objects": [
+    {
+     "name": "바위",
+     "count": 1,
+     "colors": [
+      "회색"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 252.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_002520.jpg",
+   "absent": []
+  },
+  {
+   "frame_id": "sc005",
+   "objects": [],
+   "shapes": [
+    "동그라미",
+    "네모"
+   ],
+   "t": 300.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_003000.jpg",
+   "absent": [
+    "보라",
+    "분홍",
+    "빨강"
+   ]
+  },
+  {
+   "frame_id": "sc006",
+   "objects": [
+    {
+     "name": "로봇",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "동그라미",
+    "세모",
+    "네모"
+   ],
+   "t": 360.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_003600.jpg",
+   "absent": []
+  },
+  {
+   "frame_id": "sc007",
+   "objects": [
+    {
+     "name": "돌",
+     "count": 1,
+     "colors": [
+      "회색"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [],
+   "t": 528.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_005280.jpg",
+   "absent": [
+    "보라",
+    "빨강",
+    "흰색"
+   ]
+  },
+  {
+   "frame_id": "sc008",
+   "objects": [
+    {
+     "name": "나비",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "돌",
+     "count": 1,
+     "colors": [
+      "회색"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 600.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_006000.jpg",
+   "absent": [
+    "보라",
+    "분홍",
+    "빨강"
+   ]
+  }
+ ],
+ "dropped": [],
+ "facts": [
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0101",
+   "kind": "objcolor",
+   "payload": {
+    "name": "바위",
+    "colors": [
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강",
+     "흰색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0101",
+   "kind": "presence",
+   "payload": {
+    "name": "회색 바위"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 24.0,
+   "evidence": [
+    "sc001"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000240.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp01",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0201",
+   "kind": "objcolor",
+   "payload": {
+    "name": "곰",
+    "colors": [
+     "흰색"
+    ],
+    "absent": [
+     "분홍",
+     "빨강",
+     "주황"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0201",
+   "kind": "presence",
+   "payload": {
+    "name": "하얀 곰"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0202",
+   "kind": "objcolor",
+   "payload": {
+    "name": "바위",
+    "colors": [
+     "회색"
+    ],
+    "absent": [
+     "분홍",
+     "빨강",
+     "주황"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0202",
+   "kind": "presence",
+   "payload": {
+    "name": "회색 바위"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "ocl0203",
+   "kind": "objcolor",
+   "payload": {
+    "name": "통나무",
+    "colors": [
+     "갈색"
+    ],
+    "absent": [
+     "분홍",
+     "빨강",
+     "주황"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "who0203",
+   "kind": "presence",
+   "payload": {
+    "name": "갈색 통나무"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "conf": "medium",
+   "id": "sum02",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "하얀 곰",
+      "n": 1
+     },
+     {
+      "name": "회색 바위",
+      "n": 1
+     },
+     {
+      "name": "갈색 통나무",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 96.0,
+   "t1": 96.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_000960.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp02",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 144.0,
+   "t1": 144.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_001440.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp03",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 252.0,
+   "t1": 252.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_002520.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "ocl0401",
+   "kind": "objcolor",
+   "payload": {
+    "name": "바위",
+    "colors": [
+     "회색"
+    ],
+    "absent": []
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 252.0,
+   "t1": 252.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_002520.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0401",
+   "kind": "presence",
+   "payload": {
+    "name": "회색 바위"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 252.0,
+   "t1": 252.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_002520.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp04",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 300.0,
+   "t1": 300.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_003000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp05",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 360.0,
+   "t1": 360.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_003600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0601",
+   "kind": "objcolor",
+   "payload": {
+    "name": "로봇",
+    "colors": [
+     "노랑"
+    ],
+    "absent": []
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 360.0,
+   "t1": 360.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_003600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0601",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 로봇"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 360.0,
+   "t1": 360.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_003600.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp06",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "세모",
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0701",
+   "kind": "objcolor",
+   "payload": {
+    "name": "돌",
+    "colors": [
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "빨강",
+     "흰색"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 528.0,
+   "t1": 528.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_005280.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0701",
+   "kind": "presence",
+   "payload": {
+    "name": "회색 돌"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 600.0,
+   "t1": 600.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_006000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0801",
+   "kind": "objcolor",
+   "payload": {
+    "name": "나비",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 600.0,
+   "t1": 600.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_006000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0801",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 나비"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 600.0,
+   "t1": 600.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_006000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0802",
+   "kind": "objcolor",
+   "payload": {
+    "name": "돌",
+    "colors": [
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "분홍",
+     "빨강"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 600.0,
+   "t1": 600.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_006000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0802",
+   "kind": "presence",
+   "payload": {
+    "name": "회색 돌"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 600.0,
+   "t1": 600.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_006000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "siz08",
+   "kind": "size",
+   "payload": {
+    "big": "노란 나비",
+    "small": "회색 돌"
+   },
+   "afford": [
+    "크기 비교",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 600.0,
+   "t1": 600.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로2화_006000.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp08",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  }
+ ]
+}

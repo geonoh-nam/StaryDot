@@ -1,0 +1,1515 @@
+{
+ "frames": [
+  {
+   "id": "sc001",
+   "t": 12.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_000120.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.0061,
+     "주황": 0.09,
+     "노랑": 0.0862,
+     "초록": 0.2165,
+     "파랑": 0.0361,
+     "보라": 0.0117,
+     "분홍": 0.0008,
+     "갈색": 0.2182,
+     "검정": 0.0058,
+     "흰색": 0.07,
+     "회색": 0.2588
+    }
+   }
+  },
+  {
+   "id": "sc002",
+   "t": 108.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.042,
+     "주황": 0.0136,
+     "노랑": 0.0599,
+     "초록": 0.1405,
+     "파랑": 0.4189,
+     "보라": 0.0002,
+     "분홍": 0.0007,
+     "갈색": 0.0394,
+     "검정": 0.1846,
+     "흰색": 0.0128,
+     "회색": 0.0875
+    }
+   }
+  },
+  {
+   "id": "sc003",
+   "t": 156.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001560.jpg",
+   "palette": {
+    "present": [
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정",
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.0117,
+     "주황": 0.2354,
+     "노랑": 0.054,
+     "초록": 0.1953,
+     "파랑": 0.1903,
+     "분홍": 0.0002,
+     "갈색": 0.1586,
+     "검정": 0.0851,
+     "흰색": 0.0164,
+     "회색": 0.053
+    }
+   }
+  },
+  {
+   "id": "sc004",
+   "t": 240.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002400.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "초록",
+     "파랑",
+     "보라",
+     "분홍",
+     "갈색",
+     "검정"
+    ],
+    "absent": [
+     "주황"
+    ],
+    "peak": {
+     "빨강": 0.0572,
+     "주황": 0.0017,
+     "노랑": 0.0119,
+     "초록": 0.0496,
+     "파랑": 0.6002,
+     "보라": 0.0743,
+     "분홍": 0.0621,
+     "갈색": 0.0656,
+     "검정": 0.0348,
+     "흰색": 0.0175,
+     "회색": 0.0251
+    }
+   }
+  },
+  {
+   "id": "sc005",
+   "t": 276.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ],
+    "peak": {
+     "빨강": 0.0469,
+     "주황": 0.01,
+     "노랑": 0.0948,
+     "초록": 0.087,
+     "파랑": 0.0664,
+     "분홍": 0.002,
+     "갈색": 0.0838,
+     "검정": 0.0161,
+     "흰색": 0.2517,
+     "회색": 0.3414
+    }
+   }
+  },
+  {
+   "id": "sc006",
+   "t": 312.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_003120.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "노랑",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.2475,
+     "주황": 0.0215,
+     "노랑": 0.0341,
+     "초록": 0.0091,
+     "파랑": 0.1236,
+     "분홍": 0.0115,
+     "갈색": 0.0572,
+     "검정": 0.1029,
+     "흰색": 0.0967,
+     "회색": 0.296
+    }
+   }
+  },
+  {
+   "id": "sc007",
+   "t": 420.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_004200.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.1166,
+     "주황": 0.078,
+     "노랑": 0.1513,
+     "초록": 0.0417,
+     "파랑": 0.1035,
+     "보라": 0.0014,
+     "분홍": 0.0219,
+     "갈색": 0.1933,
+     "검정": 0.0388,
+     "흰색": 0.09,
+     "회색": 0.1635
+    }
+   }
+  },
+  {
+   "id": "sc008",
+   "t": 540.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_005400.jpg",
+   "palette": {
+    "present": [
+     "빨강",
+     "주황",
+     "노랑",
+     "초록",
+     "파랑",
+     "갈색",
+     "검정",
+     "흰색",
+     "회색"
+    ],
+    "absent": [
+     "보라"
+    ],
+    "peak": {
+     "빨강": 0.1291,
+     "주황": 0.0597,
+     "노랑": 0.0535,
+     "초록": 0.0872,
+     "파랑": 0.1196,
+     "보라": 0.0008,
+     "분홍": 0.0094,
+     "갈색": 0.1656,
+     "검정": 0.0442,
+     "흰색": 0.0602,
+     "회색": 0.2707
+    }
+   }
+  }
+ ],
+ "observations": [
+  {
+   "frame_id": "sc002",
+   "objects": [
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "트럭",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "트럭",
+     "count": 2,
+     "colors": [
+      "빨강"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "차",
+     "count": 1,
+     "colors": [
+      "회색"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "차",
+     "count": 1,
+     "colors": [
+      "검정"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "차",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [],
+   "t": 108.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "absent": [
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "frame_id": "sc003",
+   "objects": [
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    },
+    {
+     "name": "나무",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "보통"
+    }
+   ],
+   "shapes": [],
+   "t": 156.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001560.jpg",
+   "absent": [
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "frame_id": "sc004",
+   "objects": [
+    {
+     "name": "차",
+     "count": 3,
+     "colors": [
+      "빨강"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "별"
+   ],
+   "t": 240.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002400.jpg",
+   "absent": [
+    "주황"
+   ]
+  },
+  {
+   "frame_id": "sc005",
+   "objects": [
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "빨강"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "초록"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "보통"
+    },
+    {
+     "name": "기둥",
+     "count": 4,
+     "colors": [
+      "노랑"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "네모"
+   ],
+   "t": 276.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "absent": [
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "frame_id": "sc006",
+   "objects": [
+    {
+     "name": "자동차",
+     "count": 1,
+     "colors": [
+      "빨강"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "동그라미",
+    "네모"
+   ],
+   "t": 312.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_003120.jpg",
+   "absent": [
+    "보라"
+   ]
+  },
+  {
+   "frame_id": "sc007",
+   "objects": [
+    {
+     "name": "자동차",
+     "count": 1,
+     "colors": [
+      "노랑"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "자동차",
+     "count": 1,
+     "colors": [
+      "빨강"
+     ],
+     "size": "작음"
+    },
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "작음"
+    }
+   ],
+   "shapes": [
+    "네모"
+   ],
+   "t": 420.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_004200.jpg",
+   "absent": [
+    "보라"
+   ]
+  },
+  {
+   "frame_id": "sc008",
+   "objects": [
+    {
+     "name": "버스",
+     "count": 1,
+     "colors": [
+      "파랑"
+     ],
+     "size": "큼"
+    }
+   ],
+   "shapes": [
+    "동그라미"
+   ],
+   "t": 540.0,
+   "path": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_005400.jpg",
+   "absent": [
+    "보라"
+   ]
+  }
+ ],
+ "dropped": [],
+ "facts": [
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0101",
+   "kind": "objcolor",
+   "payload": {
+    "name": "버스",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0101",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0102",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 트럭"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "cnt0103",
+   "kind": "count",
+   "payload": {
+    "name": "빨간 트럭",
+    "n": 2
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "conf": "medium",
+   "age_min": 4,
+   "id": "who0103",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 트럭"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0104",
+   "kind": "presence",
+   "payload": {
+    "name": "회색 차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0105",
+   "kind": "presence",
+   "payload": {
+    "name": "검은 차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0106",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 108.0,
+   "t1": 108.0,
+   "evidence": [
+    "sc002"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001080.jpg",
+   "conf": "medium",
+   "id": "sum01",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "파란 버스",
+      "n": 1
+     },
+     {
+      "name": "초록색 트럭",
+      "n": 1
+     },
+     {
+      "name": "빨간 트럭",
+      "n": 2
+     }
+    ],
+    "total": 4
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 156.0,
+   "t1": 156.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001560.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0201",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 156.0,
+   "t1": 156.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001560.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0202",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 156.0,
+   "t1": 156.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001560.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0203",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 156.0,
+   "t1": 156.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001560.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0204",
+   "kind": "objcolor",
+   "payload": {
+    "name": "나무",
+    "colors": [
+     "초록"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 156.0,
+   "t1": 156.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001560.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0204",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 나무"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 156.0,
+   "t1": 156.0,
+   "evidence": [
+    "sc003"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_001560.jpg",
+   "conf": "medium",
+   "id": "sum02",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "초록색 버스",
+      "n": 1
+     },
+     {
+      "name": "파란 버스",
+      "n": 1
+     },
+     {
+      "name": "노란 버스",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 240.0,
+   "t1": 240.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002400.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "cnt0301",
+   "kind": "count",
+   "payload": {
+    "name": "빨간 차",
+    "n": 3
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 240.0,
+   "t1": 240.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002400.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0301",
+   "kind": "objcolor",
+   "payload": {
+    "name": "차",
+    "colors": [
+     "빨강"
+    ],
+    "absent": [
+     "주황"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 240.0,
+   "t1": 240.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002400.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0301",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 240.0,
+   "t1": 240.0,
+   "evidence": [
+    "sc004"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002400.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp03",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "별"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0401",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0402",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0403",
+   "kind": "presence",
+   "payload": {
+    "name": "초록색 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0404",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "cnt0405",
+   "kind": "count",
+   "payload": {
+    "name": "노란 기둥",
+    "n": 4
+   },
+   "afford": [
+    "개수 세기",
+    "같은 것 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "ocl0405",
+   "kind": "objcolor",
+   "payload": {
+    "name": "기둥",
+    "colors": [
+     "노랑"
+    ],
+    "absent": [
+     "보라",
+     "분홍"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "conf": "medium",
+   "age_min": 5,
+   "id": "who0405",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 기둥"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "conf": "medium",
+   "id": "sum04",
+   "kind": "sum",
+   "age_min": 7,
+   "payload": {
+    "parts": [
+     {
+      "name": "빨간 버스",
+      "n": 1
+     },
+     {
+      "name": "노란 버스",
+      "n": 1
+     },
+     {
+      "name": "노란 기둥",
+      "n": 4
+     }
+    ],
+    "total": 6
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "conf": "medium",
+   "id": "dif04",
+   "kind": "diff",
+   "age_min": 7,
+   "payload": {
+    "more": {
+     "name": "노란 기둥",
+     "n": 4
+    },
+    "less": {
+     "name": "빨간 버스",
+     "n": 1
+    },
+    "diff": 3
+   },
+   "afford": [
+    "수 가르기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 276.0,
+   "t1": 276.0,
+   "evidence": [
+    "sc005"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_002760.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp04",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 312.0,
+   "t1": 312.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_003120.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0501",
+   "kind": "objcolor",
+   "payload": {
+    "name": "자동차",
+    "colors": [
+     "빨강"
+    ],
+    "absent": [
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 312.0,
+   "t1": 312.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_003120.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0501",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 자동차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 312.0,
+   "t1": 312.0,
+   "evidence": [
+    "sc006"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_003120.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp05",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미",
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0601",
+   "kind": "presence",
+   "payload": {
+    "name": "노란 자동차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0602",
+   "kind": "presence",
+   "payload": {
+    "name": "빨간 자동차"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0603",
+   "kind": "objcolor",
+   "payload": {
+    "name": "버스",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0603",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_004200.jpg",
+   "conf": "medium",
+   "id": "sum06",
+   "kind": "sum",
+   "age_min": 6,
+   "payload": {
+    "parts": [
+     {
+      "name": "노란 자동차",
+      "n": 1
+     },
+     {
+      "name": "빨간 자동차",
+      "n": 1
+     },
+     {
+      "name": "파란 버스",
+      "n": 1
+     }
+    ],
+    "total": 3
+   },
+   "afford": [
+    "모두 세기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 420.0,
+   "t1": 420.0,
+   "evidence": [
+    "sc007"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_004200.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp06",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "네모"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 540.0,
+   "t1": 540.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_005400.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "ocl0701",
+   "kind": "objcolor",
+   "payload": {
+    "name": "버스",
+    "colors": [
+     "파랑"
+    ],
+    "absent": [
+     "보라"
+    ]
+   },
+   "afford": [
+    "색깔 퀴즈",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 540.0,
+   "t1": 540.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_005400.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "who0701",
+   "kind": "presence",
+   "payload": {
+    "name": "파란 버스"
+   },
+   "afford": [
+    "누가 나왔나",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  },
+  {
+   "t0": 540.0,
+   "t1": 540.0,
+   "evidence": [
+    "sc008"
+   ],
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요1화_005400.jpg",
+   "conf": "medium",
+   "age_min": 3,
+   "id": "shp07",
+   "kind": "shape",
+   "payload": {
+    "shapes": [
+     "동그라미"
+    ]
+   },
+   "afford": [
+    "모양 찾기",
+    "장면 감상",
+    "가장 좋았던 장면",
+    "그림으로 표현"
+   ]
+  }
+ ]
+}

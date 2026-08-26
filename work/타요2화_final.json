@@ -1,0 +1,164 @@
+{
+ "activities": [
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 버스는 무슨 색인가요?",
+   "fact_id": "ocl0501",
+   "color_index": 0,
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "answer": "파랑",
+   "choices": [
+    "파랑",
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 나무는 무슨 색인가요?",
+   "fact_id": "ocl0603",
+   "color_index": 0,
+   "t": 372.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "answer": "초록",
+   "choices": [
+    "초록",
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "책과 이야기 즐기기 — 이야기에 나온 대상을 알아본다",
+   "age": "3세",
+   "prompt": "이 그림에 노란 자동차가 있나요? 찾아서 손가락으로 짚어 보세요.",
+   "fact_id": "who0602",
+   "t": 372.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "answer": "노란 자동차",
+   "choices": [
+    "노란 자동차",
+    "빨간 자동차",
+    "하얀 부스"
+   ]
+  },
+  {
+   "type": "모양 찾기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 주변에서 모양을 찾아본다",
+   "age": "3세",
+   "prompt": "이 그림에서 동그라미를 찾아보세요.",
+   "fact_id": "shp07",
+   "t": 408.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_004080.jpg",
+   "answer": "동그라미",
+   "choices": [
+    "세모",
+    "별",
+    "동그라미"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 나눈다",
+   "age": "3세",
+   "prompt": "이 그림을 보고 무엇이 보이는지 말해 주세요.",
+   "fact_id": "who0501",
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 물체의 수를 세고 수로 나타내기",
+   "age": "6세",
+   "prompt": "이 그림에 하얀 부스가 몇 개 있나요?",
+   "fact_id": "cnt0101",
+   "t": 36.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000360.jpg",
+   "answer": "3",
+   "choices": [
+    "3",
+    "2",
+    "4"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 사물의 색에 관심을 가진다",
+   "age": "6세",
+   "prompt": "이 그림에서 부스는 무슨 색인가요?",
+   "fact_id": "ocl0101",
+   "color_index": 0,
+   "t": 36.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000360.jpg",
+   "answer": "흰색",
+   "choices": [
+    "보라",
+    "분홍",
+    "흰색"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 파란 버스 1대와 노란 자동차 1대, 초록색 나무 1그루가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum05",
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003360.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "3",
+    "4"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 파란 버스 1대와 노란 자동차 2대, 초록색 나무 2그루가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum06",
+   "t": 372.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_003720.jpg",
+   "answer": "5",
+   "choices": [
+    "4",
+    "6",
+    "5"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "초등 1~2학년 — 그림을 보고 대상을 찾아 말하기",
+   "age": "6세",
+   "prompt": "이 그림에서 하얀 부스를 찾아보세요.",
+   "fact_id": "who0101",
+   "t": 36.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/타요2화_000360.jpg",
+   "answer": "하얀 부스",
+   "choices": [
+    "하얀 부스",
+    "파란 버스",
+    "파란 상자"
+   ]
+  }
+ ],
+ "dropped": []
+}

@@ -1,0 +1,236 @@
+{
+ "activities": [
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 나무는 무슨 색인가요?",
+   "fact_id": "ocl0101",
+   "color_index": 0,
+   "t": 24.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_000240.jpg",
+   "answer": "초록",
+   "choices": [
+    "빨강",
+    "흰색",
+    "초록"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "책과 이야기 즐기기 — 이야기에 나온 대상을 알아본다",
+   "age": "3세",
+   "prompt": "이 그림에 누가 보이나요? 찾아서 손가락으로 짚어 보세요.",
+   "fact_id": "who0201",
+   "t": 60.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_000600.jpg",
+   "answer": "초록색 인형",
+   "choices": [
+    "초록색 나무",
+    "초록색 인형",
+    "파란 우체통"
+   ]
+  },
+  {
+   "type": "모양 찾기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 주변에서 모양을 찾아본다",
+   "age": "3세",
+   "prompt": "이 그림에서 동그라미를 찾아보세요.",
+   "fact_id": "shp03",
+   "t": 396.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_003960.jpg",
+   "answer": "동그라미",
+   "choices": [
+    "네모",
+    "동그라미",
+    "세모"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 기차는 무슨 색인가요?",
+   "fact_id": "ocl0601",
+   "color_index": 0,
+   "t": 684.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_006840.jpg",
+   "answer": "갈색",
+   "choices": [
+    "주황",
+    "갈색",
+    "빨강"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 나눈다",
+   "age": "3세",
+   "prompt": "이 그림을 보고 무엇이 보이는지 이야기해 주세요.",
+   "fact_id": "who0303",
+   "t": 396.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_003960.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "4세",
+   "prompt": "이 그림에서 우체통은 무슨 색인가요?",
+   "fact_id": "ocl0102",
+   "color_index": 0,
+   "t": 24.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_000240.jpg",
+   "answer": "파랑",
+   "choices": [
+    "파랑",
+    "빨강",
+    "흰색"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 수를 세어 본다",
+   "age": "4세",
+   "prompt": "이 그림에 초록색 화분이 몇 개 있나요?",
+   "fact_id": "cnt0202",
+   "t": 60.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_000600.jpg",
+   "answer": "2",
+   "choices": [
+    "1",
+    "3",
+    "2"
+   ]
+  },
+  {
+   "type": "크기 비교",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 크기를 비교한다",
+   "age": "4세",
+   "prompt": "이 그림에서 초록색 소파와 초록색 화분 중 어느 것이 더 큰가요?",
+   "fact_id": "siz02",
+   "t": 60.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_000600.jpg",
+   "answer": "초록색 소파",
+   "choices": [
+    "초록색 소파",
+    "초록색 화분"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 수를 세어 본다",
+   "age": "4세",
+   "prompt": "이 그림에 노란 램프가 몇 개 있나요?",
+   "fact_id": "cnt0403",
+   "t": 468.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_004680.jpg",
+   "answer": "2",
+   "choices": [
+    "1",
+    "3",
+    "2"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 나눈다",
+   "age": "4세",
+   "prompt": "이 그림을 보고 어떤 느낌이 드는지 이야기해 보세요.",
+   "fact_id": "who0401",
+   "t": 468.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_004680.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 초록색 인형 1개와 초록색 화분 2개, 초록색 소파 1개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum02",
+   "t": 60.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_000600.jpg",
+   "answer": "4",
+   "choices": [
+    "3",
+    "4",
+    "5"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "초등 1~2학년 — 대상을 관찰하고 색을 구별하여 표현하기",
+   "age": "6세",
+   "prompt": "이 그림에서 고글은 무슨 색인가요?",
+   "fact_id": "ocl0302",
+   "color_index": 0,
+   "t": 396.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_003960.jpg",
+   "answer": "주황",
+   "choices": [
+    "보라",
+    "분홍",
+    "주황"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 노란 헬멧 1개와 주황색 고글 1개, 초록색 인형 1개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum03",
+   "t": 396.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_003960.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "4",
+    "3"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 파란 이불 1개와 노란 헬멧 1개, 노란 램프 2개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum04",
+   "t": 468.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_004680.jpg",
+   "answer": "4",
+   "choices": [
+    "4",
+    "3",
+    "5"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "초등 1~2학년 — 작품을 감상하고 느낌과 생각을 말하기",
+   "age": "6세",
+   "prompt": "이 그림을 보고 어떤 느낌이 드는지 말해 주세요.",
+   "fact_id": "who0302",
+   "t": 396.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/뽀로로1화_003960.jpg",
+   "answer": null,
+   "choices": null
+  }
+ ],
+ "dropped": []
+}

@@ -1,0 +1,333 @@
+{
+ "activities": [
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 딸기는 무슨 색인가요?",
+   "fact_id": "ocl0101",
+   "color_index": 0,
+   "t": 24.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "answer": "빨강",
+   "choices": [
+    "노랑",
+    "보라",
+    "빨강"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 수량에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에 빨간 딸기가 몇 개 있나요?",
+   "fact_id": "cnt0101",
+   "t": 24.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "answer": "2",
+   "choices": [
+    "2",
+    "1",
+    "3"
+   ]
+  },
+  {
+   "type": "모양 찾기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 주변에서 모양을 찾아본다",
+   "age": "3세",
+   "prompt": "이 그림에서 동그라미 모양을 찾아보세요.",
+   "fact_id": "shp04",
+   "t": 216.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_002160.jpg",
+   "answer": "동그라미",
+   "choices": [
+    "네모",
+    "세모",
+    "동그라미"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 수량에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에 파란 그릇이 몇 개 있나요?",
+   "fact_id": "cnt0603",
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "answer": "2",
+   "choices": [
+    "1",
+    "2",
+    "3"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 보고 느낌을 자유롭게 표현한다",
+   "age": "3세",
+   "prompt": "이 그림을 보고 무엇이 보이는지 말해 보세요. 어떤 느낌이 드나요?",
+   "fact_id": "who0703",
+   "t": 468.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "4세",
+   "prompt": "이 그림에서 쓰레기통은 무슨 색인가요?",
+   "fact_id": "ocl0303",
+   "color_index": 0,
+   "t": 156.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_001560.jpg",
+   "answer": "초록",
+   "choices": [
+    "초록",
+    "검정",
+    "보라"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 수를 세어 본다",
+   "age": "4세",
+   "prompt": "이 그림에 주황색 등불이 몇 개 있나요? 함께 세어 볼까요?",
+   "fact_id": "cnt0502",
+   "t": 300.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "answer": "2",
+   "choices": [
+    "1",
+    "3",
+    "2"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 수를 세어 본다",
+   "age": "4세",
+   "prompt": "이 그림에 하얀 병이 몇 개 있나요? 하나씩 짚으며 세어 보세요.",
+   "fact_id": "cnt0602",
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "answer": "4",
+   "choices": [
+    "4",
+    "3",
+    "5"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "4세",
+   "prompt": "이 그림에서 주전자는 무슨 색인가요?",
+   "fact_id": "ocl0606",
+   "color_index": 0,
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "answer": "흰색",
+   "choices": [
+    "흰색",
+    "보라",
+    "빨강"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 장면을 보고 느낌을 자유롭게 말한다",
+   "age": "4세",
+   "prompt": "이 그림을 보고 어떤 느낌이 드는지 말해 주세요. 무엇이 가장 먼저 눈에 들어왔나요?",
+   "fact_id": "who0502",
+   "t": 300.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "5세",
+   "prompt": "이 그림에서 액자는 무슨 색인가요?",
+   "fact_id": "ocl0604",
+   "color_index": 0,
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "answer": "갈색",
+   "choices": [
+    "보라",
+    "갈색",
+    "빨강"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "듣기와 말하기 — 그림을 보고 자신의 경험을 말한다",
+   "age": "5세",
+   "prompt": "이 그림에서 갈색 액자를 찾아보세요.",
+   "fact_id": "who0604",
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "answer": "갈색 액자",
+   "choices": [
+    "초록색 쓰레기통",
+    "하얀 종이",
+    "갈색 액자"
+   ]
+  },
+  {
+   "type": "크기 비교",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 크기를 비교한다",
+   "age": "5세",
+   "prompt": "이 그림에서 갈색 선반과 하얀 병 중 어느 것이 더 큰가요?",
+   "fact_id": "siz06",
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "answer": "갈색 선반",
+   "choices": [
+    "갈색 선반",
+    "하얀 병"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 나눈다",
+   "age": "5세",
+   "prompt": "이 그림을 보고 어떤 느낌이 드는지 말해 보세요.",
+   "fact_id": "who0604",
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 빨간 딸기 2개와 하얀 크림 1개, 갈색 창문 2개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum01",
+   "t": 24.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_000240.jpg",
+   "answer": "5",
+   "choices": [
+    "5",
+    "4",
+    "6"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "초등 1~2학년 — 여러 가지 색을 구별하고 이름을 말한다",
+   "age": "6세",
+   "prompt": "이 그림에서 트로피는 무슨 색인가요?",
+   "fact_id": "ocl0403",
+   "color_index": 0,
+   "t": 216.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_002160.jpg",
+   "answer": "노랑",
+   "choices": [
+    "보라",
+    "노랑",
+    "분홍"
+   ]
+  },
+  {
+   "type": "크기 비교",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 두 물체의 크기를 비교하기",
+   "age": "6세",
+   "prompt": "이 그림에서 갈색 창살과 주황색 등불 중에서 어느 것이 더 큰가요?",
+   "fact_id": "siz05",
+   "t": 300.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "answer": "갈색 창살",
+   "choices": [
+    "갈색 창살",
+    "주황색 등불"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 갈색 창살 1개와 주황색 등불 1개, 하얀 종이 1개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum07",
+   "t": 468.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_004680.jpg",
+   "answer": "3",
+   "choices": [
+    "3",
+    "2",
+    "4"
+   ]
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "초등 1~2학년 — 여러 가지 색을 구별하고 이름을 말한다",
+   "age": "6세",
+   "prompt": "이 그림에서 창살은 무슨 색인가요?",
+   "fact_id": "ocl0501",
+   "color_index": 0,
+   "t": 300.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003000.jpg",
+   "answer": "갈색",
+   "choices": [
+    "갈색",
+    "보라",
+    "분홍"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 세 수의 덧셈",
+   "age": "7세",
+   "prompt": "이 그림에 갈색 선반 1개와 하얀 병 4개, 파란 그릇 2개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum06",
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "answer": "7",
+   "choices": [
+    "6",
+    "8",
+    "7"
+   ]
+  },
+  {
+   "type": "수 가르기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 한 자리 수의 뺄셈, 수량의 차이 알아보기",
+   "age": "7세",
+   "prompt": "이 그림에 하얀 병 4개와 갈색 선반 1개가 있어요. 하얀 병이 몇 개 더 많을까요?",
+   "fact_id": "dif06",
+   "t": 336.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/브레드2화_003360.jpg",
+   "answer": "3",
+   "choices": [
+    "2",
+    "3",
+    "4"
+   ]
+  }
+ ],
+ "dropped": []
+}

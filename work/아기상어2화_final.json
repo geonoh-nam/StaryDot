@@ -1,0 +1,277 @@
+{
+ "activities": [
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "3세",
+   "prompt": "이 그림에서 상어는 무슨 색인가요?",
+   "fact_id": "ocl0101",
+   "color_index": 0,
+   "t": 60.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_000600.jpg",
+   "answer": "파랑",
+   "choices": [
+    "갈색",
+    "검정",
+    "파랑"
+   ]
+  },
+  {
+   "type": "크기 비교",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 크기를 비교한다",
+   "age": "3세",
+   "prompt": "이 그림에서 파란 상어와 주황색 물고기 중 어느 것이 더 큰가요?",
+   "fact_id": "siz01",
+   "t": 60.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_000600.jpg",
+   "answer": "파란 상어",
+   "choices": [
+    "파란 상어",
+    "주황색 물고기"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "읽기와 쓰기에 관심 가지기 — 그림을 보고 누가 있는지 말한다",
+   "age": "3세",
+   "prompt": "이 그림에 누가 보이나요?",
+   "fact_id": "who0201",
+   "t": 108.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001080.jpg",
+   "answer": "보라색 집",
+   "choices": [
+    "파란 상어",
+    "보라색 집",
+    "파란 칫솔"
+   ]
+  },
+  {
+   "type": "모양 찾기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 주변에서 모양을 찾아본다",
+   "age": "3세",
+   "prompt": "이 그림에서 동그라미를 찾아보세요.",
+   "fact_id": "shp03",
+   "t": 192.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "answer": "동그라미",
+   "choices": [
+    "네모",
+    "동그라미",
+    "세모"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 보고 느낌을 나눈다",
+   "age": "3세",
+   "prompt": "이 그림을 보고 어떤 느낌이 드는지 말해 주세요.",
+   "fact_id": "who0601",
+   "t": 480.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 수를 세어 본다",
+   "age": "4세",
+   "prompt": "이 그림에 파란 칫솔이 몇 개 있나요?",
+   "fact_id": "cnt0401",
+   "t": 228.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_002280.jpg",
+   "answer": "3",
+   "choices": [
+    "3",
+    "2",
+    "4"
+   ]
+  },
+  {
+   "type": "개수 세기",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 수를 세어 본다",
+   "age": "4세",
+   "prompt": "이 그림에 초록색 선인장이 몇 개 있나요?",
+   "fact_id": "cnt0303",
+   "t": 192.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "answer": "2",
+   "choices": [
+    "1",
+    "2",
+    "3"
+   ]
+  },
+  {
+   "type": "크기 비교",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 크기를 비교한다",
+   "age": "4세",
+   "prompt": "이 그림에서 노란 상어와 초록색 선인장 중 어느 것이 더 큰가요?",
+   "fact_id": "siz03",
+   "t": 192.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "answer": "노란 상어",
+   "choices": [
+    "노란 상어",
+    "초록색 선인장"
+   ]
+  },
+  {
+   "type": "크기 비교",
+   "domain": "자연탐구",
+   "curriculum": "생활 속에서 탐구하기 — 물체의 크기를 비교한다",
+   "age": "4세",
+   "prompt": "이 그림에서 주황색 상어와 파란 칫솔 중 어느 것이 더 작은가요?",
+   "fact_id": "siz06",
+   "t": 480.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "answer": "주황색 상어",
+   "choices": [
+    "주황색 상어",
+    "파란 칫솔"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 다양한 예술을 감상하며 느낌을 나눈다",
+   "age": "4세",
+   "prompt": "이 그림을 보고 무엇이 보이는지, 어떤 느낌이 드는지 말해 보세요.",
+   "fact_id": "who0603",
+   "t": 480.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "아름다움 찾아보기 — 자연과 사물의 색에 관심을 가진다",
+   "age": "5세",
+   "prompt": "이 그림에서 거품은 무슨 색인가요?",
+   "fact_id": "ocl0602",
+   "color_index": 0,
+   "t": 480.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "answer": "흰색",
+   "choices": [
+    "갈색",
+    "검정",
+    "흰색"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "자연탐구",
+   "curriculum": "탐구과정 즐기기 — 주변 사물을 자세히 관찰한다",
+   "age": "5세",
+   "prompt": "이 그림에서 하얀 거품을 찾아보세요.",
+   "fact_id": "who0602",
+   "t": 480.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "answer": "하얀 거품",
+   "choices": [
+    "하얀 거품",
+    "노란 상어",
+    "보라색 집"
+   ]
+  },
+  {
+   "type": "장면 감상",
+   "domain": "예술경험",
+   "curriculum": "예술 감상하기 — 장면을 보고 느낀 것을 자유롭게 말한다",
+   "age": "5세",
+   "prompt": "이 그림을 보고 어떤 느낌이 드는지 이야기해 보세요.",
+   "fact_id": "who0602",
+   "t": 480.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "그림으로 표현",
+   "domain": "예술경험",
+   "curriculum": "창의적으로 표현하기 — 본 것을 그림으로 나타낸다",
+   "age": "5세",
+   "prompt": "이 그림에서 본 하얀 거품을 그려 보세요.",
+   "fact_id": "who0602",
+   "t": 480.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "answer": null,
+   "choices": null
+  },
+  {
+   "type": "색깔 퀴즈",
+   "domain": "예술경험",
+   "curriculum": "초등 1~2학년 — 대상의 색과 모양을 자세히 살펴보고 말하기",
+   "age": "6세",
+   "prompt": "이 그림에서 산호는 무슨 색인가요?",
+   "fact_id": "ocl0501",
+   "color_index": 0,
+   "t": 408.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004080.jpg",
+   "answer": "주황",
+   "choices": [
+    "주황",
+    "검정",
+    "초록"
+   ]
+  },
+  {
+   "type": "누가 나왔나",
+   "domain": "의사소통",
+   "curriculum": "초등 1~2학년 — 그림을 자세히 살펴보고 알맞은 대상을 찾아 말하기",
+   "age": "6세",
+   "prompt": "이 그림에서 산호를 찾아 골라 보세요.",
+   "fact_id": "who0501",
+   "t": 408.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004080.jpg",
+   "answer": "주황색 산호",
+   "choices": [
+    "초록색 선인장",
+    "주황색 산호",
+    "파란 상어"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 노란 상어 1마리와 주황색 물고기 1마리, 초록색 선인장 2개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum03",
+   "t": 192.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_001920.jpg",
+   "answer": "4",
+   "choices": [
+    "3",
+    "5",
+    "4"
+   ]
+  },
+  {
+   "type": "모두 세기",
+   "domain": "자연탐구",
+   "curriculum": "초등 1~2학년 — 수 모으기와 한 자리 수의 덧셈",
+   "age": "6세",
+   "prompt": "이 그림에 주황색 상어 1마리와 하얀 거품 1개, 파란 칫솔 2개가 있어요. 모두 몇 개일까요?",
+   "fact_id": "sum06",
+   "t": 480.0,
+   "frame": "/Users/geonoh/Downloads/storydot-pipeline/work/shots/아기상어2화_004800.jpg",
+   "answer": "4",
+   "choices": [
+    "3",
+    "5",
+    "4"
+   ]
+  }
+ ],
+ "dropped": []
+}
