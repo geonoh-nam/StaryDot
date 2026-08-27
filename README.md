@@ -4,7 +4,77 @@
 
 SKT FLY AI 열정4팀 최종 프로젝트.
 
-## 무엇을 하는가
+저장소에는 두 가지가 들어 있다. 아이가 쓰는 태블릿 앱과, 그 앱이 낼 문제를 영상에서
+뽑아내는 파이프라인이다.
+
+```
+frontend/          Expo React Native 앱 (안드로이드 태블릿)
+backend/
+  server/          콘텐츠·기록 API (Node 내장 http + node:sqlite)
+  oneshot/         영상에서 활동을 뽑는 파이프라인 (파이썬)
+  tools/           스케치 변환 등 보조 스크립트
+docs/              기획서, 파이프라인 설계 문서
+```
+
+## 앱 실행
+
+Node 22 이상이 필요하다. 서버가 `node:sqlite` 내장 모듈을 쓰기 때문에 22 미만에서는
+켜지지 않는다.
+
+```bash
+node -v    # v22 이상
+```
+
+**서버.** 의존성이 없다. 받아서 바로 켠다.
+
+```bash
+node backend/server/index.js
+```
+
+DB는 `backend/server/data/stary.db`에 자동으로 생긴다. 영상은 `backend/server/media/`에 둔다.
+
+**앱.**
+
+```bash
+cd frontend
+npm install
+npx expo start
+```
+
+붙을 서버 주소는 Metro가 물려 있는 호스트에서 가져온다. IP를 손으로 적을 곳은 없다.
+USB로 물린 기기라면 포트만 넘겨주면 된다.
+
+```bash
+adb reverse tcp:8081 tcp:8081
+adb reverse tcp:5056 tcp:5056
+```
+
+Skia와 Reanimated를 쓰기 때문에 **Expo Go로는 열리지 않는다.** 개발용 빌드를 한 번
+만들어 설치해야 한다.
+
+```bash
+cd frontend
+npx eas build -p android --profile development   # 개발용, Metro에 붙는다
+npx eas build -p android --profile preview       # 팀 배포용 APK
+```
+
+로컬 gradle로 만든 APK는 기존 EAS 빌드와 서명이 달라 설치되지 않는다. 개발용 빌드는
+EAS 빌드로만 갱신한다.
+
+서버가 꺼져 있어도 앱은 돈다. 목록은 `frontend/assets/library.json`에서, 영상은 기기의
+앱 폴더에서 읽는다. 서버가 없으면 그날의 기록이 남지 않을 뿐이다.
+
+## 환경 변수
+
+| 변수 | 쓰는 곳 | 없으면 |
+|---|---|---|
+| `STARY_PORT` | 콘텐츠 서버 포트 | 5056으로 뜬다 |
+| `GEMINI_API_KEY` | 스케치를 그림으로 바꾸는 보조 스크립트 | 그 스크립트만 안 돈다 |
+| `ANTHROPIC_API_KEY` | 파이프라인 API 경로 | 에이전트 경로는 없이 돈다 |
+
+`backend/.env.example`에 이름만 두었다. 값이 든 `.env`는 커밋하지 않는다.
+
+## 활동은 어떻게 만들어지는가
 
 아이가 영상을 수동적으로 보기만 하는 대신, 중간에 멈춰 질문에 답하게 한다.
 그러려면 두 가지를 정해야 한다 — **어디서 멈출지**와 **무엇을 물을지**.
@@ -58,12 +128,18 @@ oneshot.prep  ─→ ① 관찰자 A·B ─→ ② 지점 선정 ─→ ③ 출�
 각 이미지 앞에 `[MM:SS]` 라벨을 붙여 자막과 시간축을 맞춘다. 라벨이 없으면 모델은
 프레임의 시각을 몰라 `timestamp_sec`을 지어낸다.
 
-## 설치
+## 파이프라인 설치
 
 Python 3.11+, [ffmpeg](https://ffmpeg.org/)(`brew install ffmpeg`)가 필요하다.
 
 ```bash
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
+```
+
+아래 `python3 -m oneshot.*` 명령은 모두 `backend/`에서 실행한다.
+
+```bash
+cd backend
 ```
 
 API 경로만 `ANTHROPIC_API_KEY` 또는 `ant auth login`이 필요하다. 에이전트 경로는
@@ -135,7 +211,7 @@ python3 -m oneshot.run \
 | 그림_속_대상_찾기 | 감정_추론 | 이야기_핵심_주제 |
 | | | 원인과_결과 |
 
-출처는 `oneshot/schemas.py`의 `TEMPLATES_BY_AGE_TIER` 하나다.
+출처는 `backend/oneshot/schemas.py`의 `TEMPLATES_BY_AGE_TIER` 하나다.
 
 **유형은 코드가 배정한다.** 프롬프트에 "다양하게 쓰세요"라고 부탁하면 모델은 만들기
 쉬운 유형으로 기운다 — 실측에서 활동 9개 중 4개가 한 유형이었고 한 유형은 0개였다.
@@ -165,7 +241,7 @@ assign_types(point_count, templates, weights)
 
 ## 검증
 
-모델을 믿되 검산은 코드가 한다. `oneshot/validate.py`가 순수 함수로 수행한다.
+모델을 믿되 검산은 코드가 한다. `backend/oneshot/validate.py`가 순수 함수로 수행한다.
 
 | 검사 | 위반 시 |
 |---|---|
@@ -182,7 +258,7 @@ assign_types(point_count, templates, weights)
 ## 구조
 
 ```
-oneshot/
+backend/oneshot/
   schemas.py          데이터클래스, 연령 티어별 활동 카탈로그
   subtitle_parser.py  SRT/VTT 파싱
   _reuse.py           카탈로그·파서 재수출 (임포트 지점을 한곳으로)
@@ -196,6 +272,16 @@ oneshot/
   generate.py         [API 경로] Opus 5 단일 호출
   run.py              [API 경로] CLI 오케스트레이터
   tests/              단위 테스트 93개
+backend/server/
+  index.js            HTTP 라우팅
+  db.js               SQLite 스키마·질의
+  session.js          오늘의 묶음 편성
+  media.js            영상·자막 서빙
+frontend/
+  App.js              화면 전환, 서버와 통신하는 유일한 지점
+  screens/            화면별 컴포넌트
+  data/               캐릭터·코스튬·활동 정의
+  assets/             이미지, 사운드, 오프라인 목록
 .claude/skills/quiz-agents/
   SKILL.md            4역할 오케스트레이션 지시문
 ```
@@ -203,7 +289,7 @@ oneshot/
 ## 테스트
 
 ```bash
-python3 -m pytest oneshot/tests -v
+python3 -m pytest backend/oneshot/tests -v
 ```
 
 ffmpeg 호출과 API 호출이 전부 모킹되어 있어 별도 설치나 자격 증명 없이 돈다.

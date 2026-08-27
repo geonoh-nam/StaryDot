@@ -10,3 +10,6 @@ web-build/
 *.mp4
 *.srt
 .superpowers/
+
+# Secrets: only the example is tracked.
+.env
