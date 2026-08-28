@@ -8,12 +8,16 @@
 
 storydot.py 는 LLM 을 안 부른다. 사건 추출이 LLM 이므로 이 파일로 분리했다.
 """
+import json
 import subprocess
+import sys
 from pathlib import Path
 
 import generate
 import grounding
+import motion
 import storydot
+import visual
 
 ROOT = Path(__file__).parent
 WORK = ROOT / "work"
@@ -309,5 +313,130 @@ def selftest():
     print("events 자체검사 통과")
 
 
+def settle(video, cands, canon, end, P, baseline_tv, rejected) -> list[dict]:
+    """후보 전원을 화면 기준으로 정착시킨다.
+
+    오디오는 "이야기가 한 단락 끝났다"를 알려주지만 카메라가 그때 멈춰 있는지는
+    말해 주지 않는다. 실측 9개 지점 중 3개가 동작 한복판이었다 (바느질 클로즈업·
+    점프·기차 주행). motion.py 가 컷≠동작과 샷 크기를 더 본다.
+
+    정착이 t 를 옮기면 발화 여유를 **옮긴 자리에서** 다시 잰다. 옮기기 전 값으로
+    규칙을 통과시키면 실제로는 여유가 없는 자리에 활동이 붙는다.
+    """
+    out = []
+    for c in cands:
+        pause = motion.best_pause(video, c["t"])
+        if pause["kind"] == "none":
+            rejected.append((c["t"], f"멈출 자리 없음 — {pause['why']}"))
+            continue
+        tv, _flat = motion.scale_stats(video, pause["t"])
+        scale = "closeup" if tv < baseline_tv * storydot.CLOSEUP_REL else (
+            "wide" if tv > baseline_tv * 1.15 else "medium")
+        if scale == "closeup":
+            # 수치는 조용해도 익스트림 클로즈업은 동작 한복판이다.
+            rejected.append((c["t"], f"클로즈업 (디테일 {tv:.1f} < 기준 {baseline_tv:.1f})"))
+            continue
+        t = pause["t"]
+        nxt = min(min((s["t0"] for s in canon if s["t0"] >= t), default=end), end)
+        gap = nxt - t
+        if gap < P["speech_pad"]:
+            rejected.append((c["t"], f"정착 {t:.2f}s 에서 발화 재개까지 {gap:.1f}s"))
+            continue
+        c.update(t=t, gap=round(gap, 2), pause_score=round(pause["score"], 2),
+                 pause_kind=pause["kind"], shot=scale, why=pause["why"])
+        out.append(c)
+    return out
+
+
+def run(plan_path: Path) -> dict:
+    """plan.json 을 **읽기만** 하고 사건·개입지점을 채운 eplan.json 을 새로 쓴다.
+
+    원본을 덮어쓰지 않는다. 기존 파이프라인(generate.py, seed-from-work.js)이
+    계속 옛 결과로 돌 수 있어야 하고, 옛 결과와 새 결과를 나란히 비교해야 한다.
+    """
+    plan = json.loads(plan_path.read_text())
+    video = Path(plan["video"])
+    P, canon, end = plan["params"], plan["canonical"], plan["end"]
+
+    evs, dropped = extract(plan)
+    rejected = [(0.0, f"[사건폐기] {w}: {r}") for w, r in dropped]
+
+    # 사건 → 후보. 사건이 끝난 뒤로만 민다.
+    cands = []
+    for e in evs:
+        if e["t"] < P["min_start"]:
+            rejected.append((e["t"], f"몰입 전 구간 (<{P['min_start']:.0f}s)"))
+            continue
+        t, gap = snap_forward(e["t"], canon, end, P["speech_pad"])
+        if t is None:
+            rejected.append((e["t"], f"사건 직후 {SNAP_LOOK:.0f}초 안에 멈출 자리 없음"))
+            continue
+        cands.append({"t": t, "gap": gap, "n_ev": len(e["evidence"]),
+                      "event": e, "snapped": t > e["t"]})
+
+    # detail_baseline 과 CLOSEUP_REL 은 storydot 에 이미 있으므로 그대로 쓴다.
+    # settle 은 storydot 에 없다 — 아래에서 events.py 가 직접 정의한다.
+    baseline_tv = storydot.detail_baseline(video, plan["duration"])
+    chosen = choose(settle(video, cands, canon, end, P, baseline_tv, rejected),
+                    P, rejected)
+
+    for c in chosen:
+        try:
+            frames = visual.extract_evidence_frames(video, c["t"], span=20.0, n=4,
+                                                    out_dir=WORK / "shots")
+            c["frames"] = frames
+            c["colors"] = visual.frame_facts(frames[-1:])
+        except Exception as exc:
+            c["frames"], c["colors"] = [], {"error": str(exc)}
+
+    by_id = {s["id"]: s for s in canon}
+    plan["events"] = evs
+    plan["interrupts"] = [{
+        "id": f"i{k:02d}", "t": c["t"], "gap": c["gap"], "score": c.get("score"),
+        "n_ev": c["n_ev"],
+        "event_id": c["event"]["id"], "kind": c["event"]["kind"],
+        "asked_by": c["event"]["who"], "what": c["event"]["what"],
+        "pause": {"score": c.get("pause_score"), "kind": c.get("pause_kind"),
+                  "shot": c.get("shot"), "why": c.get("why")},
+        "frames": c.get("frames", []), "colors": c.get("colors", {}),
+        "snapped": c.get("snapped", False),
+        "evidence": [{"id": i, "t0": by_id[i]["t0"], "t1": by_id[i]["t1"],
+                      "text": by_id[i]["text"], "conf": by_id[i]["conf"]}
+                     for i in c["event"]["evidence"]],
+    } for k, c in enumerate(chosen)]
+    plan["rejected"] = [{"t": t, "why": w} for t, w in rejected]
+    out = plan_path.with_name(plan_path.name.replace("_plan.json", "_eplan.json"))
+    out.write_text(json.dumps(plan, ensure_ascii=False, indent=1))
+    plan["_out"] = str(out)
+    return plan
+
+
+def report(plan: dict) -> None:
+    """실행 결과를 사람이 읽을 수 있게 콘솔에 찍는다."""
+    print(f"\n{'='*74}\n{Path(plan['video']).stem}")
+    print(f"사건 {len(plan['events'])}건  "
+          f"kind: " + " · ".join(f"{k}{sum(1 for e in plan['events'] if e['kind']==k)}"
+                                 for k in KINDS))
+    print(f"\n채택 개입지점 {len(plan['interrupts'])}")
+    for it in plan["interrupts"]:
+        pz = it.get("pause") or {}
+        who = it["asked_by"] or "(화자불명)"
+        print(f"  ★ {storydot.mmss(it['t'])}  점수 {it.get('score')}  [{it['kind']}] {who}")
+        print(f"       {it['what']}")
+        print(f"       화면 {pz.get('kind')}/{pz.get('shot')} {pz.get('score')}"
+              f"  근거 {len(it['evidence'])}건")
+    if plan["rejected"]:
+        print("기각:")
+        for x in plan["rejected"]:
+            print(f"  ✗ {storydot.mmss(x['t'])}  {x['why']}")
+
+
 if __name__ == "__main__":
-    selftest()
+    args = [a for a in sys.argv[1:] if not a.startswith("-")]
+    if not args:
+        selftest()
+        sys.exit(0)
+    for p in args:
+        r = run(Path(p).expanduser())
+        report(r)
+        print(f"  → {r['_out']}")
