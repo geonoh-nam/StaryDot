@@ -58,7 +58,12 @@ export function BreakScreen({ items = [], mediaBase = '', isLast, onResult, onDo
         frame={quiz.framePath ? { uri: mediaBase + quiz.framePath } : null}
         resumeLabel={label}
         onAnswer={answer}
-        onRetry={() => setSelected(null)}
+        onRetry={() => {
+          // 재시도도 같은 문항(at 은 그대로)이라 문항 전환 효과가 시각을 새로 안 잡는다.
+          // 여기서 새로 잡지 않으면 재시도 클릭의 지연이 첫 시도부터 누적된 값이 되어 버린다.
+          shownAt.current = Date.now();
+          setSelected(null);
+        }}
         onResume={next}
         onSkip={() => {
           // 건너뛰기도 기록한다. 아무 답이 없는 문항은 리포트에서 '안 푼 것'으로 세어야 한다.
