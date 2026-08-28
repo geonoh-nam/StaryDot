@@ -8,6 +8,9 @@
 
 storydot.py 는 LLM 을 안 부른다. 사건 추출이 LLM 이므로 이 파일로 분리했다.
 """
+import json
+import re
+import subprocess
 from pathlib import Path
 
 import grounding
@@ -25,8 +28,8 @@ EVENT_MIN_EVIDENCE = 2
 KINDS = ("결과", "감정", "시도", "발견", "갈등")
 
 # 사건의 근거가 이보다 넓게 흩어져 있으면 사건이 아니라 뭉치다.
-# storydot 의 같은 이름 상수에서 왔다 — "유아는 그만큼 거슬러 기억하지 못한다".
-# Task 3 에서 storydot 쪽 원본은 지운다(거기선 evidence() 만 쓰던 값이다).
+# storydot 의 같은 이름 상수에서 왔으나 — "유아는 그만큼 거슬러 기억하지 못한다" —
+# storydot.py 가 읽기 전용이라 여기에 중복시킨다.
 RECALL_WINDOW = 100.0
 
 # 사건 직후 몇 초까지 안전한 자리를 찾을 것인가.
@@ -157,6 +160,58 @@ def snap_forward(t: float, canon: list[dict], end: float,
     return None, 0.0
 
 
+SKILLS = ROOT / "skills"
+TIMEOUT = 300
+MAX_EVENTS = 12
+
+
+def _first_json_object(text: str) -> dict:
+    """LLM 이 앞뒤에 말을 붙여도 첫 JSON 객체만 꺼낸다."""
+    m = re.search(r"\{.*\}", text, re.S)
+    if not m:
+        raise RuntimeError(f"JSON 을 못 찾았다: {text[:200]}")
+    return json.loads(m.group(0))
+
+
+def _claude(prompt: str) -> dict:
+    """claude CLI 를 헤드리스로 1회 호출한다. generate.py 의 _claude 와 같은 규약."""
+    sysmsg = (SKILLS / "events" / "SKILL.md").read_text()
+    cmd = ["claude", "-p", prompt, "--append-system-prompt", sysmsg,
+           "--allowed-tools", "Read", "--output-format", "json"]
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=TIMEOUT, cwd=ROOT)
+    if r.returncode != 0:
+        raise RuntimeError(f"claude 실패(events): {r.stderr[-300:]}")
+    return _first_json_object(storydot.claude_result(r.stdout))
+
+
+def extract(plan: dict) -> tuple[list[dict], list[tuple[str, str]]]:
+    """정본에서 사건을 뽑고 게이트를 통과한 것만 돌려준다.
+
+    Returns: (통과한 사건, [(what, 폐기사유)])
+    """
+    usable = [s for s in plan["canonical"]
+              if s["conf"] in ("high", "medium") and s["t1"] <= plan["end"]]
+    canon_by_id = {s["id"]: s for s in usable}
+    names = set(plan["names"]) | {v for vs in plan["names"].values() for v in vs}
+
+    lines = "\n".join(f'{s["id"]}  [{s["t0"]:.1f}-{s["t1"]:.1f}]  {s["text"]}'
+                      for s in usable)
+    raw = _claude(f"아래는 만화 한 편의 정본 전사본이다.\n\n{lines}\n\n"
+                  f"여기서 사건을 뽑아라.")
+
+    kept, dropped = [], []
+    for i, ev in enumerate(raw.get("events", [])[:MAX_EVENTS]):
+        ok, why, out = gate(ev, canon_by_id, names)
+        if not ok:
+            dropped.append((ev.get("what", "?"), why))
+            continue
+        out["id"] = f"e{len(kept):02d}"
+        out["evidence_text"] = [canon_by_id[j]["text"] for j in out["evidence"]]
+        kept.append(out)
+    kept.sort(key=lambda e: e["t"])
+    return kept, dropped
+
+
 def selftest():
     """게이트가 무동작이 아님을 증명한다. 하나씩 위조해 반드시 걸려야 한다."""
     canon = {
@@ -253,10 +308,6 @@ def selftest():
                   cand(350.0, 0.50, "medium", 3, 4.0)], P, rej)
     assert [c["t"] for c in got] == [300.0], got
     assert any("간격" in w for _, w in rej), rej
-
-    # storydot 원본을 덮어쓰지 않았음을 못박는다
-    # (storydot 이 pick_score 를 가지지 않으므로 이건 사건 전용 구현이다)
-    assert not hasattr(storydot, "pick_score") or storydot.pick_score is not pick_score
 
     print("events 자체검사 통과")
 
