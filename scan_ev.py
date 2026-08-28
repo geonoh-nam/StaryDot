@@ -17,22 +17,28 @@ def scan_ev(video: Path) -> dict:
     """scan.scan 을 돌리고 eplan 의 사건을 얹는다."""
     r = scan.scan(video)
     key = ud.normalize("NFC", video.stem)
-    ep = next((p for p in scan.WORK.glob("*_ev_plan.json")
+    # events.py 는 judge.py 의 work/*_plan.json 글롭과 안 겹치게 work/ev/ 밑에 쓴다.
+    ep = next((p for p in (scan.WORK / "ev").glob("*_ev_plan.json")
                if ud.normalize("NFC", p.stem) == key + "_ev_plan"), None)
     if ep is None:
-        sys.exit(f"work/{key}_ev_plan.json 이 없다. events.py 를 먼저 돌려라.")
+        sys.exit(f"work/ev/{key}_ev_plan.json 이 없다. events.py 를 먼저 돌려라.")
     e = json.loads(ep.read_text())
     r["plan"]["events"] = e.get("events", [])
     r["plan"]["interrupts"] = e.get("interrupts", [])
     return r
 
 
-def funnel(r: dict):
-    """scan.funnel 의 네 번째 단계를 act 경계에서 사건으로 바꾼다."""
-    rows = scan.funnel(r)
+def _with_event_row(rows: list[tuple[str, int, str]], r: dict) -> list[tuple[str, int, str]]:
+    """행 3 을 act 경계 대신 사건으로 바꾼다. funnel() 과 svg() 안 몽키패치 양쪽이 쓴다 —
+    한 군데서만 만들어야 라벨을 고칠 때 콘솔·SVG 가 어긋나지 않는다."""
     rows[3] = ("+ 사건이 있음", len(r["plan"].get("events", [])),
                "LLM 추출 + 게이트 통과")
     return rows
+
+
+def funnel(r: dict):
+    """scan.funnel 의 네 번째 단계를 act 경계에서 사건으로 바꾼다."""
+    return _with_event_row(scan.funnel(r), r)
 
 
 # 저장할 원본 scan.funnel 참조 (svg() 내에서 임시로 교체할 때 사용).
@@ -41,10 +47,7 @@ _original_scan_funnel = None
 
 def _make_funnel_wrapper(r: dict) -> list[tuple[str, int, str]]:
     """원본 scan.funnel 을 호출하고 행 3 을 사건으로 바꾼다."""
-    rows = _original_scan_funnel(r)
-    rows[3] = ("+ 사건이 있음", len(r["plan"].get("events", [])),
-               "LLM 추출 + 게이트 통과")
-    return rows
+    return _with_event_row(_original_scan_funnel(r), r)
 
 
 def svg(r: dict) -> str:

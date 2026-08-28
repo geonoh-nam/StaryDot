@@ -29,7 +29,14 @@ def first_attempts(rows: list[dict]) -> list[dict]:
 
 
 def buckets(rows: list[dict]) -> list[tuple[int, int, float, float]]:
-    """(회차, 건수, 지연 중앙값 ms, 정답률). 회차는 세션 안 문항 순서."""
+    """(회차, 건수, 지연 중앙값 ms, 정답률). 회차는 세션 안 문항 순서.
+
+    회차는 rows 전체(지연이 안 찍힌 인터랙티브 문항 포함)로 센다 — Watch.js 의
+    영상 안 퀴즈는 계측이 안 돼 latency_ms 가 NULL 인데, 이 행을 먼저 걸러내고
+    나서 세면 "3회차"가 "아이가 답한 3번째 문항"이 아니라 "3번째로 지연이 찍힌
+    문항"이 되어 버린다. 회차를 다 매긴 뒤에야 그 회차 안에서 latency_ms 가
+    있는 행만 추려 중앙값·정답률을 낸다 — 그래야 그 축만 왜곡되지 않는다.
+    """
     by_turn: dict[int, list[dict]] = {}
     seen: dict[object, int] = {}
     for r in sorted(rows, key=lambda x: x["created_at"]):
@@ -38,21 +45,23 @@ def buckets(rows: list[dict]) -> list[tuple[int, int, float, float]]:
         by_turn.setdefault(seen[s], []).append(r)
     out = []
     for turn in sorted(by_turn):
-        g = by_turn[turn]
+        g = [x for x in by_turn[turn] if x["latency_ms"] is not None]
+        if not g:
+            continue
         lat = sorted(x["latency_ms"] for x in g)
-        med = lat[len(lat) // 2] if lat else 0.0
+        med = lat[len(lat) // 2]
         acc = sum(1 for x in g if x["result"] == "correct") / len(g)
         out.append((turn, len(g), float(med), acc))
     return out
 
 
 def load(db_path: Path) -> list[dict]:
-    """latency_ms 가 기록된 행만 읽는다. 옛 행은 NULL 이라 건너뛴다."""
+    """activity_result 전체 행을 읽는다. latency_ms 가 NULL 인 행도 회차 계산에는
+    필요하므로 여기서 걸러내면 안 된다 — buckets() 가 회차를 다 매긴 뒤에 거른다."""
     con = sqlite3.connect(db_path)
     con.row_factory = sqlite3.Row
     rows = con.execute(
-        "SELECT session_id, activity_id, result, latency_ms, created_at FROM activity_result "
-        "WHERE latency_ms IS NOT NULL"
+        "SELECT session_id, activity_id, result, latency_ms, created_at FROM activity_result"
     ).fetchall()
     con.close()
     return [dict(r) for r in rows]
@@ -85,6 +94,30 @@ def _selftest() -> None:
     assert [t for t, *_ in rb] == [1, 2], rb
     assert rb[1][1] == 2, "재시도 행이 회차 건수를 부풀리면 안 된다"
     assert rb[1][3] == 0.0, "재시도로 맞췄어도 정답률은 첫 시도(오답) 기준이어야 한다"
+
+    # 혼합 세션: 세션1 은 문항2(영상 안 퀴즈, Watch.js 미계측)가 latency_ms NULL.
+    # 세션2 는 셋 다 계측됐다. 세션1의 세 번째 문항이 회차 3 이어야 한다 — NULL
+    # 행을 먼저 걸러내고 세면(옛 버그) 회차 2 로 밀린다.
+    mixed = [
+        {"session_id": 1, "activity_id": 10, "created_at": 100,
+         "latency_ms": 5000, "result": "correct"},
+        {"session_id": 1, "activity_id": 20, "created_at": 200,
+         "latency_ms": None, "result": "wrong"},   # 영상 안 퀴즈 — 지연 미기록
+        {"session_id": 1, "activity_id": 30, "created_at": 300,
+         "latency_ms": 1000, "result": "correct"},
+        {"session_id": 2, "activity_id": 10, "created_at": 150,
+         "latency_ms": 4000, "result": "wrong"},
+        {"session_id": 2, "activity_id": 20, "created_at": 250,
+         "latency_ms": 2000, "result": "correct"},
+    ]
+    mb = {turn: (n, med, acc) for turn, n, med, acc in buckets(first_attempts(mixed))}
+    # 회차 배정에는 NULL 행도 세어져 있어야 세션1의 문항30 이 회차 3 이 된다.
+    assert 3 in mb, "NULL 행을 걸러내고 셌다 — 회차 3 이 사라졌다"
+    assert mb[3] == (1, 1000.0, 1.0), mb
+    # 회차 2 에는 세션1(NULL, 걸러짐)·세션2(2000ms) 가 같이 모이지만 중앙값·정답률은
+    # latency 가 있는 행만으로 낸다.
+    assert mb[2] == (1, 2000.0, 1.0), mb
+    assert mb[1] == (2, 5000.0, 0.5), mb
     print("지연 리포트 자체검사 통과")
 
 
@@ -94,9 +127,12 @@ if __name__ == "__main__":
         _selftest()
         sys.exit(0)
     rows = first_attempts(load(Path(args[0]).expanduser()))
-    if not rows:
+    # rows 는 이제 latency_ms 가 NULL 인 행도 포함하므로(회차 계산용), 비어 있는지는
+    # buckets() 로 걸러낸 뒤에 판단해야 한다.
+    b = buckets(rows)
+    if not b:
         print("latency_ms 가 기록된 응답이 아직 없다.")
         sys.exit(0)
     print(f"{'회차':>4}{'건수':>6}{'지연중앙값':>12}{'정답률':>8}")
-    for turn, n, med, acc in buckets(rows):
+    for turn, n, med, acc in b:
         print(f"{turn:>4}{n:>6}{med/1000:>10.1f}s{acc*100:>7.0f}%")

@@ -38,10 +38,31 @@ def claude_ev(skill: str, prompt: str, extra_dirs=()):
     return _orig_claude("quiz_ev" if skill == "quiz" else skill, prompt, extra_dirs)
 
 
+def _assert_patch_still_effective() -> None:
+    """아래 몽키패치는 generate.run_slot 이 bundle·_claude 를 전역 이름으로 찾아
+    "quiz" 스킬을 호출한다는 전제로만 동작한다. run_slot 이 인라인되거나 이름이
+    바뀌거나 "quiz" 문자열이 달라지면 패치가 조용히 무동작이 되어, 사건 머리말도
+    quiz_ev 스킬도 없이 그럴듯한 카드가 에러 하나 없이 나온다. 실행 전에 미리 걸러낸다."""
+    names = generate.run_slot.__code__.co_names
+    consts = generate.run_slot.__code__.co_consts
+    missing = [n for n in ("bundle", "_claude") if n not in names]
+    if "quiz" not in consts:
+        missing.append('"quiz" 상수')
+    if missing:
+        sys.exit(
+            "generate_ev.py 전제 깨짐 — generate.run_slot 이 더 이상 "
+            + " · ".join(missing) + " 를 참조하지 않는다. "
+            "generate.bundle / generate._claude 몽키패치가 무동작이 되어 "
+            "사건 머리말·quiz_ev 스킬 없이 카드가 조용히 생성될 수 있다. "
+            "generate.py 의 현재 구현에 맞춰 generate_ev.py 를 고쳐라."
+        )
+
+
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
     if not args:
-        sys.exit("사용법: python3 generate_ev.py work/<작품>_ev_plan.json")
+        sys.exit("사용법: python3 generate_ev.py work/ev/<작품>_ev_plan.json")
+    _assert_patch_still_effective()
     generate.bundle = bundle_ev
     generate._claude = claude_ev
     generate.main(Path(args[0]).expanduser())

@@ -21,6 +21,11 @@ import visual
 
 ROOT = Path(__file__).parent
 WORK = ROOT / "work"
+# 사건 경로 산출물 전용 서브디렉터리. work/ 바로 밑에 *_ev_plan.json 을 두면
+# judge.py 의 WORK.glob("*_plan.json") 이 그걸 별개 작품으로 집어삼켜 신구 비교용
+# 합계 행을 오염시킨다 (judge.py 는 읽기 전용이라 여길 고쳐서 피한다). glob 은
+# 재귀하지 않으므로 서브디렉터리로 옮기면 그 글롭에 안 걸린다.
+EV_DIR = WORK / "ev"
 
 # 사건 하나가 성립하는 최소 근거 수. storydot 의 min_evidence(5) 를 쓰면 안 된다 —
 # 그건 "개입 직전 100초에서 긁어모은 대사"라 쉽게 차지만, 사건이 지목한 근거는
@@ -128,6 +133,10 @@ def gate(ev: dict, canon_by_id: dict, names: set[str]) -> tuple[bool, str, dict]
                        f"(비율 {ratio:.2f}, 미확인 {miss[:3]})"), ev
 
     out = dict(ev)
+    # SKILL.md 가 "확실치 않으면 null" 이라고 시키므로 who 키 자체가 없을 수 있다.
+    # 없는 채로 두면 run() 의 c["event"]["who"] 가 KeyError — claude 호출·ffmpeg 다
+    # 끝난 뒤 아무것도 못 쓰고 죽는다. 여기서 무조건 키를 만들어 둔다.
+    out.setdefault("who", None)
     who = ev.get("who")
     # 화자를 못 잡아도 사건은 유효하다. 캐릭터 매개 개입을 못 쓸 뿐이라 강등한다.
     if who and not (who in names or any(who in s["text"] for s in segs)):
@@ -255,6 +264,14 @@ def selftest():
     ok, why, out = gate({**good, "who": "제시"}, canon, names)
     assert ok, "화자 불명은 폐기가 아니라 강등이어야 한다"
     assert out["who"] is None, "확인 안 되는 who 를 그대로 뒀다"
+
+    no_who = {k: v for k, v in good.items() if k != "who"}
+    assert "who" not in no_who
+    ok, why, out = gate(no_who, canon, names)
+    assert ok, f"who 키가 아예 없는 사건이 막혔다: {why}"
+    assert "who" in out and out["who"] is None, (
+        "who 키가 없는 사건은 통과 후에도 who=None 이어야 한다 "
+        "(없으면 run() 의 c['event']['who'] 에서 KeyError)")
 
     # ── snap_forward ────────────────────────────────────────────────
     # 100~102 대사, 103~105 대사, 그 뒤 130 까지 침묵, 130~132 대사
@@ -432,7 +449,8 @@ def run(plan_path: Path) -> dict:
                      for i in c["event"]["evidence"]],
     } for k, c in enumerate(chosen)]
     plan["rejected"] = [{"t": t, "why": w} for t, w in rejected]
-    out = plan_path.with_name(plan_path.name.replace("_plan.json", "_ev_plan.json"))
+    EV_DIR.mkdir(parents=True, exist_ok=True)
+    out = EV_DIR / plan_path.name.replace("_plan.json", "_ev_plan.json")
     out.write_text(json.dumps(plan, ensure_ascii=False, indent=1))
     plan["_out"] = str(out)
     return plan
