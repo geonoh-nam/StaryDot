@@ -8,11 +8,10 @@
 
 storydot.py 는 LLM 을 안 부른다. 사건 추출이 LLM 이므로 이 파일로 분리했다.
 """
-import json
-import re
 import subprocess
 from pathlib import Path
 
+import generate
 import grounding
 import storydot
 
@@ -165,14 +164,6 @@ TIMEOUT = 300
 MAX_EVENTS = 12
 
 
-def _first_json_object(text: str) -> dict:
-    """LLM 이 앞뒤에 말을 붙여도 첫 JSON 객체만 꺼낸다."""
-    m = re.search(r"\{.*\}", text, re.S)
-    if not m:
-        raise RuntimeError(f"JSON 을 못 찾았다: {text[:200]}")
-    return json.loads(m.group(0))
-
-
 def _claude(prompt: str) -> dict:
     """claude CLI 를 헤드리스로 1회 호출한다. generate.py 의 _claude 와 같은 규약."""
     sysmsg = (SKILLS / "events" / "SKILL.md").read_text()
@@ -181,7 +172,7 @@ def _claude(prompt: str) -> dict:
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=TIMEOUT, cwd=ROOT)
     if r.returncode != 0:
         raise RuntimeError(f"claude 실패(events): {r.stderr[-300:]}")
-    return _first_json_object(storydot.claude_result(r.stdout))
+    return generate._first_json_object(storydot.claude_result(r.stdout), "events")
 
 
 def extract(plan: dict) -> tuple[list[dict], list[tuple[str, str]]]:
@@ -200,15 +191,21 @@ def extract(plan: dict) -> tuple[list[dict], list[tuple[str, str]]]:
                   f"여기서 사건을 뽑아라.")
 
     kept, dropped = [], []
-    for i, ev in enumerate(raw.get("events", [])[:MAX_EVENTS]):
+    # 게이트 통과 후 MAX_EVENTS 까지만 유지. 통과 못 한 사건은 모두 기록한다.
+    for ev in raw.get("events", []):
         ok, why, out = gate(ev, canon_by_id, names)
         if not ok:
             dropped.append((ev.get("what", "?"), why))
             continue
-        out["id"] = f"e{len(kept):02d}"
-        out["evidence_text"] = [canon_by_id[j]["text"] for j in out["evidence"]]
-        kept.append(out)
+        if len(kept) < MAX_EVENTS:
+            out["evidence_text"] = [canon_by_id[j]["text"] for j in out["evidence"]]
+            kept.append(out)
+        else:
+            dropped.append((ev.get("what", "?"), f"정원 초과 — 상위 {MAX_EVENTS}개에 밀림"))
+    # 시간순으로 정렬한 뒤 시간 순서대로 id 를 부여한다.
     kept.sort(key=lambda e: e["t"])
+    for i, ev in enumerate(kept):
+        ev["id"] = f"e{i:02d}"
     return kept, dropped
 
 
