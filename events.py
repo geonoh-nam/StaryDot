@@ -11,6 +11,7 @@ storydot.py 는 LLM 을 안 부른다. 사건 추출이 LLM 이므로 이 파일
 from pathlib import Path
 
 import grounding
+import storydot
 
 ROOT = Path(__file__).parent
 WORK = ROOT / "work"
@@ -32,6 +33,58 @@ RECALL_WINDOW = 100.0
 # visual.extract_evidence_frames 가 이미 span=20.0 을 쓴다. 같은 창을 써야
 # 프레임 근거와 사건이 겹치고 새 눈금이 늘지 않는다.
 SNAP_LOOK = 20.0
+
+
+PICK_W = {"pause": 0.40, "shot": 0.25, "evidence": 0.20, "gap": 0.15, "snap": 0.10}
+SHOT_BONUS = {"wide": 1.0, "medium": 0.6}   # closeup 은 정착 단계에서 이미 기각된다
+
+
+def _sat(x: float, full: float) -> float:
+    """0 에서 시작해 full 에서 1 로 포화. 음수는 0."""
+    return min(1.0, max(0.0, x / full)) if full > 0 else 0.0
+
+
+def pick_score(c: dict, P: dict) -> float:
+    """개입지점 후보의 상대 점수 0~1. 후보끼리 비교하는 데만 쓴다.
+
+    storydot.pick_score 와 가중치는 같고 근거 정규화 기준만 다르다.
+    storydot 은 min_evidence(5) 로 재는데 그건 100초 긁기 기준이라,
+    사건이 지목한 근거(보통 2~3건)에 쓰면 이 항이 늘 0점이 된다.
+    """
+    ev = _sat(c["n_ev"] - EVENT_MIN_EVIDENCE, EVENT_MIN_EVIDENCE)
+    gp = _sat(c["gap"] - P["speech_pad"], P["speech_pad"])
+    s = (PICK_W["pause"] * c.get("pause_score", 0.0)
+         + PICK_W["shot"] * SHOT_BONUS.get(c.get("shot"), 0.0)
+         + PICK_W["evidence"] * ev
+         + PICK_W["gap"] * gp)
+    if c.get("snapped"):
+        # 스냅으로 옮긴 자리는 사건이 끝난 그 자리가 아니다. 같은 조건이면 진다.
+        s -= PICK_W["snap"]
+    return round(max(0.0, s), 3)
+
+
+def choose(settled: list[dict], P: dict, rejected: list) -> list[dict]:
+    """점수 높은 순으로 고르되 활동 간 최소 간격을 지킨다.
+
+    정원을 다 못 채울 수 있다 — 좋은 자리 하나가 옆의 평범한 둘을 막으면 그게 맞다.
+    밀려난 후보도 사유를 남긴다.
+    """
+    for c in settled:
+        c["score"] = pick_score(c, P)
+    picked = []
+    for c in sorted(settled, key=lambda c: (-c["score"], c["t"])):
+        if len(picked) >= P["max_activities"]:
+            rejected.append((c["t"], f"정원 초과 — 점수 {c['score']}, "
+                                     f"상위 {P['max_activities']}개에 밀림"))
+            continue
+        near = next((q for q in picked if abs(c["t"] - q["t"]) < P["min_gap"]), None)
+        if near is not None:
+            rejected.append((c["t"], f"{storydot.mmss(near['t'])} 와 간격 "
+                                     f"{abs(c['t'] - near['t']):.0f}s < {P['min_gap']:.0f}s "
+                                     f"— 점수 {c['score']} vs {near['score']}"))
+            continue
+        picked.append(c)
+    return sorted(picked, key=lambda c: c["t"])
 
 
 def gate(ev: dict, canon_by_id: dict, names: set[str]) -> tuple[bool, str, dict]:
@@ -172,7 +225,40 @@ def selftest():
     t, gap = snap_forward(105.0, seq, 106.0, pad=3.0)
     assert t is None, t
 
-    print("사건 게이트 자체검사 8/8 통과")
+    # ── 점수와 선택 ──────────────────────────────────────────────────
+    P = {"min_gap": 120.0, "max_activities": 2, "speech_pad": 3.0}
+
+    def cand(t, pause, shot, n_ev, gap):
+        return {"t": t, "pause_score": pause, "shot": shot,
+                "n_ev": n_ev, "gap": gap}
+
+    # 근거 정규화 기준이 EVENT_MIN_EVIDENCE(2) 여야 한다.
+    # storydot 의 5 를 그대로 쓰면 근거 항이 항상 0점인 죽은 항이 된다.
+    floor = cand(0.0, 0.0, "medium", EVENT_MIN_EVIDENCE, P["speech_pad"])
+    assert pick_score(floor, P) == round(PICK_W["shot"] * SHOT_BONUS["medium"], 3)
+    full = cand(0.0, 1.0, "wide", EVENT_MIN_EVIDENCE * 2, P["speech_pad"] * 2)
+    assert pick_score(full, P) == 1.0, pick_score(full, P)
+
+    # 시간순이 아니라 점수순으로 고른다
+    rej = []
+    got = choose([cand(100.0, 0.30, "medium", 2, 3.0),
+                  cand(400.0, 0.95, "wide", 6, 9.0)],
+                 {**P, "max_activities": 1}, rej)
+    assert [c["t"] for c in got] == [400.0], got
+    assert rej and "정원" in rej[0][1], rej
+
+    # 최소 간격을 지키고 밀려난 후보는 사유를 남긴다
+    rej = []
+    got = choose([cand(300.0, 0.90, "wide", 5, 8.0),
+                  cand(350.0, 0.50, "medium", 3, 4.0)], P, rej)
+    assert [c["t"] for c in got] == [300.0], got
+    assert any("간격" in w for _, w in rej), rej
+
+    # storydot 원본을 덮어쓰지 않았음을 못박는다
+    # (storydot 이 pick_score 를 가지지 않으므로 이건 사건 전용 구현이다)
+    assert not hasattr(storydot, "pick_score") or storydot.pick_score is not pick_score
+
+    print("events 자체검사 통과")
 
 
 if __name__ == "__main__":
