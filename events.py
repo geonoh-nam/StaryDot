@@ -28,6 +28,11 @@ KINDS = ("결과", "감정", "시도", "발견", "갈등")
 # Task 3 에서 storydot 쪽 원본은 지운다(거기선 evidence() 만 쓰던 값이다).
 RECALL_WINDOW = 100.0
 
+# 사건 직후 몇 초까지 안전한 자리를 찾을 것인가.
+# visual.extract_evidence_frames 가 이미 span=20.0 을 쓴다. 같은 창을 써야
+# 프레임 근거와 사건이 겹치고 새 눈금이 늘지 않는다.
+SNAP_LOOK = 20.0
+
 
 def gate(ev: dict, canon_by_id: dict, names: set[str]) -> tuple[bool, str, dict]:
     """사건 하나를 결정적으로 검사한다.
@@ -76,6 +81,29 @@ def _grounding_score_of(what: str, segs: list[dict]):
     return grounding._grounding_score(what, [s["text"] for s in segs])
 
 
+def snap_forward(t: float, canon: list[dict], end: float,
+                 pad: float, look: float = SNAP_LOOK) -> tuple[float | None, float]:
+    """사건 직후 pad 초 이상 조용한 **첫** 자리를 찾는다. 없으면 (None, 0.0).
+
+    storydot.snap_back 은 더 큰 공백을 찾아 과거로 당긴다. 사건에는 못 쓴다 —
+    사건 한복판으로 돌아가기 때문이다. "타요가 탈락했다" 를 물으려면 탈락이
+    끝난 뒤여야 한다.
+
+    가장 조용한 자리가 아니라 가장 **이른** 자리를 고른다. 사건 직후일수록
+    아이 기억이 생생하다.
+    """
+    starts = sorted(s["t0"] for s in canon)
+    cands = [t] + sorted(s["t1"] for s in canon if t < s["t1"] <= t + look)
+    for b in cands:
+        if b > end:
+            break
+        nxt = min((s for s in starts if s >= b), default=end)
+        nxt = min(nxt, end)
+        if nxt - b >= pad:
+            return round(b, 2), round(nxt - b, 2)
+    return None, 0.0
+
+
 def selftest():
     """게이트가 무동작이 아님을 증명한다. 하나씩 위조해 반드시 걸려야 한다."""
     canon = {
@@ -118,6 +146,31 @@ def selftest():
     ok, why, out = gate({**good, "who": "제시"}, canon, names)
     assert ok, "화자 불명은 폐기가 아니라 강등이어야 한다"
     assert out["who"] is None, "확인 안 되는 who 를 그대로 뒀다"
+
+    # ── snap_forward ────────────────────────────────────────────────
+    # 100~102 대사, 103~105 대사, 그 뒤 130 까지 침묵, 130~132 대사
+    seq = [{"t0": 100.0, "t1": 102.0}, {"t0": 103.0, "t1": 105.0},
+           {"t0": 130.0, "t1": 132.0}]
+
+    # 사건이 105 에 끝났고 130 까지 25초 비었다 → 105 를 그대로 쓴다
+    t, gap = snap_forward(105.0, seq, 200.0, pad=3.0)
+    assert t == 105.0 and gap == 25.0, (t, gap)
+
+    # 사건이 102 에 끝났는데 103 에 대사가 재개된다 → 105 로 민다
+    t, gap = snap_forward(102.0, seq, 200.0, pad=3.0)
+    assert t == 105.0 and gap == 25.0, (t, gap)
+
+    # 창(look) 밖은 안 본다. 102 에서 2초만 보면 105 에 못 닿는다
+    t, gap = snap_forward(102.0, seq, 200.0, pad=3.0, look=2.0)
+    assert t is None and gap == 0.0, (t, gap)
+
+    # 과거로는 절대 안 간다 — snap_back 과 반대 방향임을 못박는다
+    t, _ = snap_forward(103.5, seq, 200.0, pad=3.0)
+    assert t is not None and t >= 103.5, t
+
+    # 본편 끝을 넘어가지 않는다
+    t, gap = snap_forward(105.0, seq, 106.0, pad=3.0)
+    assert t is None, t
 
     print("사건 게이트 자체검사 8/8 통과")
 
