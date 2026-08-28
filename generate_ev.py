@@ -41,7 +41,7 @@ def claude_ev(skill: str, prompt: str, extra_dirs=()):
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
     if not args:
-        sys.exit("사용법: python3 generate_ev.py work/<작품>_eplan.json")
+        sys.exit("사용법: python3 generate_ev.py work/<작품>_ev_plan.json")
     generate.bundle = bundle_ev
     generate._claude = claude_ev
     generate.main(Path(args[0]).expanduser())
