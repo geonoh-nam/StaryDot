@@ -7,7 +7,7 @@ generate.py 를 임포트해 두 가지만 갈아 끼운다.
 
 원본은 안 고친다 — 옛 경로가 그대로 살아 있어야 나란히 비교가 된다.
 
-    python3 generate_ev.py work/<작품>_eplan.json
+    python3 generate_ev.py work/<작품>_ev_plan.json
 """
 import sys
 from pathlib import Path
@@ -31,12 +31,6 @@ _orig_claude = generate._claude
 
 
 def bundle_ev(it: dict) -> str:
-    # eplan.json 의 개입지점은 plan.json 과 달리 `act`(직전 장면 표시)가 없다 —
-    # events.py 가 사건 기준으로 새로 만든 지점이라 장면(act) 소속을 안 붙인다.
-    # generate.bundle() 은 이걸 그대로 읽으므로(it['act']['beat']) 없으면 KeyError.
-    # 원본은 못 고치니 여기서 없을 때만 채워 넣는다 (얕은 복사, 원본 dict 는 안 건드림).
-    if "act" not in it:
-        it = {**it, "act": {"beat": "(사건 기반 개입지점 — 별도 장면 구분 없음)"}}
     return event_prefix(it) + _orig_bundle(it)
 
 

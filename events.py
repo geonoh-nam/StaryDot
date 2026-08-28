@@ -310,6 +310,14 @@ def selftest():
     assert [c["t"] for c in got] == [300.0], got
     assert any("간격" in w for _, w in rej), rej
 
+    # ── find_act ─────────────────────────────────────────────────────
+    acts = [{"t0": 0.0, "t1": 100.0, "beat": "1장"},
+            {"t0": 100.0, "t1": 200.0, "beat": "2장"}]
+    assert find_act(acts, 150.0)["beat"] == "2장"
+    assert find_act(acts, 100.0)["beat"] == "2장"          # 경계는 다음 장 소속
+    assert find_act(acts, 250.0)["beat"] == "2장"          # 장 밖이면 마지막 장
+    assert find_act([], 50.0) == {"t0": 0.0, "t1": 50.0, "beat": "(장 정보 없음)"}
+
     print("events 자체검사 통과")
 
 
@@ -348,8 +356,26 @@ def settle(video, cands, canon, end, P, baseline_tv, rejected) -> list[dict]:
     return out
 
 
+def find_act(acts: list[dict], t: float) -> dict:
+    """시각 t 가 속한 장(act)을 찾는다. `generate.bundle()` 이 `it['act']['beat']`
+    로 "직전에 끝난 장면"을 읽으므로, 사건 기준 개입지점에도 같은 모양을 채워 줘야
+    옛 생성 경로(generate.py, 읽기 전용)와 스키마가 맞는다.
+
+    1) t 를 포함하는 장 (t0 <= t < t1).
+    2) 없으면 t 이전에 시작한 장 중 가장 나중 것 (장 경계에 걸쳤을 때 대비).
+    3) 그마저 없으면 "장 정보 없음" 자리표시자.
+    """
+    for a in acts:
+        if a["t0"] <= t < a["t1"]:
+            return a
+    before = [a for a in acts if a["t0"] <= t]
+    if before:
+        return max(before, key=lambda a: a["t0"])
+    return {"t0": 0.0, "t1": t, "beat": "(장 정보 없음)"}
+
+
 def run(plan_path: Path) -> dict:
-    """plan.json 을 **읽기만** 하고 사건·개입지점을 채운 eplan.json 을 새로 쓴다.
+    """plan.json 을 **읽기만** 하고 사건·개입지점을 채운 ev_plan.json 을 새로 쓴다.
 
     원본을 덮어쓰지 않는다. 기존 파이프라인(generate.py, seed-from-work.js)이
     계속 옛 결과로 돌 수 있어야 하고, 옛 결과와 새 결과를 나란히 비교해야 한다.
@@ -396,6 +422,7 @@ def run(plan_path: Path) -> dict:
         "n_ev": c["n_ev"],
         "event_id": c["event"]["id"], "kind": c["event"]["kind"],
         "asked_by": c["event"]["who"], "what": c["event"]["what"],
+        "act": find_act(plan.get("acts") or [], c["t"]),
         "pause": {"score": c.get("pause_score"), "kind": c.get("pause_kind"),
                   "shot": c.get("shot"), "why": c.get("why")},
         "frames": c.get("frames", []), "colors": c.get("colors", {}),
@@ -405,7 +432,7 @@ def run(plan_path: Path) -> dict:
                      for i in c["event"]["evidence"]],
     } for k, c in enumerate(chosen)]
     plan["rejected"] = [{"t": t, "why": w} for t, w in rejected]
-    out = plan_path.with_name(plan_path.name.replace("_plan.json", "_eplan.json"))
+    out = plan_path.with_name(plan_path.name.replace("_plan.json", "_ev_plan.json"))
     out.write_text(json.dumps(plan, ensure_ascii=False, indent=1))
     plan["_out"] = str(out)
     return plan
