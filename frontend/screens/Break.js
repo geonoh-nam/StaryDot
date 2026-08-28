@@ -16,6 +16,9 @@ export function BreakScreen({ items = [], mediaBase = '', isLast, onResult, onDo
   const [at, setAt] = useState(0);
   const [selected, setSelected] = useState(null);
   const [tries, setTries] = useState(0);
+  // 문항이 뜬 시각. 개입 평가용 응답 지연을 재는 기준점이라 문항이 바뀔 때마다 새로 잡는다.
+  const shownAt = React.useRef(Date.now());
+  useEffect(() => { shownAt.current = Date.now(); }, [at]);
 
   const quiz = items[at];
   // 문항이 없는 브레이크는 만들지 않는다(편성기가 걸러 준다). 그래도 도달하면 조용히 넘긴다.
@@ -35,7 +38,8 @@ export function BreakScreen({ items = [], mediaBase = '', isLast, onResult, onDo
   const answer = (label) => {
     setSelected(label);
     const right = label === quiz.answer;
-    if (onResult) onResult(quiz.activityId, right ? 'correct' : 'wrong', quiz.activity_template);
+    if (onResult) onResult(quiz.activityId, right ? 'correct' : 'wrong',
+                           quiz.activity_template, Date.now() - shownAt.current);
     playSound(right ? 'success' : 'wrong');
     speak(right ? 'correct' : 'retry');
     if (!right) setTries((n) => n + 1);
@@ -58,7 +62,8 @@ export function BreakScreen({ items = [], mediaBase = '', isLast, onResult, onDo
         onResume={next}
         onSkip={() => {
           // 건너뛰기도 기록한다. 아무 답이 없는 문항은 리포트에서 '안 푼 것'으로 세어야 한다.
-          if (selected == null && onResult) onResult(quiz.activityId, 'skip', quiz.activity_template);
+          if (selected == null && onResult) onResult(quiz.activityId, 'skip', quiz.activity_template,
+                                                       Date.now() - shownAt.current);
           next();
         }}
       />

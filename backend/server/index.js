@@ -122,7 +122,12 @@ const server = http.createServer(async (req, res) => {
       const b = await readJson(req);
       if (!b.session_id) return json(res, 400, { error: 'session_id required' });
       if (!b.activity_id) return json(res, 400, { error: 'activity_id required' });
-      addActivityResult(db, b);
+      // 음수(시계 역행)나 10분(600000ms) 넘는 값(백그라운드 전환 등으로 시계가 튄 경우)은
+      // 실제 응답 시간이 아니라 시계 오차이므로 null 로 떨어뜨린다.
+      const latencyNum = Number(b.latency_ms);
+      const latencyMs = Number.isFinite(latencyNum) && latencyNum >= 0 && latencyNum <= 600000
+        ? latencyNum : null;
+      addActivityResult(db, { ...b, latency_ms: latencyMs });
       return json(res, 200, { ok: true });
     }
 

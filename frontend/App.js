@@ -211,12 +211,13 @@ export default function App() {
   };
 
   // 활동 결과 한 건. 영상 중이든 브레이크든 기록하는 자리는 하나여야 리포트가 어긋나지 않는다.
-  const recordResult = (activityId, result, kind) => {
+  const recordResult = (activityId, result, kind, latencyMs) => {
     if (kind) setQuizHistory((prev) => [...prev.slice(-99), { kind, correct: result === 'correct' }]);
     if (result === 'correct') setLog((prev) => ({ ...prev, quiz: prev.quiz + 1 }));
     if (result === 'skip') setLog((prev) => ({ ...prev, skip: prev.skip + 1 }));
     if (!sessionId.current || !activityId) return;
-    api('/activity-results', { method: 'POST', body: { session_id: sessionId.current, activity_id: activityId, result } });
+    api('/activity-results', { method: 'POST', body: { session_id: sessionId.current,
+        activity_id: activityId, result, latency_ms: latencyMs ?? null } });
   };
 
   // Opening a video: ask the server for its activity plan and open a session to record against.

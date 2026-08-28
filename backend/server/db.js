@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS activity_result (
   activity_id  INTEGER NOT NULL REFERENCES activity(id),
   result       TEXT NOT NULL,
   drawing_path TEXT,
+  latency_ms   INTEGER,
   created_at   INTEGER NOT NULL
 );
 `;
@@ -91,6 +92,12 @@ function migrate(db) {
   const cols = db.prepare('PRAGMA table_info(video)').all().map((c) => c.name);
   if (!cols.includes('crop_bottom')) {
     db.exec('ALTER TABLE video ADD COLUMN crop_bottom REAL NOT NULL DEFAULT 0');
+  }
+
+  const rcols = db.prepare('PRAGMA table_info(activity_result)').all().map((c) => c.name);
+  if (!rcols.includes('latency_ms')) {
+    // 문항이 뜨고 아이가 처음 누르기까지 걸린 시간. 옛 행은 NULL 로 남는다.
+    db.exec('ALTER TABLE activity_result ADD COLUMN latency_ms INTEGER');
   }
 }
 
@@ -192,10 +199,10 @@ export function endSession(db, id, watchedSec) {
   db.prepare('UPDATE session SET ended_at = ?, watched_sec = ? WHERE id = ?').run(Date.now(), watchedSec, id);
 }
 
-export function addActivityResult(db, { session_id, activity_id, result, drawing_path }) {
+export function addActivityResult(db, { session_id, activity_id, result, drawing_path, latency_ms }) {
   db.prepare(
-    'INSERT INTO activity_result (session_id, activity_id, result, drawing_path, created_at) VALUES (?, ?, ?, ?, ?)'
-  ).run(session_id, activity_id, result, drawing_path ?? null, Date.now());
+    'INSERT INTO activity_result (session_id, activity_id, result, drawing_path, latency_ms, created_at) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(session_id, activity_id, result, drawing_path ?? null, latency_ms ?? null, Date.now());
 }
 
 export function getReport(db, childId) {
