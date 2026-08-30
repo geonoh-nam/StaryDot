@@ -41,10 +41,11 @@ fs.mkdirSync(path.join(MEDIA_DIR, 'frame'), { recursive: true });
 const dropped = [];
 const rows = [];
 for (const a of activities) {
-  // 창의 문항(장면 감상·가장 좋았던 장면)은 정답이 없다. 4지선다 브레이크 화면에 넣을 수
-  // 없으므로 지금은 싣지 않는다 — 말하기 활동으로 붙일 때 여기를 푼다.
-  if (a.answer == null || !Array.isArray(a.choices)) {
-    dropped.push([a.fact_id ?? '?', a.type, '창의 문항 — 선택지가 없다']);
+  // 창의 문항(장면 감상·이어질 말 상상)은 정답이 없어 4지선다 화면에 못 넣는다.
+  // 대신 말하기 활동(type:'say')으로 온다 — 버디가 질문을 읽어 주고 아이가 대답하며
+  // 채점하지 않는다. 그 형태로 오지 않은 무정답 문항만 버린다.
+  if (a.type !== 'say' && (a.answer == null || !Array.isArray(a.choices))) {
+    dropped.push([a.fact_id ?? '?', a.type, '창의 문항 — 선택지도 say 형태도 아니다']);
     continue;
   }
   if (!a.frame || !fs.existsSync(a.frame)) {

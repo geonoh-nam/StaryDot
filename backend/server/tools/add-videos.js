@@ -118,7 +118,7 @@ for (const job of jobs) {
     // 편성기는 ready 만 본다. 문항이 없어도 재생목록에는 들어가야 한다.
     setVideoStatus(db, id, 'ready');
     added++;
-    const quiz = db.prepare("SELECT COUNT(*) AS n FROM activity WHERE video_id = ? AND type = 'quiz'").get(id).n;
+    const quiz = db.prepare("SELECT COUNT(*) AS n FROM activity WHERE video_id = ? AND type = 'quiz' AND retired = 0").get(id).n;
     console.log(`+ ${id}  ${Math.floor(duration / 60)}분 ${duration % 60}초  문항 ${quiz}개${hasThumb ? '' : '  (썸네일 없음)'}`);
   } catch (err) {
     failed.push([base, err.message]);
@@ -130,7 +130,7 @@ for (const [f, why] of failed) console.log(`  실패 ${f}: ${why}`);
 
 const counts = db.prepare(
   `SELECT c.id, c.label, COUNT(v.id) AS n,
-          SUM(CASE WHEN EXISTS (SELECT 1 FROM activity a WHERE a.video_id = v.id AND a.type='quiz') THEN 1 ELSE 0 END) AS withQuiz
+          SUM(CASE WHEN EXISTS (SELECT 1 FROM activity a WHERE a.video_id = v.id AND a.type='quiz' AND a.retired=0) THEN 1 ELSE 0 END) AS withQuiz
    FROM category c JOIN video v ON v.category_id = c.id AND v.status = 'ready'
    GROUP BY c.id ORDER BY c.sort, c.id`
 ).all();

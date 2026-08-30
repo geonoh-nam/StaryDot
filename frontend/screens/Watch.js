@@ -40,7 +40,11 @@ const QUIZ_BUDDY = require('../assets/characters/bunny.png');
 // How long the character stands alone before the bubble and its voice arrive.
 const BUDDY_ALONE_MS = 700;
 
-export function WatchScreen({ source, plan = [], midVideo = true, picks = [0, 1, 2], seekTo, onResult, onWatched, quizDone, onQuizAsk, onQuizCorrect, onQuizSkip, onFinish, onBack, onHome, onReport }) {
+// midVideo 는 서버가 준 개입지점에서 영상을 멈출지 정한다 — 파이프라인이 계산한 시점이
+// 여기서 쓰인다. allowDemo 는 그와 별개로, 서버 문항이 하나도 없을 때 ACTIVITY_SLOTS 의
+// 하드코딩 문항(10·20·40초, "비가 내리는 소리는?")으로 떨어질지 정한다.
+// 둘을 한 스위치로 묶으면 데모를 끄려다 진짜 문항까지 꺼진다 — 실제로 그랬다.
+export function WatchScreen({ source, plan = [], midVideo = true, allowDemo = false, picks = [0, 1, 2], seekTo, onResult, onWatched, quizDone, onQuizAsk, onQuizCorrect, onQuizSkip, onFinish, onBack, onHome, onReport }) {
   const player = useVideoPlayer(source, (instance) => {
     instance.loop = false;
     instance.play();
@@ -63,7 +67,11 @@ export function WatchScreen({ source, plan = [], midVideo = true, picks = [0, 1,
     // 세션 편성에서는 퀴즈가 영상 사이에만 붙는다. 중간 개입을 끄면 데모 일정도 같이 꺼야
     // 한다 — 안 그러면 10초·20초마다 데모 문항이 튀어나온다.
     if (!midVideo) return [];
-    if (!plan.length) return ACTIVITY_SLOTS.map((a) => ({ ...a, quiz: picks[a.pick] ?? 0 }));
+    // 서버 문항이 없을 때만 데모로 떨어진다. allowDemo 없이 떨어지면 파이프라인이
+    // 아직 안 돈 영상에서 영상과 무관한 문항이 진짜인 척 나온다.
+    if (!plan.length) {
+      return allowDemo ? ACTIVITY_SLOTS.map((a) => ({ ...a, quiz: picks[a.pick] ?? 0 })) : [];
+    }
     return plan.map((a) => {
       let payload = {};
       try {
@@ -73,7 +81,7 @@ export function WatchScreen({ source, plan = [], midVideo = true, picks = [0, 1,
       }
       return { at: a.at_sec ?? a.at, type: a.type, activityId: a.id, payload };
     });
-  }, [plan, picks, midVideo]);
+  }, [plan, picks, midVideo, allowDemo]);
   const [announce, setAnnounce] = useState(null); // activity type being announced before it opens
   const [celebrate, setCelebrate] = useState(false); // "잘했어요" popup between an activity and resuming the video
   const firedRef = useRef(new Set());
@@ -396,6 +404,12 @@ export function QuizOverlay({ quiz, selected, tries = 0, frame, resumeLabel = '�
               </Defs>
               <Rect x="0" y="0" width="100%" height="100%" rx={42} ry={42} fill="none" stroke="url(#qRim)" strokeWidth={7} />
             </Svg>
+            {/* 누가 묻는지 먼저 밝힌다. 영상 속 인물이 물어야 아이가 이야기의 일부로
+                받아들인다 — 생뚱맞은 박스로 보이면 짜증을 낸다(심사 피드백).
+                사건 주체를 못 잡았으면 이 줄이 없고 화면은 예전과 같다. */}
+            {!selected && quiz.asked_by ? (
+              <Text style={styles.questionAsker}>{quiz.asked_by}가 물어봐요</Text>
+            ) : null}
             <Text style={styles.questionText}>
               {selected && correct
                 ? '맞아 정답이야! 잘했어 :)'
@@ -637,6 +651,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#dbeafe',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  // 문항보다 작고 연하게. 질문을 가리지 않으면서 "누가 묻는지"만 먼저 읽히게 한다.
+  questionAsker: {
+    textAlign: 'center',
+    color: TEXT_ON_DARK,
+    opacity: 0.75,
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 6,
   },
   questionText: {
     textAlign: 'center',

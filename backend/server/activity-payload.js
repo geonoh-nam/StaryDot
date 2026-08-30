@@ -88,6 +88,28 @@ export function toActivityRow(activity) {
 // framePath 가 없으면 만들지 않는다. 그림 없는 화면을 아이에게 내보내는 것보다 문항 하나를
 // 잃는 편이 낫다.
 export function toStorydotRow(activity, framePath) {
+  // 창의 문항은 정답이 없다. 4지선다 대신 말하기 활동으로 낸다 — 버디가 질문을 읽어 주고
+  // 아이가 대답하며, 맞고 틀림을 따지지 않는다. 누리과정이 정답보다 표현과 참여를
+  // 앞에 두는 자리이고, 이걸 못 실으면 추론 문항 대부분이 아이에게 도달하지 못한다.
+  if (activity.type === 'say') {
+    if (!framePath) {
+      throw new Error(`${activity.fact_id}: 프레임이 없습니다`);
+    }
+    return {
+      at_sec: Math.round(activity.t),
+      type: 'say',
+      payload: {
+        activity_template: activity.activity_template ?? '말하기',
+        word: activity.word ?? activity.prompt,
+        listenMs: activity.listenMs ?? 8000,
+        framePath,
+        why_here: activity.curriculum ?? null,
+        domain: activity.domain ?? null,
+        age: activity.age ?? null,
+        fact_id: activity.fact_id ?? null,
+      },
+    };
+  }
   if (!Array.isArray(activity.choices) || activity.choices.length < 2) {
     throw new Error(`${activity.fact_id}: 선택지가 없습니다 (창의 문항은 호출부가 먼저 걸러야 합니다)`);
   }
@@ -115,5 +137,11 @@ export function toStorydotRow(activity, framePath) {
   row.payload.domain = activity.domain ?? null;
   row.payload.age = activity.age ?? null;
   row.payload.fact_id = activity.fact_id ?? null;
+  // 누가 묻는가. 영상 속 인물이 물어야 아이가 이야기의 일부로 받아들인다 —
+  // "생뚱맞게 박스 쳐놓고 물어보면 이게 뭔지 판단이 안 돼" (심사 피드백).
+  // 사건의 주체를 못 잡으면 null 이고, 그때는 화면이 예전처럼 그냥 묻는다.
+  row.payload.asked_by = activity.asked_by ?? null;
+  row.payload.event_kind = activity.event_kind ?? null;
+  row.payload.event_what = activity.event_what ?? null;
   return row;
 }

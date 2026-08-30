@@ -35,7 +35,8 @@ CREATE TABLE IF NOT EXISTS activity (
   video_id TEXT NOT NULL REFERENCES video(id),
   at_sec   INTEGER NOT NULL,
   type     TEXT NOT NULL,
-  payload  TEXT NOT NULL
+  payload  TEXT NOT NULL,
+  retired  INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS activity_video_time ON activity(video_id, at_sec);
 CREATE TABLE IF NOT EXISTS child (
@@ -94,6 +95,13 @@ function migrate(db) {
     db.exec('ALTER TABLE video ADD COLUMN crop_bottom REAL NOT NULL DEFAULT 0');
   }
 
+  const acols = db.prepare('PRAGMA table_info(activity)').all().map((c) => c.name);
+  if (!acols.includes('retired')) {
+    // 이미 아이가 답한 문항은 지울 수 없다 — activity_result 가 참조한다.
+    // 지우는 대신 은퇴시켜 기록은 남기고 더는 내보내지 않는다.
+    db.exec('ALTER TABLE activity ADD COLUMN retired INTEGER NOT NULL DEFAULT 0');
+  }
+
   const rcols = db.prepare('PRAGMA table_info(activity_result)').all().map((c) => c.name);
   if (!rcols.includes('latency_ms')) {
     // 문항이 뜨고 아이가 처음 누르기까지 걸린 시간. 옛 행은 NULL 로 남는다.
@@ -131,8 +139,14 @@ export function getSubtitles(db, videoId) {
   return db.prepare('SELECT idx, start_ms, end_ms, text FROM subtitle WHERE video_id = ? ORDER BY start_ms').all(videoId);
 }
 
+// 한 번이라도 아이가 답한 문항은 DELETE 가 외래키에 막힌다. 그대로 두면
+// 플레이된 영상은 문항을 영영 갱신할 수 없다 — 파이프라인을 고쳐도 반영이 안 된다.
+// 답한 적 있는 문항은 은퇴시켜 기록을 남기고, 나머지만 지운다.
 export function replaceActivities(db, videoId, rows) {
-  db.prepare('DELETE FROM activity WHERE video_id = ?').run(videoId);
+  db.prepare(`UPDATE activity SET retired = 1 WHERE video_id = ? AND retired = 0
+              AND id IN (SELECT activity_id FROM activity_result)`).run(videoId);
+  db.prepare(`DELETE FROM activity WHERE video_id = ?
+              AND id NOT IN (SELECT activity_id FROM activity_result)`).run(videoId);
   const insert = db.prepare('INSERT INTO activity (video_id, at_sec, type, payload) VALUES (?, ?, ?, ?)');
   for (const r of rows) insert.run(videoId, r.at_sec, r.type, JSON.stringify(r.payload));
 }
@@ -167,7 +181,7 @@ export function getLibrary(db) {
 export function getVideo(db, id) {
   const v = db.prepare('SELECT id, title, duration_sec, file_path FROM video WHERE id = ?').get(id);
   if (!v) return null;
-  const acts = db.prepare('SELECT id, at_sec, type, payload FROM activity WHERE video_id = ? ORDER BY at_sec').all(id);
+  const acts = db.prepare('SELECT id, at_sec, type, payload FROM activity WHERE video_id = ? AND retired = 0 ORDER BY at_sec').all(id);
   return {
     id: v.id,
     title: v.title,
@@ -267,7 +281,7 @@ export function getCatalog(db, { childAge = null } = {}) {
      FROM video WHERE status = 'ready' ORDER BY created_at`
   ).all();
   const acts = db.prepare(
-    `SELECT id, video_id, at_sec, payload FROM activity WHERE type = 'quiz' ORDER BY video_id, at_sec`
+    `SELECT id, video_id, at_sec, payload FROM activity WHERE type = 'quiz' AND retired = 0 ORDER BY video_id, at_sec`
   ).all();
 
   const byVideo = new Map();

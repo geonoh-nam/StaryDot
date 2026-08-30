@@ -230,15 +230,17 @@ export default function App() {
     setPlan([]);
     sessionId.current = null;
     if (video?.id) {
-      if (!planned) {
-        const bundled = OFFLINE_ACTIVITIES[video.id] || [];
-        setPlan(bundled);
-        api(`/videos/${video.id}`).then((v) => {
-          if (!v?.activities?.length) return;
-          const ours = bundled.filter((a) => a.type !== 'quiz');
-          setPlan([...v.activities, ...ours].sort((a, b) => (a.at_sec ?? a.at) - (b.at_sec ?? b.at)));
-        });
-      }
+      // 서버 문항은 편성이든 아니든 항상 받는다 — 파이프라인이 계산한 개입지점이
+      // 거기 실려 온다. 예전에는 planned 일 때 이 호출을 건너뛰어서, 편성으로 보면
+      // 개입지점 문항이 하나도 안 뜨고 영상만 끝까지 재생됐다.
+      // 오프라인 번들은 편성 밖에서만 쓴다(서버가 꺼져 있을 때의 대비).
+      const bundled = planned ? [] : (OFFLINE_ACTIVITIES[video.id] || []);
+      setPlan(bundled);
+      api(`/videos/${video.id}`).then((v) => {
+        if (!v?.activities?.length) return;
+        const ours = bundled.filter((a) => a.type !== 'quiz');
+        setPlan([...v.activities, ...ours].sort((a, b) => (a.at_sec ?? a.at) - (b.at_sec ?? b.at)));
+      });
       if (childId) {
         api('/sessions', { method: 'POST', body: { child_id: childId, video_id: video.id } })
           .then((res) => { sessionId.current = res?.id || null; });
@@ -458,8 +460,14 @@ export default function App() {
   }, [sessionPlan]);
 
   // 편성이 없을 때의 임시 고르기 — 서버가 꺼져 있어도 아이가 볼 것이 있어야 한다.
+  //
+  // 고른 시리즈를 먼저 본다. 예전에는 "에피소드가 가장 많은 시리즈"만 봐서,
+  // 편성 응답이 늦으면 아이가 아기상어를 골라도 타요(유일한 2편짜리)가 떴다.
+  // 아무것도 안 나오는 것보다 나쁘다 — 고른 것과 다른 게 나오면 앱이 고장 난 것으로 보인다.
   const fallbackPick = useMemo(() => {
-    const richest = [...series].sort((a, b) => (b.episodes?.length || 0) - (a.episodes?.length || 0))[0];
+    const picked = selectedSeries && series.find((s) => s.id === selectedSeries.id);
+    const richest = picked
+      || [...series].sort((a, b) => (b.episodes?.length || 0) - (a.episodes?.length || 0))[0];
     const pool = [...(richest?.episodes || [])];
     const out = [];
     while (pool.length && out.length < 3) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
@@ -514,7 +522,10 @@ export default function App() {
               onStart={() => {
                 if (sessionPlan) { openPlanItem(0); return; }
                 const first = todayPick[0];
-                if (first) { setSelectedVideo(first); startWatching(first); }
+                // planned:true 를 빠뜨리면 startWatching 이 방금 받은 편성을 지운다.
+                // 그러면 1화가 끝났을 때 sessionPlan 이 없어 브레이크·2화·미션을
+                // 건너뛰고 마무리 활동으로 직행한다.
+                if (first) { setSelectedVideo(first); startWatching(first, { planned: true }); }
               }}
             />
           )}
@@ -642,7 +653,7 @@ export default function App() {
               }}
               onQuizSkip={() => setLog((prev) => ({ ...prev, skip: prev.skip + 1 }))}
               plan={plan}
-              midVideo={!sessionPlan}
+              midVideo
               picks={picks}
               seekTo={seekTo}
               onResult={recordResult}
