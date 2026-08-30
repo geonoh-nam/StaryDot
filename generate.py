@@ -195,7 +195,14 @@ def run_slot(plan: dict, it: dict, work: Path) -> dict:
             if c.get("answer") is not None:
                 dropped.append({**c, "drop": "창작형인데 정답이 있다"})
                 continue
-        elif mode == "inferential":
+        # 인용은 정본 어디에 있어도 통과했다 — activities.gate 가 "원문에 있는가"만 본다.
+        # 그래서 개입지점이 지목하지 않은 대사를 근거로 쓴 문항이 살아남았다
+        # (실측: 타요 2:12 개입인데 정답 근거가 1:11 의 s044. 아이는 1분 전 대사를
+        # 기억해야 하고, 멈춘 화면과도 안 맞는다). 유형과 무관하게 먼저 막는다.
+        if c.get("source_id") and c["source_id"] not in {e["id"] for e in ev}:
+            dropped.append({**c, "drop": f"개입지점 근거 밖 — {c['source_id']}"})
+            continue
+        if mode == "inferential":
             # 감정·인과는 대사에 글자로 안 나온다. "기뻐요" 를 전사본에서 찾으면
             # 사회관계 영역 활동이 전멸한다 (실측). 근거 스팬 실재 + 검증자 accept 가 관문.
             if c.get("source_id") and c["source_id"] not in {e["id"] for e in ev}:

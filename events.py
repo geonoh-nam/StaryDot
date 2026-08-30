@@ -44,13 +44,39 @@ KINDS = ("결과", "감정", "시도", "발견", "갈등")
 # storydot.py 가 읽기 전용이라 여기에 중복시킨다.
 RECALL_WINDOW = 100.0
 
+# 멈춘 자리에서 **몇 초 전까지의 사건**을 붙일 것인가.
+# RECALL_WINDOW(100초)를 그대로 쓰면 1분 전 일을 묻게 된다 — 실측에서 타요 2:12 개입에
+# 1:03 사건이 붙었다. 아이가 그걸 기억해서 답하기는 어렵다.
+# 게이트의 근거 스팬 검사는 RECALL_WINDOW 를 그대로 쓴다. 그건 "사건의 근거들이 서로
+# 얼마나 떨어져 있나"이지 "개입과 사건 사이 거리"가 아니다.
+#
+# 20초로 조였더니 5편에 개입지점이 3개(편당 0.6)로 무너졌고 브레드는 0이 됐다.
+# 40초면 자리가 9 → 19 로 늘어 5편 모두 살아난다. 점수의 recency 항(0.20)이
+# 가까운 자리를 우선하므로, 창이 40초여도 실제로 뽑히는 것은 더 가깝다.
+ATTACH_WINDOW = 40.0
+
 # 사건 직후 몇 초까지 안전한 자리를 찾을 것인가.
 # visual.extract_evidence_frames 가 이미 span=20.0 을 쓴다. 같은 창을 써야
-# 프레임 근거와 사건이 겹치고 새 눈금이 늘지 않는다.
-SNAP_LOOK = 20.0
+SKILLS = ROOT / "skills"
+TIMEOUT = 300
+MAX_EVENTS = 12          # 한 편에서 받아들일 사건 수 상한
+
+# 정착(ffmpeg)에 넘길 자리 수 상한. 자리가 수백 곳이라 전부 돌리면 느리다.
+# 자리를 모으는 바닥. speech_pad(3초=페이드아웃 시간)보다 낮게 잡고,
+# 실제 개입 방식은 settle 이 화면을 보고 정한다. 브레드1화는 전 구간에
+# 3초 공백이 2곳뿐인데 2초 이상은 5곳, 1.5초 이상은 10곳이다 —
+# 3초라는 값이 대사 촘촘한 작품을 통째로 잘라내고 있었다.
+PAD_FLOOR = 1.5
+
+# 개입 방식. 여유가 넉넉하면 페이드아웃, 짧으면 컷 직후에만 얼린다.
+# 컷 직후는 장면 경계라 소리 여유가 짧아도 얼리는 것이 자연스럽다.
+MODE_FADE_PAD = 3.0
+
+SETTLE_CAP = 12
 
 
-PICK_W = {"pause": 0.40, "shot": 0.25, "evidence": 0.20, "gap": 0.15, "snap": 0.10}
+# 사건 직후라는 보장이 사라졌으므로 "얼마나 가까운가"를 점수가 대신 잰다.
+PICK_W = {"pause": 0.35, "shot": 0.20, "evidence": 0.15, "gap": 0.10, "recency": 0.20}
 SHOT_BONUS = {"wide": 1.0, "medium": 0.6}   # closeup 은 정착 단계에서 이미 기각된다
 
 
@@ -68,13 +94,13 @@ def pick_score(c: dict, P: dict) -> float:
     """
     ev = _sat(c["n_ev"] - EVENT_MIN_EVIDENCE, EVENT_MIN_EVIDENCE)
     gp = _sat(c["gap"] - P["speech_pad"], P["speech_pad"])
+    # 사건에서 멀수록 아이 기억이 흐려진다. ATTACH_WINDOW 끝에서 0 이 된다.
+    rc = max(0.0, 1.0 - c.get("since", 0.0) / ATTACH_WINDOW)
     s = (PICK_W["pause"] * c.get("pause_score", 0.0)
          + PICK_W["shot"] * SHOT_BONUS.get(c.get("shot"), 0.0)
          + PICK_W["evidence"] * ev
-         + PICK_W["gap"] * gp)
-    if c.get("snapped"):
-        # 스냅으로 옮긴 자리는 사건이 끝난 그 자리가 아니다. 같은 조건이면 진다.
-        s -= PICK_W["snap"]
+         + PICK_W["gap"] * gp
+         + PICK_W["recency"] * rc)
     return round(max(0.0, s), 3)
 
 
@@ -153,32 +179,44 @@ def _grounding_score_of(what: str, segs: list[dict]):
     return grounding._grounding_score(what, [s["text"] for s in segs])
 
 
-def snap_forward(t: float, canon: list[dict], end: float,
-                 pad: float, look: float = SNAP_LOOK) -> tuple[float | None, float]:
-    """사건 직후 pad 초 이상 조용한 **첫** 자리를 찾는다. 없으면 (None, 0.0).
+def stop_candidates(canon, end: float, P: dict) -> list[dict]:
+    """대사가 PAD_FLOOR 이상 쉬는 자리를 **전 구간에서** 모은다.
 
-    storydot.snap_back 은 더 큰 공백을 찾아 과거로 당긴다. 사건에는 못 쓴다 —
-    사건 한복판으로 돌아가기 때문이다. "타요가 탈락했다" 를 물으려면 탈락이
-    끝난 뒤여야 한다.
-
-    가장 조용한 자리가 아니라 가장 **이른** 자리를 고른다. 사건 직후일수록
-    아이 기억이 생생하다.
+    사건에서 출발해 직후에서 멈출 자리를 찾으면 대부분 실패한다 — 실측에서
+    사건 10건 중 창을 100초까지 넓혀도 5건뿐이었고, 타요·브레드는 0이었다.
+    멈출 자리는 편당 수백 곳으로 널려 있고 희소한 건 사건 쪽이다.
+    그래서 방향을 뒤집어 자리에서 출발한다.
     """
-    starts = sorted(s["t0"] for s in canon)
-    cands = [t] + sorted(s["t1"] for s in canon if t < s["t1"] <= t + look)
-    for b in cands:
-        if b > end:
-            break
-        nxt = min((s for s in starts if s >= b), default=end)
-        nxt = min(nxt, end)
-        if nxt - b >= pad:
-            return round(b, 2), round(nxt - b, 2)
-    return None, 0.0
+    starts = sorted(x["t0"] for x in canon)
+    out = []
+    for seg in canon:
+        b = seg["t1"]
+        if b < P["min_start"] or b > end:
+            continue
+        nxt = min(min((x for x in starts if x >= b), default=end), end)
+        gap = nxt - b
+        if gap >= PAD_FLOOR:
+            out.append({"t": round(b, 2), "gap": round(gap, 2)})
+    return out
 
 
-SKILLS = ROOT / "skills"
-TIMEOUT = 300
-MAX_EVENTS = 12
+def attach_event(spots: list[dict], events: list[dict],
+                 window: float = ATTACH_WINDOW) -> list[dict]:
+    """각 자리에 **직전 window 초 안의 가장 최근 사건**을 붙인다. 없으면 버린다.
+
+    창을 RECALL_WINDOW(100초)로 열었더니 1분 전 사건이 붙었다 — 타요 2:12 개입에
+    1:03 의 사건. 아이가 그만큼 거슬러 기억해서 답하기는 어렵다. 방금 본 일이어야 한다.
+    """
+    out = []
+    for sp in spots:
+        prior = [e for e in events if sp["t"] - window <= e["t"] <= sp["t"]]
+        if not prior:
+            continue
+        e = max(prior, key=lambda x: x["t"])
+        out.append({**sp, "event": e, "n_ev": len(e["evidence"]),
+                    "since": round(sp["t"] - e["t"], 1)})
+    return out
+
 
 
 def _claude(prompt: str) -> dict:
@@ -277,44 +315,53 @@ def selftest():
         "who 키가 없는 사건은 통과 후에도 who=None 이어야 한다 "
         "(없으면 run() 의 c['event']['who'] 에서 KeyError)")
 
-    # ── snap_forward ────────────────────────────────────────────────
-    # 100~102 대사, 103~105 대사, 그 뒤 130 까지 침묵, 130~132 대사
+    # ── 자리 모으기 · 사건 붙이기 ─────────────────────────────────
     seq = [{"t0": 100.0, "t1": 102.0}, {"t0": 103.0, "t1": 105.0},
            {"t0": 130.0, "t1": 132.0}]
+    Ps = {"min_start": 50.0, "speech_pad": 3.0}
 
-    # 사건이 105 에 끝났고 130 까지 25초 비었다 → 105 를 그대로 쓴다
-    t, gap = snap_forward(105.0, seq, 200.0, pad=3.0)
-    assert t == 105.0 and gap == 25.0, (t, gap)
+    spots = stop_candidates(seq, 200.0, Ps)
+    # 105(다음 대사 130 까지 25초)와 132(끝 200 까지 68초)만 남는다.
+    # 102 는 103 에 대사가 재개돼 1초뿐이라 빠진다.
+    assert [x["t"] for x in spots] == [105.0, 132.0], spots
+    assert spots[0]["gap"] == 25.0, spots[0]
+    assert stop_candidates(seq, 200.0, {**Ps, "min_start": 120.0})[0]["t"] == 132.0
+    assert stop_candidates(seq, 106.0, Ps) == []
 
-    # 사건이 102 에 끝났는데 103 에 대사가 재개된다 → 105 로 민다
-    t, gap = snap_forward(102.0, seq, 200.0, pad=3.0)
-    assert t == 105.0 and gap == 25.0, (t, gap)
-
-    # 창(look) 밖은 안 본다. 102 에서 2초만 보면 105 에 못 닿는다
-    t, gap = snap_forward(102.0, seq, 200.0, pad=3.0, look=2.0)
-    assert t is None and gap == 0.0, (t, gap)
-
-    # 과거로는 절대 안 간다 — snap_back 과 반대 방향임을 못박는다
-    t, _ = snap_forward(103.5, seq, 200.0, pad=3.0)
-    assert t is not None and t >= 103.5, t
-
-    # 본편 끝을 넘어가지 않는다
-    t, gap = snap_forward(105.0, seq, 106.0, pad=3.0)
-    assert t is None, t
+    events_x = [{"t": 40.0, "what": "옛일", "evidence": ["a", "b"]},
+                {"t": 95.0, "what": "최근", "evidence": ["c", "d", "e"]}]
+    got = attach_event(spots, events_x, window=100.0)
+    assert len(got) == 2, got
+    assert got[0]["event"]["what"] == "최근", got[0]      # 40 이 아니라 95
+    assert got[0]["since"] == 10.0 and got[0]["n_ev"] == 3, got[0]
+    assert got[1]["since"] == 37.0, got[1]
+    assert attach_event(spots, events_x, window=5.0) == []
+    # 기본 창(ATTACH_WINDOW)이 실제로 거리를 제한한다. 창을 20초로 주면 37초 떨어진
+    # 자리는 떨어져 나간다 — 1분 전 사건을 묻지 않게 하는 것이 이 창의 존재 이유다.
+    assert [x["t"] for x in attach_event(spots, events_x, window=20.0)] == [105.0]
+    # 기본 창에서는 둘 다 붙되 거리가 기록된다. 점수의 recency 항이 이 값을 쓴다.
+    near = attach_event(spots, events_x)
+    assert [x["since"] for x in near] == [10.0, 37.0], near
+    assert all(x["since"] <= ATTACH_WINDOW for x in near), near
+    # 자리보다 나중에 일어난 사건은 안 붙인다
+    assert attach_event([{"t": 60.0, "gap": 9.0}], events_x, 100.0)[0]["event"]["t"] == 40.0
 
     # ── 점수와 선택 ──────────────────────────────────────────────────
     P = {"min_gap": 120.0, "max_activities": 2, "speech_pad": 3.0}
 
-    def cand(t, pause, shot, n_ev, gap):
+    def cand(t, pause, shot, n_ev, gap, since=0.0):
         return {"t": t, "pause_score": pause, "shot": shot,
-                "n_ev": n_ev, "gap": gap}
+                "n_ev": n_ev, "gap": gap, "since": since}
 
     # 근거 정규화 기준이 EVENT_MIN_EVIDENCE(2) 여야 한다.
     # storydot 의 5 를 그대로 쓰면 근거 항이 항상 0점인 죽은 항이 된다.
-    floor = cand(0.0, 0.0, "medium", EVENT_MIN_EVIDENCE, P["speech_pad"])
+    floor = cand(0.0, 0.0, "medium", EVENT_MIN_EVIDENCE, P["speech_pad"], ATTACH_WINDOW)
     assert pick_score(floor, P) == round(PICK_W["shot"] * SHOT_BONUS["medium"], 3)
-    full = cand(0.0, 1.0, "wide", EVENT_MIN_EVIDENCE * 2, P["speech_pad"] * 2)
+    full = cand(0.0, 1.0, "wide", EVENT_MIN_EVIDENCE * 2, P["speech_pad"] * 2, 0.0)
     assert pick_score(full, P) == 1.0, pick_score(full, P)
+    # 사건에 가까울수록 높다 — 방향 뒤집기의 안전장치
+    assert pick_score(cand(0.0, 0.5, "wide", 4, 6.0, 5.0), P) > \
+           pick_score(cand(0.0, 0.5, "wide", 4, 6.0, 90.0), P)
 
     # 시간순이 아니라 점수순으로 고른다
     rej = []
@@ -338,6 +385,56 @@ def selftest():
     assert find_act(acts, 100.0)["beat"] == "2장"          # 경계는 다음 장 소속
     assert find_act(acts, 250.0)["beat"] == "2장"          # 장 밖이면 마지막 장
     assert find_act([], 50.0) == {"t0": 0.0, "t1": 50.0, "beat": "(장 정보 없음)"}
+
+    # ── 개입 방식 분기 ───────────────────────────────────────────
+    cn = [{"t0": 100.0, "t1": 102.0}, {"t0": 110.0, "t1": 112.0}]
+    Pm = {"speech_pad": 3.0, "min_start": 0.0}
+    real = motion.best_pause, motion.scale_stats
+    try:
+        motion.scale_stats = lambda v, t: (100.0, 0.0)          # 항상 wide
+        base = {"t": 102.0, "n_ev": 3, "gap": 8.0, "since": 5.0,
+                "event": {"t": 97.0}}
+
+        # 여유 8초(102 → 110) → fade
+        motion.best_pause = lambda v, t: {"t": 102.0, "score": 0.9,
+                                          "kind": "still", "why": "x"}
+        out = settle(None, [dict(base)], cn, 200.0, Pm, 10.0, [])
+        assert out and out[0]["mode"] == "fade", out
+        # 정착이 t 를 옮기면 사건과의 거리도 다시 재야 한다. 여기선 102 로 그대로
+        # 앉으므로 사건(97)과 5초. 재계산이 빠지면 입력값이 그대로 남아 안 걸린다 —
+        # 그래서 아래에서 t 가 옮겨지는 경우로 한 번 더 확인한다.
+        assert out[0]["since"] == 5.0, out[0]
+
+        # 정착이 t 를 104 로 옮기면 사건(97)과의 거리는 입력 5.0 이 아니라 7.0 이다.
+        # 재계산이 빠지면 5.0 이 그대로 남아 이 단언이 터진다.
+        motion.best_pause = lambda v, t: {"t": 104.0, "score": 0.9,
+                                          "kind": "still", "why": "x"}
+        out = settle(None, [dict(base)], cn, 200.0, Pm, 10.0, [])
+        assert out and out[0]["since"] == 7.0, out
+
+        # 정착이 사건(97)보다 앞으로 당기면 기각한다 — 아직 일어나지 않은 일을
+        # 물을 수는 없다. 실측에서 since=-0.8s 인 개입지점이 나왔다.
+        motion.best_pause = lambda v, t: {"t": 96.0, "score": 0.9,
+                                          "kind": "still", "why": "x"}
+        rej = []
+        assert settle(None, [dict(base)], cn, 200.0, Pm, 10.0, rej) == []
+        assert "앞선다" in rej[0][1], rej
+
+        # 여유 2초인데 컷 직후 → freeze
+        cn2 = [{"t0": 100.0, "t1": 102.0}, {"t0": 104.0, "t1": 106.0}]
+        motion.best_pause = lambda v, t: {"t": 102.0, "score": 0.9,
+                                          "kind": "post-cut", "why": "x"}
+        out = settle(None, [dict(base)], cn2, 200.0, Pm, 10.0, [])
+        assert out and out[0]["mode"] == "freeze", out
+
+        # 같은 여유인데 컷 직후가 아니면 기각 — freeze 를 아무 데나 쓰면 안 된다
+        motion.best_pause = lambda v, t: {"t": 102.0, "score": 0.9,
+                                          "kind": "still", "why": "x"}
+        rej = []
+        assert settle(None, [dict(base)], cn2, 200.0, Pm, 10.0, rej) == []
+        assert "컷 직후도 아니다" in rej[0][1], rej
+    finally:
+        motion.best_pause, motion.scale_stats = real
 
     print("events 자체검사 통과")
 
@@ -368,10 +465,25 @@ def settle(video, cands, canon, end, P, baseline_tv, rejected) -> list[dict]:
         t = pause["t"]
         nxt = min(min((s["t0"] for s in canon if s["t0"] >= t), default=end), end)
         gap = nxt - t
-        if gap < P["speech_pad"]:
-            rejected.append((c["t"], f"정착 {t:.2f}s 에서 발화 재개까지 {gap:.1f}s"))
+        # 개입 방식을 여기서 정한다. 여유가 페이드아웃 시간만큼 있으면 fade,
+        # 없으면 컷 직후일 때만 freeze — 장면 경계라 얼려도 덜 어색하다.
+        if gap >= MODE_FADE_PAD:
+            mode = "fade"
+        elif pause["kind"] == "post-cut" and gap >= PAD_FLOOR:
+            mode = "freeze"
+        else:
+            rejected.append((c["t"], f"정착 {t:.2f}s 여유 {gap:.1f}s — "
+                                     f"페이드아웃엔 짧고 컷 직후도 아니다({pause['kind']})"))
             continue
-        c.update(t=t, gap=round(gap, 2), pause_score=round(pause["score"], 2),
+        # 정착이 t 를 ±4초 옮기므로 사건과의 거리도 다시 잰다. gap 은 다시 재면서
+        # since 는 안 재면, 점수의 recency 항이 옮기기 전 값으로 계산된다.
+        since = round(t - c["event"]["t"], 1)
+        if since < 0:
+            # 정착이 사건보다 앞으로 당겼다. 아직 일어나지 않은 일을 물을 수는 없다.
+            rejected.append((c["t"], f"정착 {t:.2f}s 가 사건({c['event']['t']:.1f}s)보다 앞선다"))
+            continue
+        c.update(t=t, gap=round(gap, 2), mode=mode, since=since,
+                 pause_score=round(pause["score"], 2),
                  pause_kind=pause["kind"], shot=scale, why=pause["why"])
         out.append(c)
     return out
@@ -408,18 +520,17 @@ def run(plan_path: Path) -> dict:
     evs, dropped = extract(plan)
     rejected = [(0.0, f"[사건폐기] {w}: {r}") for w, r in dropped]
 
-    # 사건 → 후보. 사건이 끝난 뒤로만 민다.
-    cands = []
-    for e in evs:
-        if e["t"] < P["min_start"]:
-            rejected.append((e["t"], f"몰입 전 구간 (<{P['min_start']:.0f}s)"))
-            continue
-        t, gap = snap_forward(e["t"], canon, end, P["speech_pad"])
-        if t is None:
-            rejected.append((e["t"], f"사건 직후 {SNAP_LOOK:.0f}초 안에 멈출 자리 없음"))
-            continue
-        cands.append({"t": t, "gap": gap, "n_ev": len(e["evidence"]),
-                      "event": e, "snapped": t > e["t"]})
+    # 자리 → 사건 (방향 뒤집기). 자리는 수백 곳, 사건은 편당 몇 건뿐이다.
+    spots = stop_candidates(canon, end, P)
+    cands = attach_event(spots, evs)
+    rejected.append((0.0, f"[정보] 멈출 자리 {len(spots)} → 사건 붙은 자리 {len(cands)}"))
+    # 정착은 자리마다 ffmpeg 를 돌린다. 영상 없이 미리 추려 비용을 묶는다.
+    cands.sort(key=lambda c: (-c["n_ev"], c["since"], -c["gap"]))
+    if len(cands) > SETTLE_CAP:
+        for c in cands[SETTLE_CAP:]:
+            rejected.append((c["t"], f"사전선별 {SETTLE_CAP}위 밖 "
+                                     f"(근거 {c['n_ev']}, 사건 후 {c['since']}s)"))
+        cands = cands[:SETTLE_CAP]
 
     # detail_baseline 과 CLOSEUP_REL 은 storydot 에 이미 있으므로 그대로 쓴다.
     # settle 은 storydot 에 없다 — 아래에서 events.py 가 직접 정의한다.
@@ -440,7 +551,7 @@ def run(plan_path: Path) -> dict:
     plan["events"] = evs
     plan["interrupts"] = [{
         "id": f"i{k:02d}", "t": c["t"], "gap": c["gap"], "score": c.get("score"),
-        "n_ev": c["n_ev"],
+        "n_ev": c["n_ev"], "mode": c.get("mode"), "since": c.get("since"),
         "event_id": c["event"]["id"], "kind": c["event"]["kind"],
         "asked_by": c["event"]["who"], "what": c["event"]["what"],
         "act": find_act(plan.get("acts") or [], c["t"]),
@@ -473,7 +584,7 @@ def report(plan: dict) -> None:
         print(f"  ★ {storydot.mmss(it['t'])}  점수 {it.get('score')}  [{it['kind']}] {who}")
         print(f"       {it['what']}")
         print(f"       화면 {pz.get('kind')}/{pz.get('shot')} {pz.get('score')}"
-              f"  근거 {len(it['evidence'])}건")
+              f"  여유 {it['gap']}s  개입 {it.get('mode')}  근거 {len(it['evidence'])}건")
     if plan["rejected"]:
         print("기각:")
         for x in plan["rejected"]:
