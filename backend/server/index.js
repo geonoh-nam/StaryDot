@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { openDb, getLibrary, getVideo, getSubtitles, upsertChild, startSession,
          endSession, addActivityResult, getReport } from './db.js';
+import { planFor } from './session.js';
 import { serveFile } from './media.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -56,6 +57,30 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (url.pathname === '/library') return json(res, 200, getLibrary(db));
+
+    // 오늘 한 회분 편성. 부모가 정한 총량 안에서 영상 몇 편과 그 사이 브레이크, 마지막
+    // 미션 카드까지 정해 돌려준다.
+    //   GET /plan?character_id=teenieping&child_id=c_x&budget_sec=1800
+    // budget_sec 을 주지 않으면 아이에게 등록된 daily_limit_min 을 쓴다.
+    if (url.pathname === '/plan') {
+      const characterId = url.searchParams.get('character_id');
+      if (!characterId) return json(res, 400, { error: 'character_id required' });
+      const childId = url.searchParams.get('child_id');
+
+      let budgetSec = Number(url.searchParams.get('budget_sec'));
+      if (!Number.isFinite(budgetSec) || budgetSec <= 0) {
+        const child = childId
+          ? db.prepare('SELECT daily_limit_min FROM child WHERE id = ?').get(childId)
+          : null;
+        budgetSec = (child?.daily_limit_min ?? 30) * 60;
+      }
+
+      const result = planFor(db, { childId, characterId, budgetSec });
+      // 편성 실패는 서버 오류가 아니다. 왜 못 만들었는지 앱이 알아야 화면을 고를 수 있다.
+      return result.ok
+        ? json(res, 200, { ok: true, budgetSec, plan: result.plan })
+        : json(res, 200, { ok: false, budgetSec, reason: result.reason });
+    }
 
     const videoMatch = /^\/videos\/([^/]+)$/.exec(url.pathname);
     if (videoMatch) {

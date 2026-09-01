@@ -55,6 +55,16 @@ CREATE TABLE IF NOT EXISTS session (
   watched_sec INTEGER
 );
 CREATE INDEX IF NOT EXISTS session_child_time ON session(child_id, started_at);
+-- 한 번의 편성(영상 여러 편 + 미션 카드 하나)이 무엇이었는지. 편성기의 다양성 규칙이
+-- "어제 본 조합"을 물리적으로 다시 못 만들게 하려면 세션이 아니라 편성 단위로 남아야 한다.
+CREATE TABLE IF NOT EXISTS plan_session (
+  id         INTEGER PRIMARY KEY,
+  child_id   TEXT NOT NULL REFERENCES child(id),
+  video_ids  TEXT NOT NULL,
+  mission_id TEXT,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS plan_session_child_time ON plan_session(child_id, created_at);
 CREATE TABLE IF NOT EXISTS activity_result (
   id           INTEGER PRIMARY KEY,
   session_id   INTEGER NOT NULL REFERENCES session(id),
@@ -220,4 +230,98 @@ export function getReport(db, childId) {
     skip: sum((r) => r.result === 'skip'),
     recent,
   };
+}
+
+
+// ---------------------------------------------------------------- 세션 편성
+
+// 편성기가 고를 수 있는 영상 전부와, 각 영상이 낼 수 있는 문항.
+//
+// characterId 는 카테고리 id 다 (teenieping·tayo·…). 아이가 고른 시리즈 안에서만 편성한다.
+// 문항이 0개인 영상도 카탈로그에는 남긴다 — 편성은 되지만 그 뒤에 브레이크가 안 붙을 뿐이다.
+// 문항 payload 의 age 는 "3세" 같은 문자열이다. 누리과정 만 나이라 child.age 와 같은 척도다.
+function ageOf(payload) {
+  const m = /\d+/.exec(payload?.age ?? '');
+  return m ? Number(m[0]) : null;
+}
+
+
+/**
+ * 편성기가 읽을 카탈로그.
+ *
+ * childAge 를 주면 **그 나이가 아직 감당 못 하는 문항을 빼고** 돌려준다. 문항의 age 는
+ * 어휘가 정한 하한이다(observe.py 의 WORD_AGE) — "갈색 액자가 몇 개" 는 액자를 아는
+ * 나이여야 풀린다. 거르는 자리를 여기로 둔 이유는, 편성기의 시간 회계가 "문항을 가진
+ * 영상"만 세기 때문이다. 걸러진 결과를 그대로 넘겨야 예산과 실제 화면이 어긋나지 않는다.
+ */
+export function getCatalog(db, { childAge = null } = {}) {
+  const videos = db.prepare(
+    `SELECT id, category_id, title, duration_sec, file_path, thumb_path, color
+     FROM video WHERE status = 'ready' ORDER BY created_at`
+  ).all();
+  const acts = db.prepare(
+    `SELECT id, video_id, at_sec, payload FROM activity WHERE type = 'quiz' ORDER BY video_id, at_sec`
+  ).all();
+
+  const byVideo = new Map();
+  for (const a of acts) {
+    let payload;
+    try {
+      payload = JSON.parse(a.payload);
+    } catch (e) {
+      continue; // 못 읽는 행 하나 때문에 카탈로그 전체를 잃지 않는다
+    }
+    if (!Array.isArray(payload.options) || payload.answer == null) continue;
+    const qAge = ageOf(payload);
+    // age 를 못 읽는 문항은 거르지 않는다 — 판단 근거가 없는데 버리면 조용히 사라진다.
+    if (childAge != null && qAge != null && qAge > childAge) continue;
+    const list = byVideo.get(a.video_id) || [];
+    list.push({
+      age: qAge,
+      // 편성기(planner.ts)가 읽는 네 칸.
+      id: String(a.id),
+      question: payload.title,
+      choices: payload.options.map((o) => o.label),
+      answerIndex: payload.options.findIndex((o) => o.label === payload.answer),
+      // 앱이 그대로 그리는 원본. 편성기는 건드리지 않는다.
+      activityId: a.id,
+      atSec: a.at_sec,
+      payload,
+    });
+    byVideo.set(a.video_id, list);
+  }
+
+  return videos.map((v) => ({
+    id: v.id,
+    characterIds: [v.category_id],
+    durationSec: v.duration_sec,
+    title: v.title,
+    // 감당 가능한 것 중 **가장 어려운 것부터**. 브레이크는 두 문항만 싣기 때문에,
+    // 다섯 살에게 세 살 문항만 돌아가는 일을 막으려면 여기서 순서를 정해야 한다.
+    quizItems: (byVideo.get(v.id) || []).slice().sort((x, y) => (y.age ?? 0) - (x.age ?? 0)),
+    // 편성 결과를 앱이 바로 재생할 수 있게 붙여 보낸다.
+    videoPath: v.file_path ? `/media/${v.file_path}` : null,
+    thumbPath: v.thumb_path ? `/media/${v.thumb_path}` : null,
+    color: v.color,
+  }));
+}
+
+export function getWatchHistory(db, childId, limit) {
+  const rows = db.prepare(
+    `SELECT video_ids, mission_id FROM plan_session
+     WHERE child_id = ? ORDER BY created_at DESC LIMIT ?`
+  ).all(childId, limit);
+  return {
+    recentSessions: rows.map((r) => ({
+      videoIds: JSON.parse(r.video_ids),
+      missionId: r.mission_id ?? null,
+    })),
+  };
+}
+
+export function recordPlanSession(db, { child_id, video_ids, mission_id }) {
+  const info = db.prepare(
+    'INSERT INTO plan_session (child_id, video_ids, mission_id, created_at) VALUES (?, ?, ?, ?)'
+  ).run(child_id, JSON.stringify(video_ids), mission_id ?? null, Date.now());
+  return { id: Number(info.lastInsertRowid) };
 }

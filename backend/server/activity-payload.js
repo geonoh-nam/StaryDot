@@ -33,10 +33,23 @@ export const COLOR_SWATCHES = {
   검은색: { color: '#343a40', bg: '#f4f4f5' },
   하얀색: { color: '#adb5bd', bg: '#ffffff' },
   회색:   { color: '#868e96', bg: '#f5f5f5' },
+  // storydot 파이프라인(visual.py)은 접미사 없는 짧은 이름을 쓴다. 같은 색을 두 번
+  // 적는 대신 위 항목을 가리키게 두면 한쪽만 고쳐지는 사고가 난다 — 아래에서 파생시킨다.
 };
 
+// 짧은 이름 → 위에서 이미 정한 색. 사람이 색을 고칠 자리는 위 표 하나뿐이다.
+for (const [short, full] of Object.entries({
+  빨강: '빨간색', 주황: '주황색', 노랑: '노란색', 초록: '초록색', 파랑: '파란색',
+  보라: '보라색', 분홍: '분홍색', 검정: '검은색', 하양: '하얀색',
+  // 파이프라인(visual.py)이 실제로 내보내는 이름은 '흰색' 이다. 이게 없으면 그 문항이
+  // 통째로 버려진다.
+  흰색: '하얀색',
+})) {
+  COLOR_SWATCHES[short] = COLOR_SWATCHES[full];
+}
+
 // 선택지 글자가 곧 색 이름인 활동. 늘어나면 여기 추가한다.
-export const COLOR_TEMPLATES = new Set(['색_찾기']);
+export const COLOR_TEMPLATES = new Set(['색_찾기', '색깔 퀴즈']);
 
 export function swatchFor(template, label, index) {
   if (!COLOR_TEMPLATES.has(template)) return PALETTE[index % PALETTE.length];
@@ -67,4 +80,43 @@ export function toActivityRow(activity) {
       why_here: activity.why_here ?? null,
     },
   };
+}
+
+// ---------------------------------------------------------------- storydot 파이프라인
+
+// storydot 의 generate3.py(`work/<작품>_final.json`)가 내놓는 마무리 활동 하나 → DB activity 행.
+//
+// generate3 은 **영상이 끝난 뒤** 화면과 함께 내는 문항을 만든다. 그래서 문항마다 프레임이
+// 딸려 온다 — "이 그림에 버스가 몇 대 있나요?"는 그림이 없으면 풀 수 없는 문제다.
+// framePath 가 없으면 만들지 않는다. 그림 없는 화면을 아이에게 내보내는 것보다 문항 하나를
+// 잃는 편이 낫다.
+export function toStorydotRow(activity, framePath) {
+  if (!Array.isArray(activity.choices) || activity.choices.length < 2) {
+    throw new Error(`${activity.fact_id}: 선택지가 없습니다 (창의 문항은 호출부가 먼저 걸러야 합니다)`);
+  }
+  if (activity.answer == null) {
+    throw new Error(`${activity.fact_id}: 정답이 없습니다 (창의 문항은 호출부가 먼저 걸러야 합니다)`);
+  }
+  if (!activity.choices.includes(activity.answer)) {
+    throw new Error(`${activity.fact_id}: 정답 "${activity.answer}" 이 선택지에 없습니다`);
+  }
+  if (!framePath) {
+    throw new Error(`${activity.fact_id}: 프레임이 없습니다`);
+  }
+
+  const row = toActivityRow({
+    activity_template: activity.type,
+    question: activity.prompt,
+    options: activity.choices,
+    answer: activity.answer,
+    timestamp_sec: activity.t,
+    why_here: activity.curriculum ?? null,
+  });
+  // 문항이 근거로 삼은 화면. 브레이크 화면이 문제와 같이 띄운다.
+  row.payload.framePath = framePath;
+  // 보호자 리포트가 "무엇을 길렀는가"를 말할 수 있게 누리과정 영역·연령을 함께 남긴다.
+  row.payload.domain = activity.domain ?? null;
+  row.payload.age = activity.age ?? null;
+  row.payload.fact_id = activity.fact_id ?? null;
+  return row;
 }
