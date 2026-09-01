@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "expo start",
-    "ios": "expo run:ios",
     "android": "expo run:android",
     "server": "node ../backend/server/index.js",
     "server:test": "node ../backend/server/test.js",
