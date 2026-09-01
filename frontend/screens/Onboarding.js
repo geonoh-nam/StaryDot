@@ -5,7 +5,7 @@ import {
   Alert, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,
 } from 'react-native';
 import { playSound } from '../sound';
-import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
+import { COLORS, TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
 import { buttons } from '../ui/buttons';
 import { PattiCharacter } from '../ui/artwork';
 import { ageInMonths, ageLabel } from '../age';
@@ -20,7 +20,9 @@ const daysIn = (y, m) => (m ? new Date(y || THIS_YEAR, m, 0).getDate() : 31);
 
 const HOUR_VALUES = [0, 1, 2, 3, 4, 5, 6];
 
-const MINUTE_VALUES = [0, 10, 20, 30, 40, 50];
+// 5분 단위. 하루치 묶음이 35분처럼 딱 떨어지지 않는 길이로 나올 때, 10분 단위로는
+// 설정과 실제가 5분씩 어긋난 채로 남는다.
+const MINUTE_VALUES = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
 
 // First run, step 2: the grown-up rules for the session.
 // Each card is a vertical wheel: the number under the middle of the card is the selection.
@@ -591,14 +593,14 @@ const styles = StyleSheet.create({
     fontSize: 22,
     lineHeight: 26,
     fontWeight: '900',
-    color: '#609EF5',
+    color: COLORS.blue,
   },
   stepperCard: {
     width: 118,
     paddingVertical: 10,
     borderRadius: 22,
     alignItems: 'center',
-    backgroundColor: '#eaf9fc',
+    backgroundColor: COLORS.blueSoft,
   },
   stepperCol: {
     alignItems: 'center',
@@ -608,7 +610,7 @@ const styles = StyleSheet.create({
     marginTop: 44,
     fontSize: 30,
     fontWeight: '900',
-    color: '#609EF5',
+    color: COLORS.blue,
   },
   stepperItem: {
     height: WHEEL_ITEM_H,
@@ -631,7 +633,7 @@ const styles = StyleSheet.create({
     fontSize: 42,
     lineHeight: 52,
     fontWeight: '900',
-    color: '#609EF5',
+    color: COLORS.blue,
   },
   stepperViewport: {
     height: WHEEL_ITEM_H,

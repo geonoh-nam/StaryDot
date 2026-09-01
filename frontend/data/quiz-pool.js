@@ -1,7 +1,7 @@
 // The questions the app falls back on when the content server has none of its own, plus
 // the names of every template the pipeline can author.
 
-const opt = (label, color, bg, meaning, example) => ({ label, color, bg, meaning, example });
+export const opt = (label, color, bg, meaning, example) => ({ label, color, bg, meaning, example });
 
 // Question kinds the content pipeline can author. The screen only needs `type` to label them;
 // everything else is the same four-option shape.
@@ -25,7 +25,7 @@ export const QUIZ_KINDS = {
   수량_확인: '수량 확인',
 };
 
-const C = {
+export const C = {
   yellow: ['#f0ae03', '#fffaf0'],
   purple: ['#9b5de5', '#f6f0ff'],
   sky: ['#609EF5', '#f1fdff'],
@@ -34,6 +34,7 @@ const C = {
   blue: ['#5b8def', '#f0f5ff'],
   orange: ['#e07a3c', '#fff5ee'],
   grey: ['#8a97b1', '#f4f7fe'],
+  red: ['#e03131', '#fff5f5'],
 };
 
 export const QUIZ_POOL = [

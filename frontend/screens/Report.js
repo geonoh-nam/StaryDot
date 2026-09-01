@@ -17,10 +17,11 @@ function ReportStat({ label, value, tone }) {
   );
 }
 
-export function ReportScreen({ report, characterImage, savedDrawing, onReplay, onOtherVideos, onCharacter }) {
+export function ReportScreen({ report, characterImage, savedDrawing, onCharacter, onFinish }) {
   const today = new Date();
   const dateLine = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
-  const watched = report.watched || DEMO_VIDEO.title;
+  // 오늘 얼마나 봤는지. 초 단위로 들어오므로 분으로 접어 보여 준다.
+  const minutes = Math.max(1, Math.round((report.watchedSec || 0) / 60));
   const completed = report.quiz + report.drawing;
   const interests = report.interests || [];
   return (
@@ -28,7 +29,7 @@ export function ReportScreen({ report, characterImage, savedDrawing, onReplay, o
       <View style={styles.reportCardWide}>
         <View style={styles.reportHead}>
           <Text style={styles.reportTitle}>활동 리포트</Text>
-          <Text style={styles.reportDate}>{dateLine} · {watched}</Text>
+          <Text style={styles.reportDate}>{dateLine} · {minutes}분</Text>
         </View>
         <View style={styles.reportBody}>
           <View style={styles.reportArtCol}>
@@ -62,14 +63,12 @@ export function ReportScreen({ report, characterImage, savedDrawing, onReplay, o
           </View>
         </View>
         <View style={styles.reportActions}>
-          <TouchableOpacity style={buttons.lightButton} onPress={() => { playSound('pop'); onReplay(); }}>
-            <Text style={buttons.lightButtonText}>영상 다시보기</Text>
+          <TouchableOpacity style={buttons.lightButton} onPress={() => { playSound('pop'); onCharacter(); }}>
+            <Text style={buttons.lightButtonText}>캐릭터 보러가기</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={buttons.lightButton} onPress={() => { playSound('pop'); onOtherVideos(); }}>
-            <Text style={buttons.lightButtonText}>다른 영상 보기</Text>
-          </TouchableOpacity>
-          <TapScale style={buttons.darkButton} onPress={() => { playSound('pop'); onCharacter(); }}>
-            <Text style={buttons.darkButtonText}>캐릭터 보러가기</Text>
+          {/* 리포트를 보고 나면 하루가 닫힌다 — 인사와 미션 카드가 있는 마지막 화면으로. */}
+          <TapScale style={buttons.darkButton} onPress={() => { playSound('pop'); onFinish(); }}>
+            <Text style={buttons.darkButtonText}>오늘 활동 끝내기</Text>
           </TapScale>
         </View>
       </View>

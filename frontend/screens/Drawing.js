@@ -336,6 +336,7 @@ function CanvasToolbar({ tool, onTool, tools, color, onColor, swatches, size, on
 }
 
 export function DrawingScreen({ topic = '오늘의 그림', strokes, status, error, characterImage, onChangeStrokes, onCanvasSize, onConvert, onSave, onDone, onSkip }) {
+  const win = useWindowDimensions();
   const [choosing, setChoosing] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 620, height: 380 });
   const converting = status === 'loading' || (status === 'done' && !!characterImage) || status === 'error';
@@ -436,7 +437,9 @@ export function DrawingScreen({ topic = '오늘의 그림', strokes, status, err
                 <Text style={styles.convertTitle}>완성! 멋진 그림이 됐어요</Text>
                 {/* Shown at canvas size: the child should see the picture, not a thumbnail. */}
                 <View style={styles.convertFrame}>
-                  <GeneratedCharacter uri={characterImage} size={Math.min(canvasSize.width, 560)} />
+                  {/* 화면 높이도 함께 본다 — 폭만 보면 액자가 카드를 밀어 올려 아래 버튼이 잘린다.
+                      320 은 제목·버튼·카드 여백·액자 테두리가 쓰는 세로 몫이다. */}
+                  <GeneratedCharacter uri={characterImage} size={Math.max(200, Math.min(canvasSize.width, 560, win.height - 320))} />
                 </View>
                 <View style={styles.creatorActions}>
                   <TouchableOpacity style={buttons.lightButton} onPress={() => { playSound('pop'); onSave(); }}>

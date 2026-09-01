@@ -127,7 +127,11 @@ export function SketchPad({ strokes, onChange, onCanvasSize, placeholder, inkCol
   // In-progress stroke lives in local state so only THIS stroke re-renders per move
   // (committed strokes stay memoized) — that's what keeps writing latency GoodNotes-low.
   const activeRef = useRef(null);
-  const [active, setActive] = useState(null);
+  // 그리는 중인 획은 배열을 키워 가며 쓴다. 매 이벤트마다 통째로 복사하면 점이 N개일 때
+  // 한 획에 N² 번 복사하게 되고, 빨리 그릴수록 JS 스레드가 복사에 붙들려 입력이 밀린다.
+  // 화면 갱신은 이 눈금으로만 알린다 — 배열 자체는 같은 것을 계속 쓴다.
+  const [tick, setTick] = useState(0);
+  const redraw = () => setTick((n) => n + 1);
   // Palm rejection: once a stylus touches down, finger touches are ignored for a short
   // window — that window is exactly when a resting palm/knuckle lands next to the pen.
   const rejectRef = useRef(false);
@@ -284,9 +288,8 @@ export function SketchPad({ strokes, onChange, onCanvasSize, placeholder, inkCol
       return;
     }
     rejectRef.current = false;
-    const stroke = [makePoint(toCanvas(event))];
-    activeRef.current = stroke;
-    setActive(stroke);
+    activeRef.current = [makePoint(toCanvas(event))];
+    redraw();
   };
   const extend = (event) => {
     if (rejectRef.current) {
@@ -297,9 +300,9 @@ export function SketchPad({ strokes, onChange, onCanvasSize, placeholder, inkCol
     if (!prev) return begin(event);
     // Ruler mode: keep only the start point and the current point → a straight line.
     const point = makePoint(toCanvas(event));
-    const stroke = straightLine ? [prev[0], point] : [...prev, point];
-    activeRef.current = stroke;
-    setActive(stroke);
+    if (straightLine) prev.length = 1;
+    prev.push(point);
+    redraw();
   };
   const end = () => {
     if (rejectRef.current) {
@@ -308,7 +311,7 @@ export function SketchPad({ strokes, onChange, onCanvasSize, placeholder, inkCol
     }
     const stroke = activeRef.current;
     activeRef.current = null;
-    setActive(null);
+    redraw();
     if (stroke && stroke.length) {
       stroke.color = inkColor; // lock each stroke's color so later palette changes don't repaint it
       stroke.thickness = thickness; // lock its width too so later size changes don't repaint it
@@ -402,7 +405,11 @@ export function SketchPad({ strokes, onChange, onCanvasSize, placeholder, inkCol
     [committedPaths, overlayPaths, fillImage, fillGeom && fillGeom.top, fillGeom && fillGeom.boxW, fillGeom && fillGeom.boxH]
   );
   const fillGeom = fillBox();
-  const activePath = active ? strokeToSvg(active.filter(Boolean), thickness) : '';
+  // 획 배열은 그리는 내내 같은 것이라 값 비교로는 바뀐 걸 알 수 없다. tick 이 바뀔 때만 다시 그린다.
+  const activePath = useMemo(() => {
+    const live = activeRef.current;
+    return live && live.length ? strokeToSvg(live.filter(Boolean), thickness) : '';
+  }, [tick, thickness]);
   const hasInk = committedPaths.length > 0 || overlayPaths.length > 0 || !!activePath;
 
   return (

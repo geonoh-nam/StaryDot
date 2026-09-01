@@ -6,8 +6,9 @@ import { Animated, Easing, Image, Pressable, StyleSheet, useWindowDimensions, Vi
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { Text } from '../Typography';
-import { playSound } from '../sound';
-import { sayLine } from '../activities/voice';
+import LINES from '../assets/lines.json';
+import { pickLine } from '../activities/lines';
+import { playSound, speak } from '../sound';
 const BG = require('../assets/scenes/bg.png');
 const BUDDY = require('../assets/characters/loading.png');
 
@@ -18,14 +19,14 @@ const LINE_KEYS = ['load.play', 'load.pick'];
 const LINE_MS = 3200;
 
 // How long the buddy keeps the child company before the day's set is ready.
-const PACK_MS = 5000;
+const PACK_MS = 3000;
 
 // How much speed a thrown buddy keeps off a wall, and how fast it coasts to a stop.
 const WALL_BOUNCE = 0.5;
 const FLING_FRICTION = 0.94;
 const BUDDY_SIZE = 260;
 
-export function LoadingScreen({ profile, onStart }) {
+export function LoadingScreen({ profile, voice = 'bunny', onStart }) {
   // The wait ends on its own — a child should not have to press anything to get to the good part.
   useEffect(() => {
     const t = setTimeout(() => onStart && onStart(), PACK_MS);
@@ -114,8 +115,9 @@ export function LoadingScreen({ profile, onStart }) {
   useEffect(() => {
     bubble.setValue(0);
     Animated.spring(bubble, { toValue: 1, friction: 7, tension: 90, useNativeDriver: true }).start();
-    // Says it aloud if a recording exists; the words show either way.
-    setSaid(sayLine(profile?.species === 'dino' ? 'dino' : 'bunny', LINE_KEYS[line], said) || '');
+    // 글은 줄마다 바뀌지만 목소리는 하나다 — 로딩 내내 같은 한마디가 흐른다.
+    setSaid(pickLine(LINES[LINE_KEYS[line]] || [], said) || '');
+    if (line === 0) speak('loading');
     if (line >= LINE_KEYS.length - 1) return undefined;
     const t = setTimeout(() => setLine((n) => n + 1), LINE_MS);
     return () => clearTimeout(t);

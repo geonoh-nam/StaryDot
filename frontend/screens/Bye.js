@@ -2,7 +2,7 @@
 // far corner, worded for the grown-up who has to be the one to unlock it.
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Image, Pressable, StyleSheet, View } from 'react-native';
-import Svg, { Circle, Defs, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Circle, Defs, LinearGradient, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
 import { Text } from '../Typography';
 import { playSound } from '../sound';
 import { StaryLogo } from '../ui/Logo';
@@ -13,10 +13,27 @@ const BUDDY = require('../assets/characters/bye.png');
 // A tailless bubble: nothing on this screen for a tail to point at.
 const GOODBYE_BUBBLE = require('../assets/scenes/goodbyement.png');
 
-export function ByeScreen({ profile, onUnlock }) {
+export function ByeScreen({ profile, mission, onUnlock }) {
   const name = profile?.name || '친구';
   // Both friends say goodbye together — one slot each, so the two recordings overlap.
   const [line, setLine] = useState('');
+  // A React Native border takes one flat colour, so the card's rim is drawn at its measured size.
+  const [cardBox, setCardBox] = useState({ width: 0, height: 0 });
+  // Poking the buddy is the only thing left to do on this screen: it wobbles and turns around.
+  const boing = useRef(new Animated.Value(0)).current;
+  const face = useRef(new Animated.Value(1)).current;
+  const facing = useRef(1);
+  const poke = () => {
+    playSound('star');
+    facing.current = -facing.current;
+    // Turning passes through zero width, so it reads as spinning on the spot.
+    Animated.timing(face, { toValue: facing.current, duration: 300, useNativeDriver: true }).start();
+    boing.setValue(0);
+    Animated.sequence([
+      Animated.timing(boing, { toValue: 1, duration: 130, useNativeDriver: true }),
+      Animated.spring(boing, { toValue: 0, friction: 3, tension: 140, useNativeDriver: true }),
+    ]).start();
+  };
   useEffect(() => {
     setLine(sayLine('bunny', 'bye.see') || '');
     sayLine('dino', 'bye.see');
@@ -44,7 +61,7 @@ export function ByeScreen({ profile, onUnlock }) {
     <View style={styles.screen}>
       <View style={styles.logo} pointerEvents="none"><StaryLogo size={30} /></View>
 
-      <View style={styles.middle} pointerEvents="none">
+      <View style={styles.middle} pointerEvents="box-none">
         {/* A soft halo behind the buddy, breathing so the still screen keeps a pulse. */}
         <Animated.View
           style={[
@@ -67,15 +84,52 @@ export function ByeScreen({ profile, onUnlock }) {
             <Circle cx={320} cy={320} r={320} fill="url(#byeGlow)" />
           </Svg>
         </Animated.View>
-        <Animated.Image
-          source={BUDDY}
-          resizeMode="contain"
-          style={[
-            styles.buddy,
-            { transform: [{ translateY: bob.interpolate({ inputRange: [0, 1], outputRange: [0, -14] }) }] },
-          ]}
-        />
-        <Bubble art={GOODBYE_BUBBLE} style={styles.line} textStyle={styles.lineText}>{name}아 {line}</Bubble>
+        <Bubble art={GOODBYE_BUBBLE} flip style={styles.line} textStyle={styles.lineText}>{name}아 {line}</Bubble>
+        <Pressable onPress={poke}>
+          <Animated.Image
+            source={BUDDY}
+            resizeMode="contain"
+            style={[
+              styles.buddy,
+              {
+                transform: [
+                  { translateY: bob.interpolate({ inputRange: [0, 1], outputRange: [0, -14] }) },
+                  { scaleX: Animated.multiply(face, boing.interpolate({ inputRange: [0, 1], outputRange: [1, 0.86] })) },
+                  { scaleY: boing.interpolate({ inputRange: [0, 1], outputRange: [1, 1.16] }) },
+                ],
+              },
+            ]}
+          />
+        </Pressable>
+        {/* What the planner asks the grown-up to do with the child once the screen is off. */}
+        <View style={styles.card} onLayout={(e) => setCardBox(e.nativeEvent.layout)}>
+          {cardBox.width ? (
+            <Svg width={cardBox.width} height={cardBox.height} style={StyleSheet.absoluteFill}>
+              <Defs>
+                <LinearGradient id="byeCardRim" x1="0" y1="0" x2="1" y2="1">
+                  <Stop offset="0" stopColor="#8FBAF8" />
+                  <Stop offset="1" stopColor="#DFECFF" />
+                </LinearGradient>
+              </Defs>
+              <Rect
+                x={2}
+                y={2}
+                width={cardBox.width - 4}
+                height={cardBox.height - 4}
+                rx={30}
+                fill="#ffffff"
+                stroke="url(#byeCardRim)"
+                strokeWidth={4}
+              />
+            </Svg>
+          ) : null}
+          {mission ? (
+            <View style={styles.missionText}>
+              <Text style={styles.missionTitle} numberOfLines={1}>{mission.title}</Text>
+              <Text style={styles.missionBody}>{mission.description}</Text>
+            </View>
+          ) : null}
+        </View>
       </View>
 
       {/* Two presses, not one: a child who finds the button still cannot get past it alone. */}
@@ -112,6 +166,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    // Nudged down off the wordmark.
+    paddingTop: 70,
     gap: 10,
   },
   halo: {
@@ -124,12 +180,39 @@ const styles = StyleSheet.create({
     height: 420,
   },
   line: {
-    // Pulled up into the space the buddy's artwork leaves empty above its head.
-    marginTop: -100,
+    // Above the buddy, tucked down into the space its artwork leaves empty over the head.
+    marginBottom: -70,
   },
   lineText: {
-    // Sits lower than the middle of the box: the drawn oval's round part is below its centre.
-    marginTop: 60,
+    // The turned-over artwork puts its round part above the middle, and its tail off to one side,
+    // so the words sit a little right of centre and a little lower than the middle of the box.
+    marginBottom: 0,
+    marginTop: 14,
+    marginLeft: 24,
+  },
+  card: {
+    // As wide as the buddy standing above it, so the two read as one column.
+    width: 560,
+    height: 150,
+    marginTop: -40,
+    justifyContent: 'center',
+  },
+  missionText: {
+    paddingHorizontal: 28,
+    gap: 6,
+  },
+  missionTitle: {
+    textAlign: 'center',
+    fontSize: 21,
+    fontFamily: 'PretendardExtraBold',
+    color: '#2C4A7C',
+  },
+  missionBody: {
+    textAlign: 'center',
+    fontSize: 15,
+    fontWeight: '800',
+    lineHeight: 21,
+    color: '#6C86AE',
   },
   unlock: {
     position: 'absolute',

@@ -29,6 +29,8 @@ const START_RIM = 4;
 export function OnboardSlides({ onNext }) {
   const win = useWindowDimensions();
   const [page, setPage] = useState(0);
+  // 마지막 그림이 다 떠오른 뒤에야 버튼을 낸다 — 화면이 아직 바뀌는 중에 뜨면 먼저 눌린다.
+  const [ready, setReady] = useState(false);
   const last = SLIDES.length - 1;
   // One value per picture: a crossfade is two of them moving at once, so there is never a frame
   // where the screen is empty.
@@ -57,7 +59,7 @@ export function OnboardSlides({ onNext }) {
       }
       // The picture underneath is never faded out: two half-transparent pictures let the ground
       // show through, which reads as the screen washing white mid-change.
-      Animated.parallel(moves).start();
+      Animated.parallel(moves).start(({ finished }) => { if (finished && next >= last) setReady(true); });
       setPage(next);
     }, HOLD_MS);
     return () => clearTimeout(t);
@@ -70,7 +72,7 @@ export function OnboardSlides({ onNext }) {
     Animated.parallel([
       ...fades.map((f, i) => Animated.timing(f, { toValue: i <= last ? 1 : 0, duration: 320, useNativeDriver: true })),
       ...slides.map((v, i) => Animated.timing(v, { toValue: i === SLIDE_IN - 1 ? -1 : 0, duration: 320, useNativeDriver: true })),
-    ]).start();
+    ]).start(({ finished }) => { if (finished) setReady(true); });
     setPage(last);
   };
 
@@ -97,7 +99,7 @@ export function OnboardSlides({ onNext }) {
         </Animated.View>
       ))}
 
-      {page >= last ? (
+      {ready ? (
         // A real button to a five-year-old: it has a thick base, and pressing pushes it down onto it.
         <View style={styles.startWrap} pointerEvents="box-none">
           <Pressable

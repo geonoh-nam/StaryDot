@@ -11,6 +11,7 @@ import {
   GROWTH_PER_CANDY, SCENES, STAGE1_ART, STAR_FIELD,
 } from '../data/character';
 import { playSound } from '../sound';
+import { GradientRim } from '../ui/motion';
 import { TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
 import { Spark } from './Browse';
 
@@ -467,6 +468,8 @@ export function CharacterScreen({ profile, food, fed, onFeed }) {
           {stageBlock}
         </View>
 
+        <GradientRim radius={34} width={5} />
+
         {full && !chosen ? (
           <View style={styles.evolveWrap}>
             <Text style={styles.evolveTitle}>어떤 모습으로 자랄까?</Text>
@@ -876,10 +879,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 28,
+    // Same frame as the video screen: one rim across every big canvas in the app.
+    borderRadius: 34,
     overflow: 'hidden',
-    borderWidth: 3,
-    borderColor: '#b7e3c8',
   },
   costumeArt: {
     width: 108,

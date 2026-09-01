@@ -6,8 +6,7 @@ import Svg, { Circle, Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { SERIES_ART, THUMBS } from '../data/library';
 import { playSound } from '../sound';
 import { BG, hexToRgb, rgbToHex, TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
-import { GradientRim, TapScale } from '../ui/motion';
-import { SETTINGS_ICON } from '../ui/Header';
+import { TapScale } from '../ui/motion';
 import Rea, { Extrapolation, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withDecay, withSpring } from 'react-native-reanimated';
 import { DebugJump } from '../ui/DebugJump';
 import { StaryLogo } from '../ui/Logo';
@@ -45,11 +44,18 @@ const BUDDY_BOUNCE = 0.55;
 
 const BUDDY_FRICTION = 0.93;
 
+// 이름을 부를 때 붙는 조사. 받침이 있으면 "아", 없으면 "야" — 한글이 아니면 붙이지 않는다.
+function callSuffix(name) {
+  const last = name.trim().slice(-1);
+  const code = last.charCodeAt(0) - 0xac00;
+  if (code < 0 || code > 11171) return '';
+  return code % 28 ? '아' : '야';
+}
+
 const BUDDY_MENU = [
-  { key: 'character', label: '캐릭터', icon: '★' },
-  { key: 'parent', label: '부모 리포트', icon: '▤' },
-  { key: 'words', label: '단어장', icon: '가' },
-  { key: 'settings', label: '설정', art: SETTINGS_ICON },
+  { key: 'character', label: '마이 캐릭터', art: require('../assets/scenes/mycharacter.png') },
+  { key: 'parent', label: '부모 리포트', art: require('../assets/scenes/report.png') },
+  { key: 'settings', label: '설정', art: require('../assets/scenes/setting.png') },
 ];
 
 // Cards wear a lighter ring of their own colour, like the mockup.
@@ -401,7 +407,9 @@ export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, 
             ]}
           >
             <View style={styles.buddyTail} />
-            <Text style={styles.buddyText}>어디로 갈까?</Text>
+            <Text style={styles.buddyText}>
+              {profile?.name ? `${profile.name}${callSuffix(profile.name)}\n` : ''}우리 어디로 갈까?
+            </Text>
             <View style={styles.buddyMenu}>
               {BUDDY_MENU.map((m) => (
                 <TouchableOpacity
@@ -414,7 +422,9 @@ export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, 
                   ) : (
                     <Text style={styles.buddyMenuIcon}>{m.icon}</Text>
                   )}
-                  <Text style={styles.buddyMenuText}>{m.label}</Text>
+                  <Text style={styles.buddyMenuText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
+                    {m.label}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -491,42 +501,6 @@ export function SeriesScreen({ series, onBack, onStart }) {
   );
 }
 
-// What the child sees after picking an episode: a big still, one start button, and what waits inside.
-export function VideoDetailScreen({ video, series, onClose, onStart }) {
-  const accent = (series && series.accent) || '#609EF5';
-  return (
-    <View style={[styles.detailScreen, { backgroundColor: (series && series.tint) || '#f5f8ff' }]}>
-      <TouchableOpacity style={styles.detailClose} onPress={onClose}>
-        <Text style={styles.detailCloseText}>✕</Text>
-      </TouchableOpacity>
-
-      <View style={styles.detailThumb}>
-        <GradientRim radius={24} width={6} />
-        {/* Until per-video stills exist, frames pulled from the demo video stand in. */}
-        <Image source={video.still || THUMBS[0]} style={styles.detailThumbImg} resizeMode="cover" />
-        {/* Absolute overlay, so the button centres on the still instead of being pushed below it. */}
-        <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
-          <View style={styles.detailOverlay}>
-            <TapScale style={styles.detailStart} onPress={() => { playSound('pop'); onStart(video); }}>
-              <View style={[styles.detailPlay, { backgroundColor: accent }]}>
-                <Text style={styles.detailPlayGlyph}>▶</Text>
-              </View>
-              <Text style={styles.detailStartText}>시작하기</Text>
-            </TapScale>
-          </View>
-        </View>
-      </View>
-
-      <Text style={styles.detailTitle}>
-        {video.title}
-        <Text style={styles.detailMeta}>  {video.duration} · 만 5~6세</Text>
-      </Text>
-      {/* ponytail: fixed counts until activities are authored per video. */}
-      <Text style={styles.detailCounts}>질문 1개 · 퍼즐 1개 · 그림 1개</Text>
-    </View>
-  );
-}
-
 const VideoCard = React.memo(function VideoCard({ video, onPress }) {
   return (
     <TapScale style={[styles.card, { backgroundColor: video.color }]} onPress={() => { playSound('pop'); onPress(video); }}>
@@ -599,37 +573,43 @@ const styles = StyleSheet.create({
     zIndex: 40,
     // Android stacks by elevation, not zIndex: without this the cards swallow the taps.
     elevation: 24,
-    minWidth: 230,
+    width: 222,
     paddingHorizontal: 18,
     paddingVertical: 14,
     borderRadius: 20,
     backgroundColor: '#609EF5',
   },
   buddyMenu: {
-    marginTop: 10,
-    gap: 8,
+    marginTop: 12,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
   },
   buddyMenuArt: {
-    // Sized and nudged to sit where the glyphs beside it sit — its PNG has less air than they do.
-    marginLeft: -3,
-    width: 16,
-    height: 16,
+    width: 40,
+    height: 40,
   },
   buddyMenuIcon: {
-    fontSize: 16,
+    fontSize: 30,
+    lineHeight: 34,
     color: '#609EF5',
   },
   buddyMenuItem: {
-    flexDirection: 'row',
+    // 두 칸씩 내려앉는 타일. 아이콘이 위, 글이 아래.
+    width: 88,
+    height: 84,
     alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    justifyContent: 'center',
+    gap: 5,
+    paddingHorizontal: 3,
+    borderRadius: 16,
+    backgroundColor: '#ffffff',
+    borderWidth: 2,
+    borderColor: '#446ECB',
   },
   buddyMenuText: {
-    fontSize: 15,
+    // 카드 폭(88) 안에서 한 줄로 앉는 한계. 넘치면 아래 adjustsFontSizeToFit 이 살짝 좁힌다.
+    fontSize: 13,
     fontWeight: '800',
     color: '#171d31',
   },
@@ -647,8 +627,9 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '45deg' }],
   },
   buddyText: {
-    fontSize: 15,
-    fontWeight: '800',
+    fontSize: 17,
+    lineHeight: 24,
+    fontWeight: '900',
     color: '#ffffff',
   },
   carousel: {
@@ -658,84 +639,6 @@ const styles = StyleSheet.create({
     // Pushed down so the cards run off the bottom edge — the fan should feel like it continues.
     marginTop: 64,
     marginBottom: -70,
-  },
-  detailClose: {
-    position: 'absolute',
-    top: 22,
-    right: 28,
-    padding: 10,
-  },
-  detailCloseText: {
-    fontSize: 26,
-    fontWeight: '900',
-    color: BG,
-  },
-  detailCounts: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#5b6b8c',
-  },
-  detailMeta: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#5b6b8c',
-  },
-  detailOverlay: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  detailPlay: {
-    width: 92,
-    height: 92,
-    borderRadius: 46,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 4,
-    borderColor: 'rgba(255,255,255,0.9)',
-  },
-  detailPlayGlyph: {
-    fontSize: 34,
-    marginLeft: 6,
-    color: '#ffffff',
-  },
-  detailScreen: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    padding: 32,
-  },
-  detailStart: {
-    alignItems: 'center',
-    gap: 10,
-  },
-  detailStartText: {
-    fontSize: 18,
-    fontWeight: '900',
-    color: '#ffffff',
-    textShadowColor: 'rgba(0,0,0,0.45)',
-    textShadowRadius: 6,
-  },
-  detailThumb: {
-    // Real video shape, so the still is not letterboxed or stretched.
-    width: '82%',
-    aspectRatio: 16 / 9,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 16,
-    overflow: 'hidden',
-  },
-  detailThumbImg: {
-    ...StyleSheet.absoluteFillObject,
-    width: '100%',
-    height: '100%',
-  },
-  detailTitle: {
-    fontSize: 17,
-    fontWeight: '800',
-    color: BG,
   },
   episode: {
     gap: 8,

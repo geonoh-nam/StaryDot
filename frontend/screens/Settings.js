@@ -6,23 +6,46 @@ import { ageLabel } from '../age';
 import { DailyLimitPicker } from './Onboarding';
 
 // The grown-ups' screen: what the child is allowed to do, and for how long.
-export function SettingsScreen({ profile, settings, onChange, onEditProfile, onWipe }) {
+export function SettingsScreen({ profile, settings, onChange, onEditProfile, onWipe, profiles = [], activeChild = 0, onPickChild, onAddChild, onOpenReport }) {
   const set = (patch) => onChange({ ...settings, ...patch });
   const act = (key) => set({ activities: { ...settings.activities, [key]: !settings.activities[key] } });
   return (
     <ScrollView contentContainerStyle={styles.settingsBody} showsVerticalScrollIndicator={false}>
       <View style={styles.settingsCard}>
-        <Text style={styles.settingsCardTitle}>아이 정보</Text>
-        <View style={styles.settingsRow}>
-          <Text style={styles.settingsLabel}>이름</Text>
-          <Text style={styles.settingsValue}>{profile.name || '친구'}</Text>
+        <Text style={styles.settingsCardTitle}>아이</Text>
+        {/* 한 패드를 형제가 나눠 쓴다. 탭하면 그 아이로 바뀌고, 나이에 맞는 문항이 따라온다. */}
+        {(profiles.length ? profiles : [profile]).map((p, i) => (
+          <TouchableOpacity
+            key={`${p.name || '친구'}-${i}`}
+            style={styles.settingsRow}
+            onPress={() => onPickChild && onPickChild(i)}
+          >
+            <View style={styles.settingsRowText}>
+              <Text style={styles.settingsLabel}>{p.name || '친구'}</Text>
+              <Text style={styles.settingsHint}>{ageLabel(p.birth) || '나이 미입력'}</Text>
+            </View>
+            <View style={[styles.pick, i === activeChild && styles.pickOn]}>
+              <Text style={[styles.pickMark, i === activeChild && styles.pickMarkOn]}>
+                {i === activeChild ? '보는 중' : '바꾸기'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+        <View style={styles.settingsButtons}>
+          <TouchableOpacity style={styles.settingsEdit} onPress={onEditProfile}>
+            <Text style={styles.settingsEditText}>프로필 수정</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.settingsEdit} onPress={onAddChild}>
+            <Text style={styles.settingsEditText}>프로필 추가</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.settingsRow}>
-          <Text style={styles.settingsLabel}>나이</Text>
-          <Text style={styles.settingsValue}>{ageLabel(profile.birth) || '-'}</Text>
-        </View>
-        <TouchableOpacity style={styles.settingsEdit} onPress={onEditProfile}>
-          <Text style={styles.settingsEditText}>프로필 수정</Text>
+      </View>
+
+      <View style={styles.settingsCard}>
+        <Text style={styles.settingsCardTitle}>보호자 리포트</Text>
+        <Text style={styles.settingsHint}>오늘 무엇을 보고 무엇을 어려워했는지 한눈에 봐요.</Text>
+        <TouchableOpacity style={styles.settingsEdit} onPress={onOpenReport}>
+          <Text style={styles.settingsEditText}>리포트 열기</Text>
         </TouchableOpacity>
       </View>
 
@@ -72,7 +95,7 @@ export function SettingsScreen({ profile, settings, onChange, onEditProfile, onW
           </View>
           <Text style={styles.settingsChevron}>›</Text>
         </TouchableOpacity>
-        {/* Wipes the profile, the words and the growth — the one button there is no way back from. */}
+        {/* Wipes the profile and growth data. */}
         <TouchableOpacity
           style={styles.settingsRow}
           onPress={() => Alert.alert('계정 삭제', '저장된 프로필과 활동 기록이 모두 지워져요.', [
@@ -108,6 +131,15 @@ export function SettingsScreen({ profile, settings, onChange, onEditProfile, onW
 }
 
 const styles = StyleSheet.create({
+  settingsButtons: { flexDirection: 'row', gap: 10 },
+  // 지금 보고 있는 아이를 한눈에 가른다.
+  pick: {
+    paddingHorizontal: 14, paddingVertical: 7, borderRadius: 999,
+    backgroundColor: '#eef4ff',
+  },
+  pickOn: { backgroundColor: '#609EF5' },
+  pickMark: { fontSize: 14, fontWeight: '800', color: '#609EF5' },
+  pickMarkOn: { color: '#ffffff' },
   settingsChevron: {
     fontSize: 22,
     fontWeight: '900',

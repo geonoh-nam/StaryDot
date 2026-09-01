@@ -1,8 +1,11 @@
 // A developer's shortcut panel: jump to any screen or activity without walking the whole app.
 // Rendered only in development builds.
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ActivityStage from '../activities/ActivityStage';
+import WheelFit from '../activities/WheelFit';
+import { WHEEL_FRAMES } from '../data/wheels';
+import { SERIES_ART } from '../data/library';
 
 // Landing screen, per the mockup: wordmark, a greeting with the child's name highlighted,
 // and the video cards fanned out underneath.
@@ -16,8 +19,6 @@ const DEBUG_SCREENS = [
   ['profile', '아이 프로필'],
   ['guardian', '보호자 설정'],
   ['main', '메인'],
-  ['home', '영상 목록'],
-  ['detail', '영상 상세'],
   ['watch', '영상 재생'],
   ['activities', '활동 선택'],
   ['drawing', '그림 그리기'],
@@ -27,14 +28,10 @@ const DEBUG_SCREENS = [
 const DEBUG_TABS = [
   ['quizdebug', '문제 목록'],
   ['character', '캐릭터'],
-  ['words', '단어장'],
   ['settings', '설정'],
 ];
 
 const DEBUG_ACTIVITIES = [
-  ['찾아 짚기', { type: 'findit', payload: { image: 'teenieping-01-27', target: { x: 0.62, y: 0.53, r: 0.15 }, ask: '하츄핑 어디 있지?' } }],
-  ['끌어다 놓기', { type: 'drag', payload: { item: 'candy', slot: 'box' } }],
-  ['세어보기', { type: 'count', payload: { item: 'apple', n: 4 } }],
   ['따라 말하기', { type: 'say', payload: { word: '사과', listenMs: 5000 } }],
 ];
 
@@ -77,6 +74,15 @@ export function DebugJump({ onJump, onTab, onReset, contentUp }) {
 
             <Text style={styles.debugGroup}>활동</Text>
             <View style={styles.debugChips}>
+              <TouchableOpacity style={styles.debugChip} onPress={() => { setOpen(false); setPreview({ type: 'wheels', frame: 'teenieping-duo' }); }}>
+                <Text style={styles.debugChipText}>5화 캐릭터 퍼즐</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.debugChip} onPress={() => { setOpen(false); setPreview({ type: 'wheels' }); }}>
+                <Text style={styles.debugChipText}>화분 퍼즐</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.debugChip} onPress={() => { setOpen(false); setPreview({ type: 'wheels', frame: 'teenieping-faces' }); }}>
+                <Text style={styles.debugChipText}>10화 실루엣 퍼즐</Text>
+              </TouchableOpacity>
               {DEBUG_ACTIVITIES.map(([label, activity]) => (
                 <TouchableOpacity key={activity.type} style={styles.debugChip} onPress={() => { setOpen(false); setPreview(activity); }}>
                   <Text style={styles.debugChipText}>{label}</Text>
@@ -91,12 +97,19 @@ export function DebugJump({ onJump, onTab, onReset, contentUp }) {
           </View>
         </>
       ) : null}
-      {preview ? <ActivityStage activity={preview} onDone={() => setPreview(null)} /> : null}
+      {preview?.type === 'wheels' ? (
+        <Modal visible supportedOrientations={['landscape', 'landscape-left', 'landscape-right']} onRequestClose={() => setPreview(null)}>
+          <View style={styles.puzzlePreview}>
+            <WheelFit {...WHEEL_FRAMES[preview.frame || 'teenieping-pots']} buddy={SERIES_ART.teenieping.thumb} onDone={() => setPreview(null)} />
+          </View>
+        </Modal>
+      ) : preview ? <ActivityStage activity={preview} onDone={() => setPreview(null)} /> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  puzzlePreview: { flex: 1, paddingBottom: 24, backgroundColor: '#F3F6F8' },
   debugWrap: {
     position: 'absolute',
     top: 8,

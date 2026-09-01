@@ -23,7 +23,11 @@
         "android.permission.MODIFY_AUDIO_SETTINGS",
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
-      ]
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#eef5ff"
+      }
     },
     "scheme": "starryworks",
     "extra": {
@@ -41,7 +45,8 @@
             "./assets/fonts/BnviitLasik.ttf",
             "./assets/fonts/Pretendard-Regular.otf",
             "./assets/fonts/Pretendard-SemiBold.otf",
-            "./assets/fonts/Pretendard-Bold.otf"
+            "./assets/fonts/Pretendard-Bold.otf",
+            "./assets/fonts/Pretendard-ExtraBold.otf"
           ]
         }
       ],
@@ -52,6 +57,7 @@
           "photosPermission": "아이 프로필 사진을 고르기 위해 사진 보관함을 사용합니다."
         }
       ]
-    ]
+    ],
+    "icon": "./assets/icon.png"
   }
 }

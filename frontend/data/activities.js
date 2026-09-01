@@ -4,8 +4,9 @@ export const OFFLINE_ACTIVITIES = require('../assets/activities.json');
 
 // Announcement shown right before each activity starts.
 export const ACT_MSG = {
-  quiz: { text: '같이 퀴즈 풀어보자!', emoji: '🧠' },
+  quiz: { text: '같이 퀴즈 풀어볼까?', emoji: '🧠' },
   puzzle: { text: '퍼즐 맞춰볼까?', emoji: '🧩' },
+  wheels: { text: '같이 퍼즐 맞춰볼까?', emoji: '🧩' },
   traceword: { text: '같이 따라 써 보자!', emoji: '✏️' },
   findit: { text: '숨은 그림을 찾아보자!', emoji: '🔍' },
   drag: { text: '제자리로 옮겨볼까?', emoji: '📦' },

@@ -14,7 +14,7 @@ const CHARACTERS = ['bunny', 'dino'];
 // The frame every activity sits in. It owns the buddy and the hint ladder; the activity owns
 // only its own board. One ladder in one place — four activities each running their own timer
 // would drift apart.
-export default function ActivityStage({ activity, onDone }) {
+export default function ActivityStage({ activity, voice, onDone }) {
   const win = useWindowDimensions();
   const buddyRef = useRef(null);
   const hintAt = useRef(null);
@@ -29,11 +29,11 @@ export default function ActivityStage({ activity, onDone }) {
   const [stage, setStage] = useState({ w: 0, h: 0 });
   const [level, setLevel] = useState(0);
 
-  // Picked once and kept for the whole activity: a voice that changes mid-sentence confuses
-  // a three-year-old.
+  // 오늘 보는 작품의 목소리로 고정한다. 시리즈를 모르는 자리에서만 아무나 나선다 —
+  // 한 활동 안에서 목소리가 바뀌면 세 살은 누가 말하는지 놓친다.
   const character = useMemo(
-    () => CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)],
-    [activity]
+    () => voice || CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)],
+    [activity, voice]
   );
 
   const Body = KINDS[activity.type];

@@ -35,3 +35,8 @@ export function speechPassed(samples, opts = {}) {
   }
   return false;
 }
+
+// 조각이 제 구멍에 들어갔나. 화면 좌표 두 점 사이 거리 하나뿐이라 눈 없이도 시험할 수 있다.
+export function fitsHole(piece, hole, snap) {
+  return Math.hypot(piece.x - hole.x, piece.y - hole.y) < snap;
+}

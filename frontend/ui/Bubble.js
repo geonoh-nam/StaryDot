@@ -9,10 +9,16 @@ const ART = require('../assets/scenes/bubble.png');
 
 // `art` swaps in a different bubble picture. A tailless one needs no room left below it, so the
 // padding evens out when one is passed.
-export function Bubble({ children, style, textStyle, art }) {
+export function Bubble({ children, style, textStyle, art, flip }) {
   return (
     <View style={[styles.bubble, art && styles.noTail, style]}>
-      <Image source={art || ART} style={StyleSheet.absoluteFill} resizeMode="stretch" pointerEvents="none" />
+      {/* Only the picture turns over — the words stay the right way up. */}
+      <Image
+        source={art || ART}
+        style={[StyleSheet.absoluteFill, flip && { transform: [{ scaleY: -1 }] }]}
+        resizeMode="stretch"
+        pointerEvents="none"
+      />
       <Text style={[styles.text, textStyle]} numberOfLines={1}>{children}</Text>
     </View>
   );

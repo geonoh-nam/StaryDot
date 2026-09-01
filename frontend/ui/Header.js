@@ -13,7 +13,6 @@ export const TABS = [
   { key: 'library', label: '영상', icon: '▶' },
   { key: 'parent', label: '부모 리포트', icon: '▤' },
   { key: 'character', label: '캐릭터', icon: '★' },
-  { key: 'words', label: '단어장', icon: '가' },
   { key: 'settings', label: '설정', art: SETTINGS_ICON },
 ];
 
@@ -48,11 +47,6 @@ export function TabletHeader({ rightLabel, onHome, onReport, onTab }) {
                 <Text style={styles.headerSheetText}>{t.label}</Text>
               </TouchableOpacity>
             ))}
-            <View style={styles.headerSheetDivider} />
-            <TouchableOpacity style={styles.headerSheetItem} onPress={() => { setOpen(false); onReport(); }}>
-              <Text style={styles.headerSheetIcon}>▤</Text>
-              <Text style={styles.headerSheetText}>활동 리포트</Text>
-            </TouchableOpacity>
           </View>
         </>
       ) : null}
@@ -113,11 +107,6 @@ const styles = StyleSheet.create({
     right: 0,
     height: 4000,
     zIndex: 60,
-  },
-  headerSheetDivider: {
-    height: 1,
-    marginVertical: 4,
-    backgroundColor: '#eef2fb',
   },
   headerSheetIcon: {
     fontSize: 15,

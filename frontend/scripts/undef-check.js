@@ -4,7 +4,7 @@
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const fs = require('fs');
-const GLOBALS = new Set(['console','require','module','exports','process','setTimeout','clearTimeout','setInterval','clearInterval','Math','JSON','Object','Array','String','Number','Boolean','Date','Promise','Error','Map','Set','RegExp','Symbol','globalThis','global','fetch','__DEV__','undefined','NaN','Infinity','Intl','parseInt','parseFloat','isNaN','encodeURIComponent','decodeURIComponent','FormData','Blob','URL','AbortController','requestAnimationFrame','cancelAnimationFrame','performance','TextEncoder','Uint8Array','ArrayBuffer','atob','btoa','structuredClone','WeakMap','Proxy','Reflect','queueMicrotask','Uint16Array','Uint32Array','Float32Array','Int32Array','DataView']);
+const GLOBALS = new Set(['console','require','module','exports','process','setTimeout','clearTimeout','setInterval','clearInterval','Math','JSON','Object','Array','String','Number','Boolean','Date','Promise','Error','Map','Set','RegExp','Symbol','globalThis','global','fetch','__DEV__','undefined','NaN','Infinity','Intl','parseInt','parseFloat','isNaN','encodeURI','decodeURI','encodeURIComponent','decodeURIComponent','FormData','Blob','URL','AbortController','requestAnimationFrame','cancelAnimationFrame','performance','TextEncoder','Uint8Array','ArrayBuffer','atob','btoa','structuredClone','WeakMap','Proxy','Reflect','queueMicrotask','Uint16Array','Uint32Array','Float32Array','Int32Array','DataView']);
 let bad = 0;
 for (const f of process.argv.slice(2)) {
   const code = fs.readFileSync(f, 'utf8');

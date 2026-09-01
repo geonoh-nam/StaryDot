@@ -6,7 +6,7 @@ import { Animated, Image, Modal, StyleSheet, Text, View, useWindowDimensions } f
 // Speech bubble with the buddy leaning in from the left, per the mockup.
 const POPUP_BUDDY = require('../assets/characters/dino.png');
 
-export function CenterPopup({ text, emoji = '✨' }) {
+export function CenterPopup({ text, emoji = '✨', buddy, solid }) {
   const a = useRef(new Animated.Value(0)).current;
   const win = useWindowDimensions();
   useEffect(() => {
@@ -15,11 +15,11 @@ export function CenterPopup({ text, emoji = '✨' }) {
   return (
     <Modal transparent visible animationType="fade" supportedOrientations={['landscape', 'landscape-left', 'landscape-right']}>
       <View style={{ width: win.width, height: win.height, alignItems: 'center', justifyContent: 'center' }} pointerEvents="none">
-        <View style={styles.praiseScrim} />
+        <View style={[styles.praiseScrim, solid && styles.praiseSolid]} />
         <Animated.View
           style={[styles.praiseRow, { opacity: a, transform: [{ scale: a.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) }] }]}
         >
-          <Image source={POPUP_BUDDY} style={styles.praiseBuddy} resizeMode="contain" />
+          <Image source={buddy || POPUP_BUDDY} style={styles.praiseBuddy} resizeMode="contain" />
           <View style={styles.praiseCard}>
             <Text style={styles.praiseText}>{text}</Text>
           </View>
@@ -31,8 +31,12 @@ export function CenterPopup({ text, emoji = '✨' }) {
 
 const styles = StyleSheet.create({
   praiseScrim: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(20,28,48,0.18)',
+  },
+  praiseSolid: {
+    // 뒤에 영상이 비치면 안 되는 자리 — 완전히 덮는다.
+    backgroundColor: '#eef5ff',
   },
   praiseRow: {
     flexDirection: 'row',

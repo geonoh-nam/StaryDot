@@ -3,12 +3,16 @@
 
 // Card art, colours and the character's line stay in the app; the server owns the episodes.
 export const SERIES_ART = {
-  teenieping: { topic: '내가 좋아하는 티니핑', color: '#ff5fa2', tint: '#fff0f6', accent: '#e0327c', line: '“같이보자츄~”', thumb: require('../assets/characters/thumbs/thumb1.png') },
-  tayo: { topic: '내가 타고 싶은 자동차', color: '#2b7fd7', tint: '#eef5ff', accent: '#1b5fae', line: '“꼬마버스 타요, 출발합니다!”', thumb: require('../assets/characters/thumbs/thumb2.png') },
-  bread: { topic: '맛있는 빵', color: '#f5c33b', tint: '#fffaec', accent: '#a8760c', line: '“어서 오세요, 브레드이발소!”', thumb: require('../assets/characters/thumbs/thumb6.png') },
-  shark: { topic: '바다 친구들', color: '#7c5cff', tint: '#f3f0ff', accent: '#ffb703', line: '“아기 상어 뚜루루 뚜루~”', thumb: require('../assets/characters/thumbs/thumb4.png') },
-  pororo: { topic: '눈 내리는 날', color: '#e5484d', tint: '#fff1f0', accent: '#1f6fd0', line: '“노는 게 제일 좋아!”', thumb: require('../assets/characters/thumbs/thumb5.png') },
+  teenieping: { voice: 'bunny', topics: ['나만의 티니핑'], style: 'high-quality 3D animation style: a two-to-three-heads-tall character with a big head on a small body, round soft shapes, a pastel palette led by pink, mint and sky blue, big sparkling eyes, smooth toy-like surfaces, soft lighting and gentle shadows, with a softly blurred pastel background behind the character. Not photorealistic, not a flat illustration', color: '#ff5fa2', tint: '#fff0f6', accent: '#e0327c', line: '“같이보자츄~”', thumb: require('../assets/characters/thumbs/thumb1.png') },
+  tayo: { voice: 'dino', topics: ['타요', '버스', '소방차', '경찰차', '신호등'], style: 'bright 3D toy-vehicle cartoon style: rounded plastic surfaces, primary blues and yellows, clean even lighting, simple city background', color: '#2b7fd7', tint: '#eef5ff', accent: '#1b5fae', line: '“꼬마버스 타요, 출발합니다!”', thumb: require('../assets/characters/thumbs/thumb2.png') },
+  bread: { topics: ['브레드', '내가 만든 빵', '이발소 친구들'], style: 'soft claymation-like 3D style: warm bakery browns and creams, doughy rounded shapes, cosy shop lighting', color: '#f5c33b', tint: '#fffaec', accent: '#a8760c', line: '“어서 오세요, 브레드이발소!”', thumb: require('../assets/characters/thumbs/thumb6.png') },
+  shark: { topics: ['아기상어', '바닷속 친구들', '우리 가족'], style: 'flat vector cartoon style: bold clean outlines, saturated ocean blues and yellows, simple shapes, no gradients', color: '#7c5cff', tint: '#f3f0ff', accent: '#ffb703', line: '“아기 상어 뚜루루 뚜루~”', thumb: require('../assets/characters/thumbs/thumb4.png') },
+  pororo: { topics: ['뽀로로', '눈사람', '내 친구 크롱'], style: 'rounded 3D CG cartoon style: chunky characters, snowy pastel palette, soft blue shadows on white snow', color: '#e5484d', tint: '#fff1f0', accent: '#1f6fd0', line: '“노는 게 제일 좋아!”', thumb: require('../assets/characters/thumbs/thumb5.png') },
 };
+
+// Whose voice speaks over the questions. The buddy on screen is the series hero, but the
+// recordings are our two characters, so each series picks the one it sounds like.
+export const voiceFor = (seriesId) => SERIES_ART[seriesId]?.voice || 'bunny';
 
 // Thumbnail frames (from the demo video for now; per-video thumbnails come with the DB).
 export const THUMBS = [
@@ -102,4 +106,30 @@ export const DEMO_VIDEO = {
     '한바탕해 볼까',
     '그 마음은 잃지 않았으면 좋겠어',
   ],
+};
+
+// 주제마다 그림체를 한 번 더 좁힌다. 시리즈 화풍만으로는 "소방차"가 그냥 빨간 차로 나온다.
+// 캐릭터로 그려야 하는 주제. 자동차·눈사람 같은 사물은 아이 선을 그대로 다듬기만 해도
+// 알아볼 수 있지만, 캐릭터는 얼굴·눈·비율이 맞아야 그 캐릭터로 보인다 — 선을 지키는 데만
+// 매달리면 아이가 그린 낙서가 그대로 남는다.
+export const CHARACTER_TOPICS = new Set([
+  '타요', '나만의 티니핑', '하츄핑', '뽀로로', '내 친구 크롱',
+  '아기상어', '바닷속 친구들', '브레드', '이발소 친구들',
+]);
+
+export const TOPIC_STYLE = {
+  '타요': 'a friendly blue city bus with a big cartoon face on its windshield, round headlight eyes, number 120 on the front',
+  '버스': 'a chunky cartoon city bus with a face on the windshield, bright primary paint, rounded toy proportions',
+  '소방차': 'a bright red cartoon fire engine with a ladder on its roof, a face on the windshield, hoses and silver fittings',
+  '경찰차': 'a white and blue cartoon police car with a light bar on the roof, a face on the windshield, clean rounded body',
+  '신호등': 'a friendly cartoon traffic light standing on a pavement, three round lamps glowing red, yellow and green, simple city street behind',
+  // 티니핑은 종마다 머리 장식과 몸 색만 다르고 몸매·눈·가슴 보석은 같은 틀을 쓴다.
+  '하츄핑': 'a Teenieping creature: a chubby roly-poly body where the head is more than half the whole figure, no neck, short stubby arms and no visible legs, an enormous pair of round glossy eyes taking up most of the face with two or three white catchlights and a soft colour gradient in the iris, a very small simple mouth, faint blush on the cheeks, a small golden flame-shaped gem glowing on the chest. This one is Hearttsyping: soft pink body, a large curled pink heart-shaped tuft of hair on top of the head, long pink ears hanging down',
+  // 공식 캐릭터를 보고 적었다. 한 번 "화풍과 겹친다"며 지웠더니 사람 아기가 나왔으므로
+  // 목·몸통·눈 배치까지 남겨 둔다.
+  '나만의 티니핑': 'a brand-new Teenieping — a palm-sized magical creature, NOT a human child and not a doll in clothes. Body: head and body are one smooth teardrop-shaped mass with no neck and no clothing, widest at the head and tapering gently to the bottom, in one soft pastel colour with a glossy vinyl sheen. Two tiny stubby arms with rounded ends and no fingers, and two very short rounded legs with simple rounded feet. Face: the eyes sit in the lower half of the head and are enormous — tall glossy ovals about a third of the head wide, with large warm irises, two or three big white catchlights and a few short lashes above them. A tiny dot of a nose between them. A small smiling mouth just below, pink inside when open. Soft round blush on the cheeks. Above the eyes is a wide empty forehead, and on top of the head one big soft ornament like ears, a ribbon or a curl. Take only the body colour and the shape of that head ornament from the child drawing',
+  '뽀로로': 'a small round penguin in blue aviator goggles and a pilot cap, standing on snow',
+  '눈사람': 'a plump snowman with a carrot nose and a knitted scarf, soft snowy light',
+  '아기상어': 'a cheerful yellow baby shark with big friendly eyes, underwater with bubbles',
+  '브레드': 'a slice of bread character with a face, standing in a cosy bakery',
 };

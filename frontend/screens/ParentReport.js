@@ -122,7 +122,7 @@ function ParentGate({ onPass }) {
   );
 }
 
-export function ParentReportScreen({ profile, report, words }) {
+export function ParentReportScreen({ profile, report }) {
   const [passed, setPassed] = useState(false);
   const [week, setWeek] = useState(0);
   const today = new Date();
@@ -131,7 +131,6 @@ export function ParentReportScreen({ profile, report, words }) {
   // Minutes per day. Real numbers land here once sessions are recorded server-side; the week
   // selector shifts them so the screen behaves like the finished thing.
   const data = MOCK_REPORT[week];
-  const newWords = words.slice(0, 4);
   const childName = profile?.name || '우리 아이';
   const moments = data.moments || MOCK_REPORT[0].moments;
 
@@ -146,7 +145,7 @@ export function ParentReportScreen({ profile, report, words }) {
   if (!passed) return <ParentGate onPass={() => setPassed(true)} />;
 
   return (
-    <View style={styles.parentScroll}>
+    <ScrollView style={styles.parentScroll} contentContainerStyle={styles.reportContent}>
       <View style={styles.parentBody}>
       <View style={styles.parentCol}>
         <Text style={styles.parentTitle}>부모 리포트</Text>
@@ -263,11 +262,12 @@ export function ParentReportScreen({ profile, report, words }) {
         </View>
       </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  reportContent: { paddingBottom: 24 },
   gateWrap: {
     flex: 1,
     alignItems: 'center',
@@ -368,7 +368,6 @@ const styles = StyleSheet.create({
     color: '#8a97b1',
   },
   parentBody: {
-    flex: 1,
     flexDirection: 'row',
     // Columns stretch to the tallest one, so the dividers run the full height.
     alignItems: 'stretch',

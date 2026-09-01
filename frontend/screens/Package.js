@@ -3,22 +3,32 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Image, Pressable, StyleSheet, View } from 'react-native';
 import { Text } from '../Typography';
-import { playSound } from '../sound';
+import { playSound, speak, stopSpeaking } from '../sound';
 import { Bubble } from '../ui/Bubble';
-import { sayLine } from '../activities/voice';
-import { CHARACTER_IMAGES, STAGE1_ART } from '../data/character';
+import LINES from '../assets/lines.json';
+import { pickLine } from '../activities/lines';
 
 // The buddy that leans on the shelf of stills.
 const BUDDY = require('../assets/characters/play.png');
 const BACK_ICON = require('../assets/characters/back.png');
 const PLAY_ICON = require('../assets/characters/playicon.png');
 
+// "11:39" 또는 "1:02:10" — 초 단위 합을 아이 옆의 어른이 읽을 수 있는 길이로.
+function spellDuration(sec) {
+  if (!sec) return '';
+  const m = Math.round(sec / 60);
+  return m >= 60 ? `${Math.floor(m / 60)}시간 ${m % 60}분` : `${m}분`;
+}
+
 export function PackageScreen({ profile, videos = [], onBack, onStart }) {
+  const total = spellDuration(videos.reduce((sum, v) => sum + (v.durationSec || 0), 0));
   const bob = useRef(new Animated.Value(0)).current;
   // The words come from lines.json so a recording can be added without touching this screen.
   const [ask, setAsk] = useState('');
   useEffect(() => {
-    setAsk(sayLine(profile?.species === 'dino' ? 'dino' : 'bunny', 'pack.ask') || '');
+    setAsk(pickLine(LINES['pack.ask'] || []) || '');
+    stopSpeaking();
+    speak('dinoLoading');
   }, []);
 
   useEffect(() => {
@@ -58,11 +68,15 @@ export function PackageScreen({ profile, videos = [], onBack, onStart }) {
                   )}
                 </View>
                 <View style={styles.label}>
-                  <Text style={styles.labelText} numberOfLines={1}>{v.title}</Text>
+                  <Text style={styles.labelText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>{v.title}</Text>
+                  {v.duration ? <Text style={styles.labelTime}>{v.duration}</Text> : null}
                 </View>
               </View>
             ))}
           </View>
+
+          {/* What the day adds up to, so a grown-up can see it against the time they set. */}
+          {total ? <Text style={styles.total}>오늘은 모두 {total}</Text> : null}
         </View>
 
         {/* Drawn last and lifted above everything: the bubble is never covered by the card. */}
@@ -101,8 +115,8 @@ const styles = StyleSheet.create({
   headRow: {
     // Straddles the card's top edge: head and arms clear of it, legs behind the stills.
     position: 'absolute',
-    left: 60,
-    top: -108,
+    left: 130,
+    top: -142,
   },
   buddy: {
     width: 200,
@@ -110,9 +124,9 @@ const styles = StyleSheet.create({
   },
   bubbleWrap: {
     position: 'absolute',
-    top: -12,
-    left: 236,
-    right: 120,
+    top: -46,
+    left: 306,
+    right: 50,
     alignItems: 'stretch',
     zIndex: 9,
     elevation: 9,
@@ -138,10 +152,14 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    justifyContent: 'center',
     gap: 20,
   },
   item: {
     flex: 1,
+    // Two videos must not grow into three videos' worth of width: the stills are 16:9, so a wider
+    // card is a taller card, and the buttons underneath get pushed off the screen.
+    maxWidth: 372,
     borderRadius: 16,
     overflow: 'hidden',
     backgroundColor: '#609EF5',
@@ -153,13 +171,27 @@ const styles = StyleSheet.create({
   },
   label: {
     paddingVertical: 12,
-    paddingHorizontal: 14,
+    // 제목이 잘리지 않게 좌우를 좁혔다 — 카드가 넓어질 수 없으니 여백을 내준다.
+    paddingHorizontal: 8,
     alignItems: 'center',
   },
   labelText: {
     fontSize: 17,
     fontWeight: '900',
     color: '#ffffff',
+  },
+  labelTime: {
+    marginTop: 2,
+    fontSize: 13,
+    fontWeight: '800',
+    color: 'rgba(255,255,255,0.82)',
+  },
+  total: {
+    marginTop: 14,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#4570CD',
   },
   actions: {
     flexDirection: 'row',
