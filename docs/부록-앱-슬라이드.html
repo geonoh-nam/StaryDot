@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<title>스토리닷 앱 부록 슬라이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  @page { size: 13.333in 7.5in; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  :root {
+    --bg: #0d0d0d; --card: #1f1f1f; --bar: #0a0a0a; --line: #333333;
+    --ink: #ececec; --dim: #9b9b9b; --faint: #6d6d6d;
+    --blue: #4a9eff; --green: #4ade80; --red: #f87171; --amber: #f0a94c;
+  }
+  body { background: var(--bg); color: var(--ink); font-family: Pretendard, "Noto Sans KR", sans-serif; }
+
+  .slide {
+    width: 13.333in; height: 7.5in; padding: 26px 32px 30px; background: var(--bg);
+    display: flex; flex-direction: column; break-after: page; overflow: hidden;
+  }
+  .slide:last-child { break-after: auto; }
+
+  .kicker { display: flex; align-items: center; gap: 14px; font-size: 11.5px; font-weight: 700; color: var(--ink); }
+  .kicker span { flex: 1; height: 1px; background: #4a4a4a; }
+  h1 { font-size: 34px; font-weight: 900; letter-spacing: -0.02em; margin: 12px 0 18px; }
+
+  .cols { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; min-height: 0; }
+  .panel { background: var(--card); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; min-height: 0; }
+  .bar {
+    background: var(--bar); border-radius: 9px; padding: 11px 14px; text-align: center;
+    font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 14px;
+  }
+  .lead { font-size: 13px; line-height: 1.7; color: var(--dim); margin-bottom: 12px; }
+  .lead b { color: var(--ink); font-weight: 700; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th {
+    text-align: left; font-size: 10.5px; font-weight: 500; color: var(--faint);
+    letter-spacing: 0.06em; padding: 0 10px 7px; border-bottom: 1px solid var(--line);
+  }
+  td { padding: 9px 10px; border-bottom: 1px solid #2a2a2a; color: var(--dim); line-height: 1.55; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td.k { color: var(--ink); font-weight: 700; white-space: nowrap; }
+  td.n, th.n { text-align: right; font-family: Pretendard, sans-serif; }
+  .mono, code { font-family: Pretendard, sans-serif; font-size: 0.94em; }
+  .blue { color: var(--blue); }
+
+  .code {
+    letter-spacing: 0.01em;
+    background: #171717; border-radius: 9px; padding: 13px 15px; margin: 12px 0;
+    font-family: Pretendard, sans-serif; font-size: 11.5px; line-height: 1.85; color: var(--dim); white-space: pre;
+  }
+  .code b { color: var(--ink); font-weight: 600; }
+
+  ul { list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 9px; }
+  li { position: relative; padding-left: 15px; font-size: 12.5px; line-height: 1.65; color: var(--dim); }
+  li::before { content: ""; position: absolute; left: 2px; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--faint); }
+  li b { color: var(--ink); font-weight: 700; }
+
+  .note { margin-top: 12px; font-size: 12px; line-height: 1.7; color: var(--dim); }
+  .note b { color: var(--ink); }
+  .src { margin-top: auto; padding-top: 16px; text-align: center; font-size: 10px; letter-spacing: 0.04em; color: #5c5c5c; text-transform: uppercase; }
+  .chips { display: flex; gap: 8px; margin: 12px 0 2px; flex-wrap: wrap; }
+  .chip { font-family: Pretendard, sans-serif; font-size: 10.5px; padding: 5px 9px; border-radius: 6px; background: #262626; color: var(--dim); }
+  .stat { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 2px; border-bottom: 1px solid #2a2a2a; font-size: 12.5px; color: var(--dim); }
+  .flow { display: flex; flex-direction: column; }
+  .box { background: #262626; border: 1px solid #2f2f2f; border-radius: 9px; padding: 7px 12px; }
+  .box.hi { border-color: #2f5f9e; }
+  .box.gate { border-color: #6b5220; }
+  .box b { display: block; font-size: 12.5px; font-weight: 700; color: var(--ink); }
+  .box.hi b { color: var(--blue); }
+  .box.gate b { color: var(--amber); }
+  .box span { font-family: Pretendard, sans-serif; font-size: 10.5px; color: var(--faint); }
+  .arrow { text-align: center; font-size: 9px; color: #5a5a5a; padding: 2px 0; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat b { font-family: Pretendard, sans-serif; font-weight: 600; color: var(--blue); }
+</style></head><body>
+
+<!-- ───────────────────────── 5 ───────────────────────── -->
+<section class="slide">
+  <div class="kicker">부록 <span></span></div>
+  <h1>Appendix 5.</h1>
+  <div class="cols">
+
+    <div class="panel">
+      <div class="bar">5-1. 프로젝트 개요</div>
+      <div class="lead">만 3–7세 아동용 태블릿 앱. 영상을 <b>수동적으로 시청하는 아동</b>을 대상으로 하며, 영상 재생 중 개입해 손으로 하는 인터랙션 활동을 삽입하고 시청 후 이해를 확인함. 하루 일과가 기기 한 대에서 완결되며 학습까지 연결함. 보호자가 시간과 활동 종류를 정하고 결과를 리포트로 확인함</div>
+      <table>
+        <tbody>
+          <tr><td class="k">대상</td><td>만 3–7세. 보호자가 시간과 활동 종류를 설정함</td></tr>
+          <tr><td class="k">기기</td><td>Galaxy Tab S8+ · S펜 입력 · 가로 고정</td></tr>
+          <tr><td class="k">해결 대상</td><td>시청이 학습으로 이어지지 않는 구간 — 개입과 응답 유도로 시청 내용을 활동 · 문항 · 그리기로 잇고, 그 결과를 리포트로 남김</td></tr>
+          <tr><td class="k">구성</td><td>시청 · 퍼즐 · 국어 · 수학 · 그리기 · 단어장 · 따라 쓰기 · 색칠 · 캐릭터 방 · 리포트</td></tr>
+          <tr><td class="k">동작 조건</td><td>네트워크 없이 전 과정 구동. 외부 호출은 그림 변환 1건</td></tr>
+        </tbody>
+      </table>
+      <div class="chips">
+        <span class="chip">앱 12,022줄</span><span class="chip">서버·도구 2,205줄</span>
+        <span class="chip">AI 모델 2종</span><span class="chip">DB 9테이블</span><span class="chip">화면 14종</span>
+      </div>
+      <ul>
+        <li><b>문항은 편마다 자동 선택됨:</b> 국어 1문항은 작품 · 월령 · 시청 순서로, 수학 1문항은 그 편의 활동 후보 중 아동 월령에 가장 근접한 것으로 정해짐. 편당 후보는 9–20개가 산출됨</li>
+        <li><b>중간 개입은 편당 1회로 제한함:</b> 시청 흐름의 단절 비용이 개입 효과를 상회하지 않도록 하드 제약을 두었으며, 문항은 시청을 마친 뒤로 이연함</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · COM.FLYAI.PATTI · EXPO SDK 57</div>
+    </div>
+
+    <div class="panel">
+      <div class="bar">5-2. 핵심 기능 및 판정 방식</div>
+      <table>
+        <thead><tr><th>활동</th><th>형식</th><th>판정 근거</th></tr></thead>
+        <tbody>
+          <tr><td class="k">퍼즐</td><td>정지 프레임에서 오려낸 조각 끼우기</td><td class="blue">좌표 정합 — 최근접 빈자리</td></tr>
+          <tr><td class="k">국어</td><td>3지선다 — 인물의 동기 · 대사의 의도</td><td>작품별 문항 뱅크 · 오답도 그 편의 실재 요소</td></tr>
+          <tr><td class="k">수학</td><td>3지선다 — 5개 유형, 근거 프레임 동반</td><td class="blue">화면 계수값과 대조</td></tr>
+          <tr><td class="k">그리기 · 변환</td><td>자유 그리기 후 캐릭터로 변환</td><td>판정 없음 — 산출물 자체가 결과</td></tr>
+          <tr><td class="k">단어장</td><td>낱말을 끌어 아는 것 · 모르는 것으로 분류</td><td>아동의 자기 보고 — 보호자 리포트에 집계</td></tr>
+          <tr><td class="k">따라 쓰기 · 색칠</td><td>안내선 위 필기 · 선 내부 채우기</td><td class="blue">획이 안내선에 얹힌 비율</td></tr>
+          <tr><td class="k">캐릭터 방</td><td>먹이기 · 쓰다듬기 · 던지기</td><td>정답 수가 보유 사탕으로 환산됨</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><b>실패 상태를 두지 않음:</b> 따라 쓰기 · 색칠은 아동이 중단하면 버디가 완료하며, 문항은 오답 시 재시도가 허용됨. 활동이 진행을 차단하지 않도록 설계함</li>
+        <li><b>활동 종류를 데이터로 기술함:</b> 편성 데이터만 교체하면 코드 수정 없이 배치가 변경되며, 보호자가 종류별로 차단할 수 있음</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · ACTIVITIES/ · DATA/QUIZ-POOL.JS
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────── 6 ───────────────────────── -->
+<section class="slide">
+  <div class="kicker">부록 <span></span></div>
+  <h1>Appendix 6.</h1>
+  <div class="cols">
+
+    <div class="panel">
+      <div class="bar">6-1. 앱 전체 아키텍처</div>
+      <div class="flow">
+        <div class="box"><b>인트로 · 프로필 · 보호자 설정</b><span>이름 · 월령 · 하루 시간 예산</span></div>
+        <div class="arrow">▼</div>
+        <div class="box"><b>오늘의 묶음 편성</b><span>plan · 하루 시간 예산 안에서 영상 · 활동 · 미션</span></div>
+        <div class="arrow">▼</div>
+        <div class="box hi"><b>시청 루프</b><span>0.35초 폴링 · 개입 시각 정합 · 3초 카운트 후 정지</span></div>
+        <div class="arrow">▼</div>
+        <div class="pair">
+          <div class="box"><b>중간 개입 — 퍼즐</b><span>정지 프레임 = 판 · 조각 안착 후 재개</span></div>
+          <div class="box"><b>종료 문항 — 국어 · 수학</b><span>근거 프레임 동반 · 유형 분산</span></div>
+        </div>
+        <div class="arrow">▼</div>
+        <div class="box gate"><b>그리기 · 변환 요청</b><span>정사각 PNG · 주제 종류 부착 — 유일한 외부 경로</span></div>
+        <div class="arrow">▼</div>
+        <div class="box"><b>활동 리포트 · 미션</b><span>날짜 · 시청 시간 · 정답 수 · 변환 결과</span></div>
+      </div>
+      <div class="note">활동 종류는 데이터로 기술되므로 편성만 바꾸면 코드 수정 없이 배치가 변경됨</div>
+      <div class="src">출처: 자체 구현 · FRONTEND/APP.JS · SCREENS/WATCH.JS</div>
+    </div>
+
+    <div class="panel">
+      <div class="bar">6-2. 계층 분리 및 상태 소유</div>
+      <table>
+        <thead><tr><th>계층</th><th>구성</th><th>보유 상태</th></tr></thead>
+        <tbody>
+          <tr><td class="k">화면</td><td class="mono">screens/ · ui/</td><td>표시 상태만. 진행 상태를 보유하지 않음</td></tr>
+          <tr><td class="k">활동</td><td class="mono">activities/</td><td>활동 1건의 진행 · 판정. 성공 시 호출자에게 반환</td></tr>
+          <tr><td class="k">조정</td><td class="mono">App.js</td><td class="blue">라우팅 · 하루 진행 · 정답 누적</td></tr>
+          <tr><td class="k">데이터</td><td class="mono">data/ · assets/*.json</td><td>작품 · 문항 · 활동 정의. 서버와 동일 스키마</td></tr>
+          <tr><td class="k">저장</td><td class="mono">AsyncStorage</td><td class="blue">프로필 · 설정 · 단어장 · 활동 기록</td></tr>
+          <tr><td class="k">외부</td><td class="mono">Worker → fal.ai</td><td>무상태. 요청 1건마다 완결됨</td></tr>
+        </tbody>
+      </table>
+      <div class="code">콘텐츠 서버 응답  ─▶ 정상 경로
+서버 무응답      ─▶ <b>동봉 스냅숏 + 기기 media</b>
+                    (동일 스키마이므로 분기 1회로 대체)</div>
+      <ul>
+        <li><b>진행 상태를 한 곳에 모음:</b> 화면과 활동은 결과만 반환하고 하루 진행은 조정 계층이 단독 보유하므로, 활동을 추가해도 화면 간 상태 동기화가 발생하지 않음</li>
+        <li><b>서버와 스냅숏이 동일 스키마임:</b> 오프라인 대체가 별도 코드 경로가 아니라 데이터 출처 교체로 처리됨</li>
+        </ul>
+      <div class="src">출처: 자체 구현 · FRONTEND/ · BACKEND/WORKER/</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────── 7 ───────────────────────── -->
+<section class="slide">
+  <div class="kicker">부록 <span></span></div>
+  <h1>Appendix 7.</h1>
+  <div class="cols">
+
+    <div class="panel">
+      <div class="bar">7-1. 기술 스택</div>
+      <table>
+        <thead><tr><th>층</th><th>구성</th><th>채택 근거</th></tr></thead>
+        <tbody>
+          <tr><td class="k">앱</td><td class="mono">Expo SDK 57 · RN 0.86</td><td>태블릿 한 대에서 오프라인 구동이 요건이므로 네이티브 빌드를 직접 생성</td></tr>
+          <tr><td class="k">그리기</td><td class="mono">skia · perfect-freehand</td><td>Skia가 획을 렌더링하고 perfect-freehand가 붓 형상을 생성. 퍼즐 윤곽은 SVG</td></tr>
+          <tr><td class="k">영상·소리</td><td class="mono">expo-video · expo-audio</td><td>재생 위치를 0.35초 주기로 폴링해 개입 시각과 정합. 음성은 슬롯 분리</td></tr>
+          <tr><td class="k">입력</td><td class="mono">gesture-handler</td><td>1지점은 펜, 2지점은 확대·이동으로 고정. S펜 버튼은 지우개로 매핑</td></tr>
+          <tr><td class="k">저장</td><td class="mono">AsyncStorage</td><td>프로필·설정·단어장·활동 기록이 기기 내부에 잔존. 서버 불요</td></tr>
+          <tr><td class="k">클라우드</td><td class="mono">Cloudflare Worker</td><td>그림 변환 1건만 외부 호출. API 키는 워커 시크릿에만 존재</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><b>외부 의존은 1개 경로뿐:</b> 영상·문항·활동은 모두 기기 내부에서 해결되며, 네트워크가 끊겨도 하루 일과가 완주됨</li>
+        <li><b>키를 앱에 두지 않음:</b> APK는 역어셈블이 가능하므로 변환 요청은 워커를 경유하고 앱은 키를 보유하지 않음</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · FRONTEND/ 12,022줄 · BACKEND/ 2,205줄</div>
+    </div>
+
+    <div class="panel">
+      <div class="bar">7-2. 구성요소별 역할</div>
+      <table>
+        <thead><tr><th>위치</th><th>역할</th></tr></thead>
+        <tbody>
+          <tr><td class="k mono">App.js</td><td>라우팅과 하루 진행. 어떤 편을 언제 열고 활동 결과를 어디에 누적할지 결정</td></tr>
+          <tr><td class="k mono">screens/</td><td>화면 14종 — Home · Browse · Package · Watch · Drawing · Character · Report · ParentReport · Settings · Onboarding · OnboardSlides · Loading · Bye · QuizDebug</td></tr>
+          <tr><td class="k mono">activities/</td><td>활동 무대와 규칙 — ActivityStage · WheelFit(퍼즐) · wheel-layout(판·조각 좌표)</td></tr>
+          <tr><td class="k mono">ui/</td><td>재사용 요소 — SketchPad(Skia 캔버스) · Header · CenterPopup · Bubble · artwork</td></tr>
+          <tr><td class="k mono">data/ · assets/</td><td>작품 · 문항 · 활동 정의와 스냅숏 JSON · 음성 · 프레임</td></tr>
+          <tr><td class="k mono">backend/server/</td><td>콘텐츠 서버 — 라이브러리 · 묶음 편성 · 기록</td></tr>
+          <tr><td class="k mono">backend/worker/</td><td>변환 중계 — 모델 선택과 프롬프트 보유</td></tr>
+          <tr><td class="k mono">backend/tools/</td><td>스냅숏 생성 · 인제스트 등 오프라인 준비 도구</td></tr>
+        </tbody>
+      </table>
+      <div class="src">출처: 자체 구현 · 디렉터리 구조</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────── 8 ───────────────────────── -->
+<section class="slide">
+  <div class="kicker">부록 <span></span></div>
+  <h1>Appendix 8.</h1>
+  <div class="cols">
+
+    <div class="panel">
+      <div class="bar">8-1. 개발 환경</div>
+      <table>
+        <tbody>
+          <tr><td class="k">플랫폼</td><td>macOS 개발 · Galaxy Tab S8+ 실기기 검증</td></tr>
+          <tr><td class="k">런타임</td><td class="mono">Node.js · Expo SDK 57 · React Native 0.86</td></tr>
+          <tr><td class="k">빌드</td><td class="mono">Gradle · JDK 21 고정</td></tr>
+          <tr><td class="k">개발 배포</td><td class="mono">개발 클라이언트 + Metro (8081 단독)</td></tr>
+          <tr><td class="k">시연 배포</td><td class="mono">assembleRelease → adb install -r</td></tr>
+          <tr><td class="k">기기 연결</td><td class="mono">adb connect · adb reverse tcp:5056</td></tr>
+          <tr><td class="k">워커 배포</td><td class="mono">wrangler deploy · 키는 시크릿</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>기기 한 대에서 완결되는 앱이라 검증도 기기에서 끝난다.</b> 개발 중에는 Metro로 즉시 반영하고,
+        시연본은 릴리스 빌드를 설치해 서버 없이 구동되는 상태 그대로 확인함</div>
+      <div class="src">출처: 자체 구현 · ANDROID/ · EAS.JSON</div>
+    </div>
+
+    <div class="panel">
+      <div class="bar">8-2. 검사 범위와 빌드 확인</div>
+      <table>
+        <thead><tr><th>검사</th><th>대상</th></tr></thead>
+        <tbody>
+          <tr><td class="k mono">undef-check</td><td>바인딩 없는 이름 — 참조되지만 정의되지 않은 식별자</td></tr>
+          <tr><td class="k mono">style-check</td><td>정의 없는 스타일 키 — RN은 없는 스타일을 조용히 무시함</td></tr>
+          <tr><td class="k mono">activities/test</td><td>퍼즐 좌표 정합 · 조각 판정 · 윤곽 폐합 규칙</td></tr>
+        </tbody>
+      </table>
+      <div class="code">빌드 전 확인
+   <b>8081 점유 여부</b>   개발 서버가 살아 있으면 번들러가 포트 확보 실패
+   <b>중복 파일 삭제</b>   "* 2.xml" 형태가 리소스 파싱을 깨뜨림
+   <b>JAVA_HOME 21</b>    다른 버전에서는 CMake 중단</div>
+      <ul>
+        <li><b>검사 대상이 아닌 항목을 분리함:</b> 필기 입력 · 영상 렌더링 · 변환 결과는 기기 없이 재현되지 않으므로 실기기 확인 절차로 둠</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · SCRIPTS/CHECK.SH</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────── 9 ───────────────────────── -->
+<section class="slide">
+  <div class="kicker">부록 <span></span></div>
+  <h1>Appendix 9.</h1>
+  <div class="cols">
+
+    <div class="panel">
+      <div class="bar">9-1. 서비스 동작 흐름</div>
+      <table>
+        <thead><tr><th class="n">#</th><th>단계</th><th>수행 내용</th></tr></thead>
+        <tbody>
+          <tr><td class="n">1</td><td class="k">인트로 · 프로필</td><td>이름 · 생년월일 · 성별 입력. 보호자가 하루 사용 시간을 5분 단위로 설정. 형제는 프로필 추가로 분리되며 나이에 따라 문항 세트가 변경됨</td></tr>
+          <tr><td class="n">2</td><td class="k">오늘의 묶음</td><td>작품 선택 시 당일 시청분과 총 시간이 카드로 제시됨. 시작 전에 분량을 확인할 수 있음</td></tr>
+          <tr><td class="n">3</td><td class="k">시청 · 개입</td><td>재생 위치를 0.35초 주기로 감시하다 개입 시각에서 3초 카운트 후 정지. 활동 완료 시 정지 지점에서 재개</td></tr>
+          <tr><td class="n">4</td><td class="k">종료 문항</td><td>모든 편에서 국어 1문항 · 수학 1문항이 순차 제시됨. 유형이 겹치지 않도록 묶음 단위로 분배</td></tr>
+          <tr><td class="n">5</td><td class="k">그림 · 변환</td><td>마지막 편 종료 후 그리기. 산출물이 해당 작품 세계의 캐릭터로 변환되어 반환됨</td></tr>
+          <tr><td class="n">6</td><td class="k">리포트 · 미션</td><td>날짜 · 시청 시간 · 정답 수 · 변환 결과를 한 화면에 정리하고 미션 카드를 제시</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>중간 개입은 편당 1회로 제한함.</b> 시청 흐름의 단절 비용이 개입 효과를 상회하지 않도록 하드 제약을 두었으며, 문항은 시청을 마친 뒤로 이연함</div>
+      <div class="src">출처: 자체 구현 · FRONTEND/APP.JS · SCREENS/WATCH.JS</div>
+    </div>
+
+    <div class="panel">
+      <div class="bar">9-2. 서버 구조 및 오프라인 경로</div>
+      <table>
+        <thead><tr><th>엔드포인트</th><th>반환</th></tr></thead>
+        <tbody>
+          <tr><td class="k mono">/library</td><td>작품과 소속 영상 목록</td></tr>
+          <tr><td class="k mono">/videos/:id</td><td>한 편의 활동 전량 — 문항 · 개입 지점 · 근거 프레임 경로</td></tr>
+          <tr><td class="k mono">/plan</td><td>당일 묶음. 하루 시간 예산 내에서 영상 · 활동 · 미션을 편성</td></tr>
+          <tr><td class="k mono">/sessions</td><td>시청 시간과 문항 결과 기록</td></tr>
+          <tr><td class="k mono">/media/*</td><td>영상 · 프레임 · 썸네일</td></tr>
+        </tbody>
+      </table>
+      <div class="code">서버 응답 없음 ─▶ <b>기기 내 스냅숏</b>으로 대체
+   library.json · activities.json · missions.json
+   영상 · 프레임 ─▶ <b>기기 media 폴더</b>
+   외부 호출 ─▶ <b>그림 변환 1건</b></div>
+      <div class="chips">
+        <span class="chip">category</span><span class="chip">video</span><span class="chip">subtitle</span>
+        <span class="chip">activity</span><span class="chip">child</span><span class="chip">session</span>
+        <span class="chip">plan_session</span><span class="chip">activity_result</span><span class="chip">leaves</span>
+      </div>
+      <ul>
+        <li><b>배포 경로는 서버를 경유하지 않음:</b> 콘텐츠 서버는 개발 중 편성·검수 용도이며, 기기에는 동일 스키마의 스냅숏이 동봉됨. 변환은 고정 도메인으로 요청하므로 IP 변동 시에도 수정할 항목이 없음</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · BACKEND/SERVER · TOOLS/OFFLINE-SNAPSHOT.MJS</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────── 10 ───────────────────────── -->
+<section class="slide">
+  <div class="kicker">부록 <span></span></div>
+  <h1>Appendix 10.</h1>
+  <div class="cols">
+
+    <div class="panel">
+      <div class="bar">10-1. 문항 활동의 작동 방식</div>
+      <div class="lead"><b>국어 — 인물의 행위 동기를 대상으로 함.</b> 화면의 개수가 아니라 서사 이해를 측정함. 해당 작품의 편을 근거로 작성된 문항 뱅크에서 시청 순서대로 선택하며, 오답도 그 편에 실재하는 요소로 구성함. 영상을 보지 않은 상태에서는 선택할 수 없음</div>
+      <table>
+        <thead><tr><th>수학 유형</th><th>질문 형태</th></tr></thead>
+        <tbody>
+          <tr><td class="k">개수 세기</td><td>화면 내 동일 대상의 수량</td></tr>
+          <tr><td class="k">모두 세기</td><td>두 집합의 합산</td></tr>
+          <tr><td class="k">수 가르기</td><td>전체에서 부분의 분할</td></tr>
+          <tr><td class="k">크기 비교</td><td>두 대상의 대소 판정</td></tr>
+          <tr><td class="k">모양 찾기</td><td>제시 형태와 동일한 대상 탐색</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><b>동일 유형의 연속 배치를 금지함:</b> 두 번째 문항부터는 계수하지 않고 문장 형태만으로 응답하는 양상이 관측되어, 묶음 내 유형을 강제 분산함</li>
+        <li><b>근거 프레임을 동반 제시함:</b> 12분 전 기억이 아니라 제시된 화면에서 계수하도록 설계하여 회상 부담을 제거함</li>
+        <li><b>나이 기반 선택:</b> 편당 9–20개의 활동 후보 중 아동 월령에 가장 근접한 항목이 선택되므로, 같은 편도 아이마다 다른 문항이 제시됨</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · FRONTEND/DATA/QUIZ-POOL.JS</div>
+    </div>
+
+    <div class="panel">
+      <div class="bar">10-2. 퍼즐 처리</div>
+      <div class="code">개입 시각 도달 ─▶ <b>3초 카운트</b> ─▶ 화면 정지
+   해당 프레임 = <b>퍼즐 판</b>  (대상 영역 결손)
+   조각 = <b>동일 프레임에서 오려낸 것</b>
+   조각 안착 ─▶ 정지 지점에서 재생 재개</div>
+      <ul>
+        <li><b>조각을 별도로 그리지 않음:</b> 개입 지점의 프레임에서 대상만 분리하며, 조각과 결손부가 동일한 베지어 윤곽을 공유하므로 경계가 어긋나지 않음</li>
+        <li><b>2배 해상도 처리 후 축소:</b> 픽셀 단위로 절단하면 가장자리에 계단이 잔존하므로, 2배로 오린 뒤 축소하여 계단을 반투명으로 소거함</li>
+        <li><b>조각은 축소 · 결손부는 확대:</b> 동일 마스크를 양쪽에 사용할 경우 조각에 배경색이 혼입되거나 판에 윤곽선이 잔류함</li>
+        <li><b>판이 영상 영역을 그대로 점유함:</b> 여백이 발생하면 영상에서 퍼즐로 전환된 것이 인지되므로, 정지 화면과 동일한 크기로 배치함</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · ACTIVITIES/WHEEL-LAYOUT.JS · DATA/TOON-SHAPES.JS</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────── 11 ───────────────────────── -->
+<section class="slide">
+  <div class="kicker">부록 <span></span></div>
+  <h1>Appendix 11.</h1>
+  <div class="cols">
+
+    <div class="panel">
+      <div class="bar">11-1. 그림 변환 모델 이원화</div>
+      <table>
+        <thead><tr><th>구분</th><th>사물 그림</th><th>캐릭터 그림</th></tr></thead>
+        <tbody>
+          <tr><td class="k">모델</td><td class="mono">flux-kontext/dev</td><td class="mono blue">nano-banana/edit</td></tr>
+          <tr><td class="k">계열</td><td>확산 편집</td><td class="blue">Gemini Flash Image</td></tr>
+          <tr><td class="k">입력 선의 취급</td><td>원위치 보존 후 정리</td><td class="blue">형태 규칙이 선을 상회</td></tr>
+          <tr><td class="k">아이 그림에서 계승</td><td>윤곽 전체</td><td class="blue">색 · 머리 모양</td></tr>
+          <tr><td class="k">지시 준수도</td><td>세부 규칙 미반영</td><td class="blue">비율 · 배치까지 반영</td></tr>
+        </tbody>
+      </table>
+      <div class="code">앱  ──▶  <b>Worker</b>  ──▶  fal.ai
+     주제 종류 전달        모델 · 프롬프트 선택
+     정사각 PNG           <b>키는 워커 시크릿</b></div>
+      <ul>
+        <li><b>단일 프롬프트가 불가능한 구조:</b> 사물에 유효한 "선을 지켜라"가 캐릭터에서는 낙서를 낙서로 잔존시킴. 주제 종류를 앱이 전달하고 워커가 분기함</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · BACKEND/WORKER/SRC/INDEX.JS</div>
+    </div>
+
+    <div class="panel">
+      <div class="bar">11-2. 그림 변환 처리 규칙</div>
+      <table>
+        <thead><tr><th>단계</th><th>처리</th></tr></thead>
+        <tbody>
+          <tr><td class="k">전송</td><td>그림을 정사각으로 패딩해 전송. 주제 종류를 함께 실어 워커가 모델을 고름</td></tr>
+          <tr><td class="k">사물</td><td>입력 선을 원위치에 둔 채 정리 — 소방차 · 경찰차는 형태가 곧 정답임</td></tr>
+          <tr><td class="k">캐릭터</td><td class="blue">몸 비율 · 얼굴 배치 · 눈 구조의 종족 규칙이 입력 형태를 상회함</td></tr>
+          <tr><td class="k">계승 항목</td><td class="blue">색과 머리 모양만 아이 그림에서 가져옴</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><b>부정 지시의 역효과:</b> "동물이 아님" 류의 부정문은 확산 모델에서 해당 대상을 오히려 유도하므로 전량 제거하고 긍정 규칙만 기술함</li>
+        <li><b>형태 규칙의 고정:</b> 머리가 전신의 3/4, 눈높이는 머리 높이의 60% 지점 등 종족 규칙을 명시하여 회차 간 편차를 억제함</li>
+        <li><b>선을 지키라는 지시의 한계:</b> 사물에 유효한 규칙이 캐릭터에서는 낙서를 낙서로 잔존시키므로, 주제 종류에 따라 프롬프트를 분기함</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · BACKEND/WORKER/SRC/INDEX.JS</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────── 12 ───────────────────────── -->
+<section class="slide">
+  <div class="kicker">부록 <span></span></div>
+  <h1>Appendix 12.</h1>
+  <div class="cols">
+
+    <div class="panel">
+      <div class="bar">12-1. 활동 외 화면 구성</div>
+      <table>
+        <thead><tr><th>화면</th><th>구성 및 설계 의도</th></tr></thead>
+        <tbody>
+          <tr><td class="k">메인</td><td>별을 누르면 마이 캐릭터 · 부모 리포트 · 설정으로 분기함. 인사 음성은 메인 최초 진입 시 1회만 재생하며, 영상에서 복귀할 때는 재생하지 않음</td></tr>
+          <tr><td class="k">캐릭터 방</td><td>사탕 10개를 초기 보유하고 정답 시 누적됨. 먹이기 · 쓰다듬기 · 던지기 반응을 두어 활동과 보상을 한 화면에서 연결함</td></tr>
+          <tr><td class="k">단어장</td><td>낱말을 끌어 "알아요 / 잘 모르겠어요"로 분류함. 미숙지로 분류된 낱말은 보호자 리포트에 집계됨</td></tr>
+          <tr><td class="k">따라 쓰기 · 색칠</td><td>획이 안내선에 얹힌 비율로 통과를 판정함. 색칠은 선 내부만 채워짐. 두 활동 모두 실패 상태가 없으며 정지 시 버디가 완료함</td></tr>
+          <tr><td class="k">활동 리포트</td><td>날짜 · 시청 시간 · 정답 수 · 변환 결과를 단일 화면에 배치하고 미션 카드로 종료함</td></tr>
+        </tbody>
+      </table>
+      <div class="src">출처: 자체 구현 · SCREENS/ · ACTIVITIES/</div>
+    </div>
+
+    <div class="panel">
+      <div class="bar">12-2. 보호자 영역 · 입력 · 음성</div>
+      <div class="stat"><span>보호자 리포트 진입</span><b>셈 문제 통과 시</b></div>
+      <div class="stat"><span>하루 사용 시간 설정</span><b>5분 단위</b></div>
+      <div class="stat"><span>활동 종류별 차단</span><b>퀴즈 · 그림 · 퍼즐</b></div>
+      <div class="stat"><span>아이 프로필</span><b>추가 · 전환 · 전량 삭제</b></div>
+      <div class="stat"><span>초기 보유 사탕</span><b>10개</b></div>
+      <ul>
+        <li><b>보호자 화면을 문으로 분리함:</b> 간단한 셈 문제를 통과해야 열리므로 아동의 우발적 진입이 차단됨. 내부에는 주간 자립 순간 · 관심사 · 활동 요약과 미숙지 낱말이 집계됨</li>
+        <li><b>입력 정책을 지점 수로 고정함:</b> 1지점은 항상 펜, 2지점은 확대 · 이동이므로 필기 중 화면이 밀리지 않음. 펜 접촉 직후 손가락 입력을 무시하여 손바닥 오입력을 차단하고, S펜 버튼 입력은 지우개로 전환함</li>
+        <li><b>음성은 작품 단위로 고정함:</b> 한 편 안에서 화자가 바뀌면 발화 주체를 식별하지 못하므로 작품별 목소리를 유지하며, 동시 발화 구간은 슬롯을 분리해 병렬 재생함</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · SCREENS/SETTINGS.JS · UI/SKETCHPAD.JS · SOUND.JS</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────── 13 ───────────────────────── -->
+<section class="slide">
+  <div class="kicker">부록 <span></span></div>
+  <h1>Appendix 13.</h1>
+  <div class="cols">
+
+    <div class="panel">
+      <div class="bar">13-1. 초기 설계 한계 및 개선</div>
+      <table>
+        <thead><tr><th>초기 구현</th><th>관측된 결과</th><th>변경</th></tr></thead>
+        <tbody>
+          <tr><td class="k">부정형 프롬프트</td><td>"동물이 아님"을 명시할수록 동물이 생성됨</td><td class="blue">부정문 전량 제거 · 긍정 규칙만 기술</td></tr>
+          <tr><td class="k">편집 모델 단일 사용</td><td>비율 · 배치 등 세부 지시가 반영되지 않음</td><td class="blue">캐릭터만 지시 준수형 모델로 분리</td></tr>
+          <tr><td class="k">조각과 구멍에 동일 마스크</td><td>조각에 배경색 혼입 · 판에 윤곽 잔류</td><td class="blue">조각은 축소 · 구멍은 확대</td></tr>
+          <tr><td class="k">원본 해상도 절단</td><td>가장자리에 계단이 남아 합성 티가 남</td><td class="blue">2배로 오린 뒤 축소</td></tr>
+          <tr><td class="k">퍼즐을 카드 내부에 배치</td><td>Android에서 렌더링되지 않음</td><td class="blue">별도 레이어 + 측정 좌표로 중첩</td></tr>
+          <tr><td class="k">판을 contain 으로 맞춤</td><td>좌우 여백이 남아 전환이 인지됨</td><td class="blue">영상이 점유하던 칸을 그대로 채움</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>공통 원인은 검증 시점이었음.</b> 위 항목은 모두 코드 검사로 검출되지 않고 실기기 화면에서만 확인되는 종류이므로, 화면 산출물을 매 회차 육안 확인하는 절차를 두었음</div>
+      <div class="src">출처: 자체 기록 · 개발 로그</div>
+    </div>
+
+    <div class="panel">
+      <div class="bar">13-2. 빌드 · 환경 실패 사례</div>
+      <table>
+        <thead><tr><th>증상</th><th>원인</th><th>대응</th></tr></thead>
+        <tbody>
+          <tr><td class="k">CMake 중단</td><td>JDK 25의 제한된 메서드 호출 차단</td><td class="blue">JDK 21 고정</td></tr>
+          <tr><td class="k">번들 단계 무한 대기</td><td>개발 서버가 8081 점유 시 릴리스 번들러가 포트 확보 실패</td><td class="blue">빌드 전 8081 해제</td></tr>
+          <tr><td class="k">리소스 파싱 실패</td><td>동기화가 생성한 중복 파일 <span class="mono">* 2.xml</span></td><td class="blue">빌드 전 일괄 삭제 · 364개</td></tr>
+          <tr><td class="k">리소스 중복 정의</td><td>교체 후 잔존한 구 확장자 음원</td><td class="blue">생성물 정리</td></tr>
+          <tr><td class="k">설치 거부</td><td>로컬 빌드와 배포본의 서명 불일치</td><td class="blue">개발 클라이언트는 단일 경로로만 갱신</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><b>정적 검사로 검출되지 않는 회귀가 존재함:</b> 재생 종료 상태를 다음 편에서 초기화하지 않아 두 번째 영상이 표시되지 않은 사례가 발생했으며, 검사는 통과했고 실기기 재생에서만 드러남</li>
+        <li><b>기기에서만 확인되는 항목을 분리함:</b> 필기 입력 · 영상 렌더링 · 변환 결과는 에뮬레이터에서 재현되지 않으므로 실기기 확인 절차로 분리했음</li>
+      </ul>
+      <div class="src">출처: 자체 기록 · 빌드 로그 · NPM RUN CHECK</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────── 14 ───────────────────────── -->
+<section class="slide">
+  <div class="kicker">부록 <span></span></div>
+  <h1>Appendix 14.</h1>
+  <div class="cols">
+
+    <div class="panel">
+      <div class="bar">14-1. 차후 개발 항목</div>
+      <table>
+        <thead><tr><th>항목</th><th>현재</th><th>다음</th></tr></thead>
+        <tbody>
+          <tr><td class="k">음성 인식</td><td>말하기 활동이 <span class="mono">-35dB</span> 문턱을 일정 시간 넘겼는지로 판정. 발화 내용은 대조하지 않음</td><td class="blue">발화 내용 대조 — 말로 답하는 문항 · 따라 읽기</td></tr>
+          <tr><td class="k">활동 기록</td><td>기기 내부 누적. 서버 기록 경로는 열려 있음</td><td class="blue">기간별 추이 — 무엇이 늘고 무엇이 정체됐는지</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><b>말하기 활동은 이미 무대에 있음:</b> 마이크 입력을 받아 통과를 판정하는 경로가 구동 중이므로, 음성 인식은 새 활동을 만드는 것이 아니라 <b>판정 근거를 음량에서 내용으로 올리는 것</b>임</li>
+        <li><b>적용 대상이 셋으로 늘어남:</b> 말하기 활동의 낱말 대조, 국어 문항의 구술 응답(선택지 없이 답하기), 자막 구간 따라 읽기</li>
+        <li><b>기존 판정 규칙은 유지됨:</b> 파열음 · 숨에서 나는 짧은 끊김을 무시하는 구간 판정은 인식 결과의 전처리로 그대로 쓰임</li>
+      </ul>
+      <div class="src">출처: 자체 구현 · ACTIVITIES/RULES.JS</div>
+    </div>
+
+    <div class="panel">
+      <div class="bar">14-2. 음성 인식 경로 비교</div>
+      <table>
+        <thead><tr><th>기준</th><th>온디바이스</th><th>서버</th></tr></thead>
+        <tbody>
+          <tr><td class="k">오프라인 원칙</td><td class="blue">유지됨</td><td>네트워크 필요</td></tr>
+          <tr><td class="k">아동 음성</td><td class="blue">기기 밖으로 나가지 않음</td><td>외부 전송 · 보호자 동의와 저장 정책 필요</td></tr>
+          <tr><td class="k">응답 지연</td><td class="blue">즉시</td><td>왕복 지연 발생</td></tr>
+          <tr><td class="k">운영 비용</td><td class="blue">없음</td><td>호출당 과금</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>본 앱의 전제는 기기 한 대에서의 완결이다.</b> 그 전제를 지키려면 온디바이스가 기본이 되고,
+        서버는 인식이 반복 실패한 구간에 한해 보조로 두는 구성이 맞다 — 아동 음성을 상시 외부로 보내지 않으면서 정확도를 확보하는 절충이다.</div>
+      <ul>
+        <li><b>판정을 통과 · 실패로 이분하지 않음:</b> 인식이 어긋나도 활동은 진행되며, 버디가 발음을 다시 들려주는 방향으로 설계함 — 실패 상태를 두지 않는 기존 원칙과 같음</li>
+      </ul>
+      <div class="src">출처: 설계안</div>
+    </div>
+
+  </div>
+</section>
+
+</body></html>

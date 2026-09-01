@@ -13,3 +13,14 @@ web-build/
 
 # Secrets: only the example is tracked.
 .env
+
+# Pipeline working set: audio, transcripts and whisper models are large and regenerable.
+pipeline/work/
+pipeline/models/
+*.wav
+
+__pycache__/
+_workspace/
+
+# iCloud drops these next to the original; they break Android resource parsing.
+* [0-9].*
