@@ -75,7 +75,40 @@
   .arrow { text-align: center; font-size: 9px; color: #5a5a5a; padding: 2px 0; }
   .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .stat b { font-family: Pretendard, sans-serif; font-weight: 600; color: var(--blue); }
-</style></head><body>
+</style>
+<style>
+  /* 라이트 팔레트 — 소제목 흰색 · 소제목 배경 #446ECB · 본문 검정 · 본문 배경 #D3E4FB */
+  body, .slide { background: #FFFFFF; color: #000000; }
+  .kicker { color: #192853; }
+  .kicker span { background: #446ECB; }
+  h1 { color: #192853; }
+  .panel { background: #D3E4FB; }
+  .bar { background: #446ECB; color: #FFFFFF; }
+  .lead, .para, td, li, .note, .stat, .kv, .bar-label { color: #000000; }
+  .lead b, .para b, .note b, li b, td.k, .sub { color: #192853; }
+  th, .bar-val { color: #1B2C55; }
+  th { border-bottom-color: #446ECB; }
+  td, .stat, .kv { border-bottom-color: rgba(25,40,83,0.22); }
+  .code, .quote, .chip, .opt { background: #FFFFFF; color: #000000; border: 1px solid rgba(25,40,83,0.25); }
+  .box { background: #FFFFFF; color: #000000; border: 1px solid rgba(25,40,83,0.35); }
+  .code b, .quote b, .box b { color: #192853; }
+  .box.hi { border-color: #2F4FA8; }
+  .box.hi b { color: #2F4FA8; }
+  .box.gate { border-color: #B7791F; }
+  .box.gate b { color: #8A5B12; }
+  .box span { color: #33456F; }
+  .arrow { color: #446ECB; }
+  .blue, .stat b, .kv b { color: #2A54B8; }
+  .green { color: #1C7A4B; }
+  .red { color: #B4232B; }
+  .amber { color: #8A5B12; }
+  .opt.ok { border-color: #1C7A4B; color: #1C7A4B; }
+  .bar-fill { background: #446ECB; }
+  .figure { background: #FFFFFF; }
+  .src, .cap { color: #3A4E7A; }
+  li::before { background: #446ECB; }
+</style>
+</head><body>
 
 <!-- ───────────────────────── 5 ───────────────────────── -->
 <section class="slide">
