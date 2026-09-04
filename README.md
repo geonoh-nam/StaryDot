@@ -62,6 +62,8 @@ frontend                          시청 루프 → 개입 → 문항 → 그리
 ## 빠르게 돌려보기
 
 Node 22 이상이 필요하다. 서버가 `node:sqlite` 내장 모듈을 쓴다.
+활동 생성에는 [`claude` CLI](https://docs.claude.com/en/docs/claude-code)가 필요하다 — 생성자와
+검증자를 별도 프로세스로 띄우는 데 쓴다. 없으면 개입 지점까지(`storydot.py`)만 돈다.
 
 **파이프라인** — API 키가 필요 없다.
 
@@ -92,10 +94,31 @@ Skia와 Reanimated를 쓰므로 **Expo Go로는 열리지 않는다.** 개발용
 ```bash
 cd frontend
 npx eas build -p android --profile development      # 개발용 — Metro 에 붙는다
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)    # 시연용 APK
-./android/gradlew -p android assembleRelease
-adb install -r android/app/build/outputs/apk/release/app-release.apk
+
+cd android                                          # 시연용 APK
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+./gradlew assembleRelease
+adb install -r app/build/outputs/apk/release/app-release.apk
 ```
+
+### 영상 넣기
+
+영상은 저장소에 없다. 용량이 크고 저작권이 있는 파일이라 `.gitignore` 가 막는다. 두 경로 중
+하나로 직접 넣는다.
+
+```bash
+# ① 파이프라인을 돌리지 않고 영상만 — inbox/<시리즈>/ 에 mp4 를 두고
+node backend/server/tools/add-videos.js
+
+# ② 파이프라인 결과와 함께 — work/ 의 산출물을 DB 로, 영상은 --video-dir 에서 찾는다
+node backend/server/tools/seed-from-work.js work --video-dir ~/Downloads
+```
+
+원본 mp4 가 아직 없으면 `--placeholder <아무.mp4>` 로 배선만 먼저 확인할 수 있다. 길이는
+파이프라인이 실측한 값을 쓰므로 편성 계산은 진짜고, 재생되는 화면만 대역이다.
+
+기기에서 서버 없이 돌릴 때는 앱과 함께 나가는 스냅숏(`frontend/assets/library.json` ·
+`activities.json`)과 기기의 `media` 폴더를 읽는다. 스냅숏은 저장소에 들어 있다.
 
 ---
 
