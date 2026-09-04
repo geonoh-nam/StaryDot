@@ -11,7 +11,7 @@ SKT FLY AI 열정4팀 최종 프로젝트.
 | | |
 | --- | ---: |
 | 앱 코드 (JS) | 12,022줄 |
-| 서버·도구 (Node) | 2,205줄 |
+| 서버·도구 (Node) | 2,075줄 |
 | 화면 | 14종 |
 | DB 테이블 | 9개 |
 | 파이프라인 외부 패키지 | 0개 |
@@ -26,7 +26,7 @@ pipeline/        영상 → 개입지점 + 활동  ← 파이프라인 정본
 backend/
   server/        콘텐츠·기록 API (Node 내장 http + node:sqlite)
   worker/        그림 변환 중계 (Cloudflare Worker → fal.ai)
-  oneshot/       구 파이프라인. pipeline/oneshot 과 같은 내용이며 유지하지 않는다
+  tools/         라인아트 준비 등 보조 스크립트
 docs/            기획서 · 파이프라인 설계 · 발표 부록
 ```
 
