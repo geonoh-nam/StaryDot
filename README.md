@@ -1,7 +1,6 @@
 # StoryDot
 
-<img width="293" height="60" alt="Storydot" src="https://github.com/user-attachments/assets/58782ede-4af8-4a3f-bf6a-38bed9348f84" />
-
+<img width="293" height="60" alt="Storydot" src="https://github.com/user-attachments/assets/bbe70253-5e86-45d7-9f2c-c41b6573b9ad" />
 
 영상을 보기만 하던 시간을, 아이가 손으로 무언가를 하는 시간으로 바꾼다.
 
