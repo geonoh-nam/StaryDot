@@ -1,5 +1,7 @@
 # StoryDot
 
+<img width="174" height="36" alt="Storydot" src="https://github.com/user-attachments/assets/37093b93-38de-42ca-b34d-752cddce35a0" />
+
 영상을 보기만 하던 시간을, 아이가 손으로 무언가를 하는 시간으로 바꾼다.
 
 만 3–7세용 안드로이드 태블릿 앱과, 그 앱이 낼 활동을 애니메이션 한 편에서 뽑아내는
