@@ -9,7 +9,7 @@ import { BG, hexToRgb, rgbToHex, TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../the
 import { TapScale } from '../ui/motion';
 import Rea, { Extrapolation, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withDecay, withSpring } from 'react-native-reanimated';
 import { DebugJump } from '../ui/DebugJump';
-import { StaryLogo } from '../ui/Logo';
+import { StoryDotLogo } from '../ui/Logo';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 export const CARD_W = 300;
@@ -371,7 +371,7 @@ export function MainScreen({ series, profile, onStart, onMenu, onJump, onReset, 
         )}
         <Text style={styles.mainWhoName} numberOfLines={1}>{profile.name || '친구'}</Text>
       </View>
-      <StaryLogo size={30} textColor={BG} />
+      <StoryDotLogo size={30} textColor={BG} />
 
       <View style={styles.mainGreetRow}>
       <View style={styles.buddySpacer} />

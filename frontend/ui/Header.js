@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { playSound } from '../sound';
-import { StaryLogo } from './Logo';
+import { StoryDotLogo } from './Logo';
 import { COLORS, TEXT_ON_DARK } from '../theme';
 
 // Shared with the star's menu on the main screen, which lists the same places.
@@ -21,7 +21,7 @@ export function TabletHeader({ rightLabel, onHome, onReport, onTab }) {
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={onHome}>
-        <StaryLogo size={20} />
+        <StoryDotLogo size={20} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.headerMenu} onPress={() => (onTab ? setOpen((v) => !v) : onReport())} accessibilityLabel={rightLabel}>
         <View style={styles.headerMenuLine} />

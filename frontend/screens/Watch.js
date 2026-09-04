@@ -12,7 +12,7 @@ import { SERIES_ART, voiceFor } from '../data/library';
 import { COLORS, TEXT_MUTED_ON_DARK, TEXT_ON_DARK } from '../theme';
 import { buttons } from '../ui/buttons';
 import { CenterPopup } from '../ui/CenterPopup';
-import { StaryLogo } from '../ui/Logo';
+import { StoryDotLogo } from '../ui/Logo';
 import { Quote } from '../ui/Quote';
 import { GeneratedCharacter, PattiCharacter } from '../ui/artwork';
 import { GradientRim, TapScale } from '../ui/motion';
@@ -503,7 +503,7 @@ export function QuizOverlay({ quiz, selected, reaction, seriesId, standalone, tr
     <Modal transparent visible animationType="fade" supportedOrientations={['landscape', 'landscape-left', 'landscape-right']} onRequestClose={onResume}>
       <View style={[styles.quizOverlay, standalone && styles.quizPage, { width: win.width, height: win.height }]}>
         {standalone ? (
-          <View style={styles.quizPageLogo} pointerEvents="none"><StaryLogo size={30} /></View>
+          <View style={styles.quizPageLogo} pointerEvents="none"><StoryDotLogo size={30} /></View>
         ) : (
           <BlurView intensity={28} tint="dark" style={StyleSheet.absoluteFill} pointerEvents="none" />
         )}

@@ -8,7 +8,7 @@ import { TEXT_ON_DARK } from '../theme';
 const CAP_TOP_RATIO = -0.11;
 
 // Wordmark: "Story" with a ringed star riding as a superscript — ring and star share the brand blue.
-export function StaryLogo({ size = 26, color = '#609EF5', textColor = TEXT_ON_DARK }) {
+export function StoryDotLogo({ size = 26, color = '#609EF5', textColor = TEXT_ON_DARK }) {
   const mark = size * 0.5;
   return (
     <View style={styles.logoRow}>

@@ -5,7 +5,7 @@ import { Animated, Easing, Image, Pressable, StyleSheet, View } from 'react-nati
 import Svg, { Circle, Defs, LinearGradient, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
 import { Text } from '../Typography';
 import { playSound } from '../sound';
-import { StaryLogo } from '../ui/Logo';
+import { StoryDotLogo } from '../ui/Logo';
 import { Bubble } from '../ui/Bubble';
 import { sayLine } from '../activities/voice';
 
@@ -59,7 +59,7 @@ export function ByeScreen({ profile, mission, onUnlock }) {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.logo} pointerEvents="none"><StaryLogo size={30} /></View>
+      <View style={styles.logo} pointerEvents="none"><StoryDotLogo size={30} /></View>
 
       <View style={styles.middle} pointerEvents="box-none">
         {/* A soft halo behind the buddy, breathing so the still screen keeps a pulse. */}

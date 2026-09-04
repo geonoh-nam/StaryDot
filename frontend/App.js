@@ -22,7 +22,7 @@ import { DUO_FRAME_AT } from './data/duo-shapes';
 import { koreanForSeries, koreanPoolFor } from './data/korean-pool';
 import { CenterPopup } from './ui/CenterPopup';
 import { TabletHeader } from './ui/Header';
-import { StaryLogo } from './ui/Logo';
+import { StoryDotLogo } from './ui/Logo';
 import { ScreenFade } from './ui/motion';
 import { EvolvePopup } from './screens/Character';
 import { ChildProfileScreen, GuardianSetupScreen } from './screens/Onboarding';
